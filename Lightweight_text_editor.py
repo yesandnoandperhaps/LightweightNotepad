@@ -129,7 +129,7 @@ def 下拉框事件(event):
 scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
 scrollbar.grid(row=1, column=1, sticky="ns")
 text_widget = tk.Text(root, wrap="word",
-                          yscrollcommand=scrollbar.set, font=sans_serif_font )
+                          yscrollcommand=scrollbar.set, font=font_style )
 text_widget.grid(row=1, column=0, sticky="nsew")
 def a(event):
      deleted_text.append(text_widget.get('1.0', tk.END))
