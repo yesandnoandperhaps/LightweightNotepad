@@ -100,7 +100,7 @@ icon = pystray.Icon("icon", image, "轻量记事本", menu)
 
 root = tk.Tk()
 root.title("轻量记事本")
-root.geometry(geometry_biao_zhun_chuang_kou)
+root.geometry()
 root.iconbitmap(icon_path)
 font_style = tkFont.Font(family="宋体", size=12)
 sans_serif_font = font.Font(family="MS Sans Serif", size=12)
