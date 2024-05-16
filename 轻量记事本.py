@@ -27,7 +27,7 @@ folder_name = "数据"
 folder_path = os.path.join(documents_path, folder_name)
 xiao_liu_ren_shu_ju_wei_zhi = "设置数据"
 file_path = os.path.join(folder_path, xiao_liu_ren_shu_ju_wei_zhi)
-icon_path = os.path.join(os.path.dirname(__file__), "a.ico")
+icon_path = os.path.join(os.path.dirname(__file__), "aaa.ico")
 def load_theme():
     """从文件加载上次保存的主题"""
     try:
