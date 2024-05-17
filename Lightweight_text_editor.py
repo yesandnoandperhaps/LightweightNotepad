@@ -17,32 +17,23 @@ import pystray
 from PIL import Image
 from pystray import MenuItem, Menu
 import threading
-documents_path = Path.home() / "Documents"
-folder_name = "数据"
-folder_path = os.path.join(documents_path, folder_name)
-数据文件 = "数据文件"
-数据文件位置 = os.path.join(folder_path, 数据文件)
-documents_path = str(Path.home() / "Documents")
-folder_name = "数据"
-folder_path = os.path.join(documents_path, folder_name)
-xiao_liu_ren_shu_ju_wei_zhi = "设置数据"
-file_path = os.path.join(folder_path, xiao_liu_ren_shu_ju_wei_zhi)
-icon_path = os.path.join(os.path.dirname(__file__), "aaa.ico")
+p = os.path.dirname(__file__)
+a = "a"
+aa = os.path.join(p, a)
+bb = "b"
+file_path = os.path.join(p, bb)
+icon_path = os.path.join(p, "aaa.ico")
 def load_theme():
-    """从文件加载上次保存的主题"""
     try:
         with open(file_path, 'r') as file:
             return file.read().strip()
     except FileNotFoundError:
         return None
-
-
+    
 def save_theme(theme):
-    """保存当前主题到文件"""
     with open(file_path, 'w') as file:
         file.write(theme)
     print("主题已成功保存到文件。")
-
 
 def bao_chun():
     save_theme(theme_cbo.get())
@@ -148,12 +139,12 @@ def save_data():
         file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
             ("Text files", "*.txt"), ("All files", "*.*")])
         
-        with open(数据文件位置, 'w') as f:
+        with open(aa, 'w') as f:
              lines = text_widget.get("1.0","end")
              f.writelines(lines)
 
         if file_path:
-            shutil.copy(数据文件位置, file_path)
+            shutil.copy(aa, file_path)
 root.protocol('WM_DELETE_WINDOW', on_exit)
 threading.Thread(target=icon.run, daemon=True).start()
 root.mainloop()
