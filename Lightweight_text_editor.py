@@ -8,11 +8,7 @@ from tkinter import font
 import ctypes
 from pathlib import Path
 import os
-import sys
 import shutil
-import math
-import multiprocessing
-import time
 import pystray
 from PIL import Image
 from pystray import MenuItem, Menu
@@ -53,7 +49,7 @@ def root_window():
     global style
     global theme_names
     window = ttk.Toplevel()
-    window.title("算卦-设置")
+    window.title("轻量记事本-设置")
     window.iconbitmap(icon_path)
     window.resizable()
     window_Button_two = ttk.Button(
