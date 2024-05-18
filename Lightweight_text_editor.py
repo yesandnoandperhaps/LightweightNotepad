@@ -15,10 +15,14 @@ from pystray import MenuItem, Menu
 import threading
 import windnd
 from tkinter.ttk import Separator
+from tkinter import messagebox
 p = os.path.dirname(__file__)
 a_path = os.path.join(p, "a")
 b_path = os.path.join(p, "b")
 c_path = os.path.join(p,"c")
+d_path = os.path.join(p,"d")
+e_path = os.path.join(p,"e")
+f_path = os.path.join(p,"f")
 icon_path = os.path.join(p, "aaa.ico")
 
 def save(theme):
@@ -26,6 +30,12 @@ def save(theme):
         file.write(theme)
     with open(c_path, 'w') as file:
         file.write(str(v))
+    with open(d_path,"w")as f:
+        f.write(str(v2))
+    with open(e_path,"w")as f:
+        f.write(str(v2))
+    with open(f_path,"w")as f:
+        f.write(str(v2))
 
 def load_theme():
     try:
@@ -41,22 +51,57 @@ def load():
     except FileNotFoundError:
         pass
 
-def bao_chun():
-    save(theme_cbo.get())
-    print("已保存。")
+def load2():
+    try:
+        with open(d_path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+
+def load3():
+    try:
+        with open(e_path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+
+def load4():
+    try:
+        with open(f_path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
 
 v = int(load() or 0)
+v2 = int(load2() or 1)
+v3 = int(load3() or 0)
+v4 = int(load4() or 0)
 
 def s():
     global v
     v = v + 1
+def s2():
+    global v2
+    v2 = v2+1
+def s3():
+    global v3
+    v3 = v3+1
+def s4():
+    global v4
+    v4 = v4+1
 
 def root_window():
     global theme_cbo
-    global consider_var
-    global style
-    global theme_names
     window = ttk.Toplevel()
+    def bao_chun(): 
+        global v2,v3,v4
+        p1=v2%2
+        p2=v3%2
+        p3=v4%2
+        if p1+p2+p3==1:
+            save(theme_cbo.get())    
+        else:
+            messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
     window.title("轻量记事本-设置")
     window.iconbitmap(icon_path)
     window.resizable()
@@ -73,10 +118,10 @@ def root_window():
         consider_var.set(0)
     consider_checkbutton = ttk.Checkbutton(
         window, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
-    consider_checkbutton.grid(column=1,row=3)
+    consider_checkbutton.grid(column=1,row=3,padx=10,pady=10)
     style = ttk.Style()
     theme_names = style.theme_names()
-    name = font.families()
+
     lbl = ttk.Label(window, text="选择主题:")
     lbl.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
     lb2 = ttk.Label(window, text="选择字体:")
@@ -89,10 +134,29 @@ def root_window():
     theme_cbo.grid(column=1,row=0,padx=10,pady=10)
     theme_cbo.current(theme_names.index(style.theme_use()))
     theme_cbo.bind('<<ComboboxSelected>>', change_theme)
-    
-    theme_cbo2 = ttk.Combobox(master=window, values=name)
-    theme_cbo2.grid(column=1,row=3,padx=10,pady=10)
-    theme_cbo2.current(theme_names.index(style.theme_use()))
+    consider_var_2 = ttk.IntVar()
+    if v2 % 2 == 1:
+        consider_var_2.set(1)
+    else:
+        consider_var_2.set(0)
+    consider_checkbutton2 = ttk.Checkbutton(window, text="宋体", variable=consider_var_2, command=s2, bootstyle="round-toggle")
+    consider_checkbutton2.grid(column=1,row=1,padx=10,pady=10)
+
+    consider_var_3 = ttk.IntVar()
+    if v3 % 2 == 1:
+        consider_var_3.set(1)
+    else:
+        consider_var_3.set(0)
+    consider_checkbutton3 = ttk.Checkbutton(window, text="等线", variable=consider_var_3, command=s3, bootstyle="round-toggle")
+    consider_checkbutton3.grid(column=2,row=1,padx=10,pady=10)
+
+    consider_var_4 = ttk.IntVar()
+    if v4 % 2 == 1:
+        consider_var_4.set(1)
+    else:
+        consider_var_4.set(0)
+    consider_checkbutton4 = ttk.Checkbutton(window, text="黑体", variable=consider_var_4, command=s4, bootstyle="round-toggle")
+    consider_checkbutton4.grid(column=3,row=1,padx=10,pady=10)
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
     window.mainloop()
@@ -119,8 +183,16 @@ root = tk.Tk()
 root.title("轻量记事本")
 root.geometry()
 root.iconbitmap(icon_path)
-font_style = tkFont.Font(family="宋体", size=12)
-sans_serif_font = font.Font(family="MS Sans Serif", size=12)
+font_style1 = tkFont.Font(family="宋体", size=12)
+font_style2 = tkFont.Font(family="等线", size=12)
+font_style3 = tkFont.Font(family="黑体", size=12)
+font_style = None
+if v2 % 2 == 1:
+    font_style = font_style1
+elif v3 % 2 == 1:
+    font_style = font_style2
+elif v4 % 2 == 1:
+    font_style = font_style3
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
 root.tk.call('tk', 'scaling', ScaleFactor / 75)
@@ -146,7 +218,7 @@ def 下拉框事件(event):
 scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
 scrollbar.grid(row=1, column=1, sticky="ns")
 text_widget = tk.Text(root, wrap="word",
-                          yscrollcommand=scrollbar.set, font=font_style )
+                          yscrollcommand=scrollbar.set, font=font_style)
 text_widget.grid(row=1, column=0, sticky="nsew")
 def a(event):
      deleted_text.append(text_widget.get('1.0', tk.END))
