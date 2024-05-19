@@ -24,7 +24,6 @@ d_path = os.path.join(p,"d")
 e_path = os.path.join(p,"e")
 f_path = os.path.join(p,"f")
 icon_path = os.path.join(p, "aaa.ico")
-
 def save(theme):
     with open(b_path, 'w') as file:
         file.write(theme)
@@ -36,47 +35,40 @@ def save(theme):
         f.write(str(v2))
     with open(f_path,"w")as f:
         f.write(str(v2))
-
 def load_theme():
     try:
         with open(b_path, 'r') as file:
             return file.read().strip()
     except FileNotFoundError:
         return None
-
 def load():
     try:
         with open(c_path, 'r') as f:
             return f.read()
     except FileNotFoundError:
         pass
-
 def load2():
     try:
         with open(d_path, 'r') as f:
             return f.read()
     except FileNotFoundError:
         pass
-
 def load3():
     try:
         with open(e_path, 'r') as f:
             return f.read()
     except FileNotFoundError:
         pass
-
 def load4():
     try:
         with open(f_path, 'r') as f:
             return f.read()
     except FileNotFoundError:
         pass
-
 v = int(load() or 0)
 v2 = int(load2() or 1)
 v3 = int(load3() or 0)
 v4 = int(load4() or 0)
-
 def s():
     global v
     v = v + 1
@@ -89,6 +81,27 @@ def s3():
 def s4():
     global v4
     v4 = v4+1
+def gadget():
+    def x():
+        window = ttk.Toplevel()
+        window.title("轻量记事本-小工具-小六壬")
+        window.iconbitmap(icon_path)
+    def z():
+        window = ttk.Toplevel()
+        window.title("轻量记事本-小工具-紫微斗数")
+        window.iconbitmap(icon_path)
+    window = ttk.Toplevel()
+    window.title("轻量记事本-小工具")
+    window.iconbitmap(icon_path)
+    b1 = ttk.Button(window, text="小六壬", bootstyle="outline", command=x)
+    b1.grid(column=0,row=0,padx=10,pady=10)
+    b2 = ttk.Button(window, text="紫微斗数", bootstyle="outline", command=z)
+    b2.grid(column=1,row=0,padx=10,pady=10)
+
+
+
+
+
 
 def root_window():
     global theme_cbo
@@ -104,7 +117,6 @@ def root_window():
             messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
     window.title("轻量记事本-设置")
     window.iconbitmap(icon_path)
-    window.resizable()
     window_Button_two = ttk.Button(
         window, text="返回", bootstyle="outline", command=window.destroy)
     window_Button_two.grid(column=4,row=0,padx=10,pady=10)
@@ -168,20 +180,20 @@ def change_theme(event):
 
 def quit_window(icon: pystray.Icon):
     icon.stop()
+    icon.visible = False
     root.destroy()
+
 def show_window():
     root.deiconify()
+
 def on_exit():
     root.withdraw()
 menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
 image = Image.open(icon_path)
 icon = pystray.Icon("icon", image, "轻量记事本", menu)
 
-
-
 root = tk.Tk()
 root.title("轻量记事本")
-root.geometry()
 root.iconbitmap(icon_path)
 font_style1 = tkFont.Font(family="宋体", size=12)
 font_style2 = tkFont.Font(family="等线", size=12)
@@ -203,14 +215,16 @@ if current_theme in style.theme_names():
 def 前_下拉框事件():
         if 下拉框.get() == "保存":
             save_2()
-        if 下拉框.get() == "设置":
+        elif 下拉框.get() == "设置":
             root_window()
+        elif 下拉框.get() == "小工具":
+            gadget()
 def 下拉框事件(event):
         x, y = event.x_root, event.y_root
         if 下拉框.winfo_rootx() < x < 下拉框.winfo_rootx() + 下拉框.winfo_width() and \
                 下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
             前_下拉框事件()
-下拉菜单组 = ["保存", "设置"]
+下拉菜单组 = ["保存", "设置","小工具"]
 下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
 下拉框.grid(row=0, column=0, sticky="e")
 下拉框.bind("<Button-3>", 下拉框事件)
@@ -220,6 +234,9 @@ scrollbar.grid(row=1, column=1, sticky="ns")
 text_widget = tk.Text(root, wrap="word",
                           yscrollcommand=scrollbar.set, font=font_style)
 text_widget.grid(row=1, column=0, sticky="nsew")
+text_widget.tag_configure("found", background="yellow")
+t=text_widget.get("1.0",tk.END)
+text_widget.focus_set()
 def a(event):
      deleted_text.append(text_widget.get('1.0', tk.END))
      text_widget.delete('1.0', tk.END)
@@ -228,8 +245,69 @@ def b():
     if deleted_text:
         deleted_content = deleted_text.pop()
         text_widget.insert(tk.END, deleted_content)
+def on():
+    text_widget.tag_configure("found", background="")
+    toggle_window()
+
+def two_window():
+    global window2
+    def mySearch():
+        text_widget.tag_remove("found","1.0",END)
+        start = "1.0"
+        key = entry.get()
+        if (len(key.strip()) == 0):
+            return
+        while True:
+            pos = text_widget.search(key,start,END)  
+            if (pos == ""):
+                break
+            text_widget.tag_add("found",pos,"%s+%dc" %(pos,len(key)))
+            start = "%s+%dc" % (pos,len(key))
+    def focus2():
+        entry2.focus_set()
+    def focus1():
+        entry.focus_set()
+    def replace():
+        k = entry.get()
+        f = entry2.get()
+        t = text_widget.get(1.0, tk.END)
+        new_text = t.replace(k, f)
+        text_widget.delete('1.0', tk.END)
+        text_widget.insert(tk.END, new_text)
+    if not window2:
+        window2 = tk.Toplevel()
+        window2.title("查找与替换")
+        window2.iconbitmap(icon_path)
+        window2.resizable( width=False, height=False )
+        window2.wm_attributes("-topmost", True)
+        lbl = ttk.Label(window2, text="查找:").grid(row=0, column=0,padx=5,pady=5)
+        entry = tk.Entry(window2, width=30)
+        entry.grid(row=0, column=1,padx=5,pady=5)
+        entry.bind("<Return>", lambda event: mySearch())
+        entry.focus_set()
+        lb2 = ttk.Label(window2, text="替换:").grid(row=1, column=0,padx=5,pady=5)
+        entry2 = tk.Entry(window2, width=30)
+        entry2.grid(row=1, column=1,padx=5,pady=5)
+        entry2.bind("<Return>", lambda event: replace())
+        window2.protocol("WM_DELETE_WINDOW", on)
+        window2.bind("<Control-f> ", lambda event:toggle_window())
+        entry.bind("<Control-f> ", lambda event:toggle_window())
+        entry.bind(" <Down>",lambda event:focus2())
+        entry2.bind("<Up>",lambda event:focus1())
+        entry2.bind("<Control-f> ", lambda event:toggle_window())
+        window2.mainloop()
+
+def toggle_window():
+    global window2
+    if window2:
+        window2.destroy()
+        window2 = None
+    else:
+        two_window()
+
 root.bind("<Shift_L> ", a)
 root.bind("<Control_L>", lambda event: b())
+root.bind("<Control-f> ", lambda event:toggle_window())
 scrollbar.config(command=text_widget.yview)
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
@@ -261,6 +339,7 @@ def i(files):
           data = f.read()
           text_widget.insert(tk.END, data)
 
+window2 = None
 windnd.hook_dropfiles(root,func=i)
 root.protocol('WM_DELETE_WINDOW', on_exit)
 threading.Thread(target=icon.run, daemon=True).start()
