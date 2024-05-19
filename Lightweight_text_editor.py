@@ -101,7 +101,7 @@ def x():
     combo = ttk.Combobox(window, values=values, state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     combo.bind("<Button-3>", on_right_click)
-    combo.set("生成例一随机数据")
+    combo.set("算一卦")
 
     def 前_下拉框事件():
         if 下拉框.get() == "返回":
