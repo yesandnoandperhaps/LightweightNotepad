@@ -16,6 +16,7 @@ import threading
 import windnd
 from tkinter.ttk import Separator
 from tkinter import messagebox
+from XiaoLliuren import g_path
 p = os.path.dirname(__file__)
 a_path = os.path.join(p, "a")
 b_path = os.path.join(p, "b")
@@ -81,11 +82,64 @@ def s3():
 def s4():
     global v4
     v4 = v4+1
+
+
+def x():
+    window = tk.Toplevel(root)
+    window.title("小六壬")
+    window.iconbitmap(icon_path)
+    def generate_and_display():
+        text_widget.delete(1.0, END)
+        if combo.get() == "算一卦":
+            text_widget.insert(tk.END, ())
+    def on_right_click(event):
+        x, y = event.x_root, event.y_root
+        if combo.winfo_rootx() < x < combo.winfo_rootx() + combo.winfo_width() and \
+                combo.winfo_rooty() < y < combo.winfo_rooty() + combo.winfo_height():
+            generate_and_display()
+    values = ["算一卦"]
+    combo = ttk.Combobox(window, values=values, state="readonly")
+    combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+    combo.bind("<Button-3>", on_right_click)
+    combo.set("生成例一随机数据")
+
+    def 前_下拉框事件():
+        if 下拉框.get() == "返回":
+            window.destroy()
+        if 下拉框.get() == "保存数据":
+            save_data()
+        if 下拉框.get() == "上传数据":
+            window.destroy()
+
+    def 下拉框事件(event):
+        x, y = event.x_root, event.y_root
+        if 下拉框.winfo_rootx() < x < 下拉框.winfo_rootx() + 下拉框.winfo_width() and \
+                下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
+            前_下拉框事件()
+
+    下拉菜单组 = ["返回", "保存数据", "上传数据"]
+    下拉框 = ttk.Combobox(window, values=下拉菜单组, state="readonly")
+    下拉框.grid(row=0, column=0, sticky="e")
+    下拉框.bind("<Button-3>", 下拉框事件)
+    下拉框.set("返回")
+    scrollbar = ttk.Scrollbar(window, style="TScrollbar", bootstyle="round")
+    scrollbar.grid(row=1, column=1, sticky="ns")
+    text_widget = tk.Text(window, wrap="word",
+                          yscrollcommand=scrollbar.set, font=font_style)
+    text_widget.grid(row=1, column=0, sticky="nsew")
+    scrollbar.config(command=text_widget.yview)
+    window.grid_rowconfigure(1, weight=1)
+    window.grid_columnconfigure(0, weight=1)
+
+    def save_data():
+        file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt", filetypes=[
+            ("Text files", "*.txt"), ("All files", "*.*")])
+        if file_path:
+            shutil.copy(g_path, file_path)
+
+    window.mainloop()
 def gadget():
-    def x():
-        window = ttk.Toplevel()
-        window.title("轻量记事本-小工具-小六壬")
-        window.iconbitmap(icon_path)
+        
     def z():
         window = ttk.Toplevel()
         window.title("轻量记事本-小工具-紫微斗数")
