@@ -17,6 +17,9 @@ import windnd
 from tkinter.ttk import Separator
 from tkinter import messagebox
 from XiaoLliuren import g_path
+import XiaoLliuren
+import tkinter.ttk
+import time
 p = os.path.dirname(__file__)
 a_path = os.path.join(p, "a")
 b_path = os.path.join(p, "b")
@@ -26,43 +29,43 @@ e_path = os.path.join(p,"e")
 f_path = os.path.join(p,"f")
 icon_path = os.path.join(p, "aaa.ico")
 def save(theme):
-    with open(b_path, 'w') as file:
+    with open(b_path, 'w',encoding='utf-8') as file:
         file.write(theme)
-    with open(c_path, 'w') as file:
+    with open(c_path, 'w',encoding='utf-8') as file:
         file.write(str(v))
-    with open(d_path,"w")as f:
+    with open(d_path,"w",encoding='utf-8')as f:
         f.write(str(v2))
-    with open(e_path,"w")as f:
-        f.write(str(v2))
-    with open(f_path,"w")as f:
-        f.write(str(v2))
+    with open(e_path,"w",encoding='utf-8')as f:
+        f.write(str(v3))
+    with open(f_path,"w",encoding='utf-8')as f:
+        f.write(str(v4))
 def load_theme():
     try:
-        with open(b_path, 'r') as file:
+        with open(b_path, 'r',encoding='utf-8') as file:
             return file.read().strip()
     except FileNotFoundError:
         return None
 def load():
     try:
-        with open(c_path, 'r') as f:
+        with open(c_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
 def load2():
     try:
-        with open(d_path, 'r') as f:
+        with open(d_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
 def load3():
     try:
-        with open(e_path, 'r') as f:
+        with open(e_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
 def load4():
     try:
-        with open(f_path, 'r') as f:
+        with open(f_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
@@ -91,7 +94,7 @@ def x():
     def generate_and_display():
         text_widget.delete(1.0, END)
         if combo.get() == "算一卦":
-            text_widget.insert(tk.END, ())
+            text_widget.insert(tk.END,XiaoLliuren.numgua())
     def on_right_click(event):
         x, y = event.x_root, event.y_root
         if combo.winfo_rootx() < x < combo.winfo_rootx() + combo.winfo_width() and \
@@ -389,9 +392,29 @@ def save_2():
 
 def i(files):
      msg = '\n'.join((item.decode('gbk') for item in files))
-     with open(msg, 'r',encoding='utf-8') as f:
-          data = f.read()
-          text_widget.insert(tk.END, data)
+     size = os.path.getsize(msg)
+     if size < 262144000:
+         with open(msg, 'r',encoding='utf-8') as f:
+             data = f.read()
+             text_widget.insert(tk.END, data)
+     else:
+         window = tk.Toplevel(root)
+         window.attributes("-topmost", 1)
+         root.attributes("-disabled", 1)
+         window.title("导入")
+         window.iconbitmap(icon_path)
+         lbl = ttk.Label(window, text="正在导入文件")
+         lbl.pack(side='top',anchor='center')
+         progressbarOne = tkinter.ttk.Progressbar(window)
+         progressbarOne.pack(side='top',anchor='center',fill=X)
+         progressbarOne['maximum'] = 100
+         progressbarOne['value'] = 0
+         for i in range(100):
+             # 每次更新加1
+             progressbarOne['value'] = i + 1
+             # 更新画面
+             window.update()
+             time.sleep(0.05)
 
 window2 = None
 windnd.hook_dropfiles(root,func=i)
