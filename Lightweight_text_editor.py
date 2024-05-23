@@ -35,6 +35,10 @@ def save(theme):
         f.write(str(v3))
     with open(f_path,"w",encoding='utf-8')as f:
         f.write(str(v4))
+    with open(h_path,"w",encoding='utf-8')as f:
+        f.write(str(combobox1_get))
+
+
 def load_theme():
     try:
         with open(b_path, 'r',encoding='utf-8') as file:
@@ -62,6 +66,12 @@ def load3():
 def load4():
     try:
         with open(f_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+def load5():
+    try:
+        with open(h_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
@@ -153,7 +163,7 @@ def gadget():
 
 
 def root_window():
-    global theme_cbo
+    global theme_cbo,combobox1_get
     window = ttk.Toplevel()
     window.resizable(0,0)
     def bao_chun(): 
@@ -173,14 +183,26 @@ def root_window():
     window_Button = ttk.Button(
         window, text="保存当前设置", bootstyle="outline", command=bao_chun)
     window_Button.grid(column=3,row=0,padx=10,pady=10)
+    w3 = ttk.Frame(window)
+    w3.grid(row=3,column=1,sticky=W)
+    w5 = ttk.Frame(window)
+    w5.grid(row=4,column=1,sticky=W)
     consider_var = ttk.IntVar()
     if v % 2 == 1:
         consider_var.set(1)
     else:
         consider_var.set(0)
     consider_checkbutton = ttk.Checkbutton(
-        window, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
-    consider_checkbutton.grid(column=1,row=3,padx=10,pady=10)
+        w3, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
+    consider_checkbutton.grid(column=0,row=0,padx=10,pady=10)
+    w5lb1 = ttk.Label(w5,text="大文件定义:")
+    w5lb1.grid(column=1,row=0,padx=10,pady=10)
+    combobox1_group1 = [ "50MB", "70MB", "128MB", "256MB", "512MB"]
+    combobox1 = ttk.Combobox(master=w5, values=combobox1_group1)
+    combobox1.grid(row=0, column=1,padx=10,pady=10)
+    combobox1.bind("<Button-3>", 下拉框事件)
+    combobox1.set("70MB")
+    combobox1_get = combobox1.get()
     style = ttk.Style()
     theme_names = style.theme_names()
 
@@ -188,16 +210,21 @@ def root_window():
     lbl.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
     lb2 = ttk.Label(window, text="选择字体:")
     lb2.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
-    lb3 = ttk.Label(window, text="各项设置:")
+    lb3 = ttk.Label(window, text="关联设置:")
     lb3.grid(column=0,row=3,padx=10,pady=10,ipadx=5)
+    lb4 = ttk.Label(window, text="文件设置:")
+    lb4.grid(column=0,row=4,padx=10,pady=10,ipadx=5)
     sep = Separator(window)
     sep.grid(column=0, row=2,pady=50)
-    theme_cbo = ttk.Combobox(master=window, values=theme_names)
+    w4 = ttk.Frame(window)
+    w4.grid(row=0,column=1,sticky=W)
+    theme_cbo = ttk.Combobox(master=w4, values=theme_names)
     theme_cbo.grid(column=1,row=0,padx=10,pady=10)
     theme_cbo.current(theme_names.index(style.theme_use()))
     theme_cbo.bind('<<ComboboxSelected>>', change_theme)
     w2 = ttk.Frame(window)
-    w2.grid(row=1,column=1,sticky=E)
+    w2.grid(row=1,column=1,sticky=W)
+    
     consider_var_2 = ttk.IntVar()
     if v2 % 2 == 1:
         consider_var_2.set(1)
@@ -431,15 +458,17 @@ if __name__ == '__main__':
  p = os.path.dirname(__file__)
  a_path = os.path.join(p, "a")
  b_path = os.path.join(p, "b")
- c_path = os.path.join(p,"c")
- d_path = os.path.join(p,"d")
- e_path = os.path.join(p,"e")
- f_path = os.path.join(p,"f")
+ c_path = os.path.join(p, "c")
+ d_path = os.path.join(p, "d")
+ e_path = os.path.join(p, "e")
+ f_path = os.path.join(p, "f")
+ h_path = os.path.join(p, "h")
  icon_path = os.path.join(p, "aaa.ico")
  v = int(load() or 0)
  v2 = int(load2() or 1)
  v3 = int(load3() or 0)
  v4 = int(load4() or 0)
+ _size_ = (load5() or "70MB")
  menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
  image = Image.open(icon_path)
  icon = pystray.Icon("icon", image, "轻量记事本", menu)

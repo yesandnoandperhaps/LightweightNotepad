@@ -57,7 +57,7 @@ def numgua():
     天宫 = new_num1 % 6
     人宫 = (new_num1 + new_num2 - 1) % 6
     地宫 = (new_num1 + new_num2 + new_num3 - 2) % 6
-    天宫_text_map = {1: "大安",
+    宫位 = {1: "大安",
                      2: "流连",
                      3: "速喜",
                      4: "赤口",
@@ -65,29 +65,9 @@ def numgua():
                      6: "空亡",
                      0: "空亡"
                      }
-    人宫_text_map = {1: "大安",
-                     2: "流连",
-                     3: "速喜",
-                     4: "赤口",
-                     5: "小吉",
-                     6: "空亡",
-                     0: "空亡"
-                     }
-    地宫_text_map = {1: "大安",
-                     2: "流连",
-                     3: "速喜",
-                     4: "赤口",
-                     5: "小吉",
-                     6: "空亡",
-                     0: "空亡"
-                     }
-    initial_text = "天宫：{}\n".format(天宫_text_map.get(天宫, "空亡，"))
-    initial_text += "人宫：{}\n".format(人宫_text_map.get(人宫, "空亡，"))
-    initial_text += "地宫：{}\n".format(地宫_text_map.get(地宫, "空亡，"))
+    initial_text1 = "天宫：{}\n".format(宫位.get(天宫, "空亡，"))
+    initial_text1 += "人宫：{}\n".format(宫位.get(人宫, "空亡，"))
+    initial_text1 += "地宫：{}\n".format(宫位.get(地宫, "空亡，"))
     
-    with open(g_path, 'w') as file:
-        file.truncate(0)
-        i = [initial_text]
-        file.writelines(i)
-        print("成功")
-    return initial_text
+    with open(g_path, 'w',encoding='utf-8') as file:file.write(initial_text1)
+    return initial_text1
