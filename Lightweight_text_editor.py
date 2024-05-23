@@ -20,14 +20,10 @@ from XiaoLliuren import g_path
 import XiaoLliuren
 import tkinter.ttk
 import time
-p = os.path.dirname(__file__)
-a_path = os.path.join(p, "a")
-b_path = os.path.join(p, "b")
-c_path = os.path.join(p,"c")
-d_path = os.path.join(p,"d")
-e_path = os.path.join(p,"e")
-f_path = os.path.join(p,"f")
-icon_path = os.path.join(p, "aaa.ico")
+import multiprocessing
+import threading
+import psutil
+
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
         file.write(theme)
@@ -69,10 +65,6 @@ def load4():
             return f.read()
     except FileNotFoundError:
         pass
-v = int(load() or 0)
-v2 = int(load2() or 1)
-v3 = int(load3() or 0)
-v4 = int(load4() or 0)
 def s():
     global v
     v = v + 1
@@ -163,6 +155,7 @@ def gadget():
 def root_window():
     global theme_cbo
     window = ttk.Toplevel()
+    window.resizable(0,0)
     def bao_chun(): 
         global v2,v3,v4
         p1=v2%2
@@ -203,12 +196,14 @@ def root_window():
     theme_cbo.grid(column=1,row=0,padx=10,pady=10)
     theme_cbo.current(theme_names.index(style.theme_use()))
     theme_cbo.bind('<<ComboboxSelected>>', change_theme)
+    w2 = ttk.Frame(window)
+    w2.grid(row=1,column=1,sticky=E)
     consider_var_2 = ttk.IntVar()
     if v2 % 2 == 1:
         consider_var_2.set(1)
     else:
         consider_var_2.set(0)
-    consider_checkbutton2 = ttk.Checkbutton(window, text="宋体", variable=consider_var_2, command=s2, bootstyle="round-toggle")
+    consider_checkbutton2 = ttk.Checkbutton(w2, text="宋体", variable=consider_var_2, command=s2, bootstyle="round-toggle")
     consider_checkbutton2.grid(column=1,row=1,padx=10,pady=10)
 
     consider_var_3 = ttk.IntVar()
@@ -216,7 +211,7 @@ def root_window():
         consider_var_3.set(1)
     else:
         consider_var_3.set(0)
-    consider_checkbutton3 = ttk.Checkbutton(window, text="等线", variable=consider_var_3, command=s3, bootstyle="round-toggle")
+    consider_checkbutton3 = ttk.Checkbutton(w2, text="等线", variable=consider_var_3, command=s3, bootstyle="round-toggle")
     consider_checkbutton3.grid(column=2,row=1,padx=10,pady=10)
 
     consider_var_4 = ttk.IntVar()
@@ -224,7 +219,7 @@ def root_window():
         consider_var_4.set(1)
     else:
         consider_var_4.set(0)
-    consider_checkbutton4 = ttk.Checkbutton(window, text="黑体", variable=consider_var_4, command=s4, bootstyle="round-toggle")
+    consider_checkbutton4 = ttk.Checkbutton(w2, text="黑体", variable=consider_var_4, command=s4, bootstyle="round-toggle")
     consider_checkbutton4.grid(column=3,row=1,padx=10,pady=10)
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
@@ -245,30 +240,7 @@ def show_window():
 
 def on_exit():
     root.withdraw()
-menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
-image = Image.open(icon_path)
-icon = pystray.Icon("icon", image, "轻量记事本", menu)
 
-root = tk.Tk()
-root.title("轻量记事本")
-root.iconbitmap(icon_path)
-font_style1 = tkFont.Font(family="宋体", size=12)
-font_style2 = tkFont.Font(family="等线", size=12)
-font_style3 = tkFont.Font(family="黑体", size=12)
-font_style = None
-if v2 % 2 == 1:
-    font_style = font_style1
-elif v3 % 2 == 1:
-    font_style = font_style2
-elif v4 % 2 == 1:
-    font_style = font_style3
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
-ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
-root.tk.call('tk', 'scaling', ScaleFactor / 75)
-style = ttk.Style()
-current_theme = load_theme()
-if current_theme in style.theme_names():
-    style.theme_use(current_theme)
 def 前_下拉框事件():
         if 下拉框.get() == "保存":
             save_2()
@@ -281,19 +253,7 @@ def 下拉框事件(event):
         if 下拉框.winfo_rootx() < x < 下拉框.winfo_rootx() + 下拉框.winfo_width() and \
                 下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
             前_下拉框事件()
-下拉菜单组 = ["保存", "设置","小工具"]
-下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
-下拉框.grid(row=0, column=0, sticky="e")
-下拉框.bind("<Button-3>", 下拉框事件)
-下拉框.set("保存")
-scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
-scrollbar.grid(row=1, column=1, sticky="ns")
-text_widget = tk.Text(root, wrap="word",
-                          yscrollcommand=scrollbar.set, font=font_style)
-text_widget.grid(row=1, column=0, sticky="nsew")
-text_widget.tag_configure("found", background="yellow")
-t=text_widget.get("1.0",tk.END)
-text_widget.focus_set()
+
 def a(event):
      deleted_text.append(text_widget.get('1.0', tk.END))
      text_widget.delete('1.0', tk.END)
@@ -362,23 +322,6 @@ def toggle_window():
     else:
         two_window()
 
-root.bind("<Shift_L> ", a)
-root.bind("<Control_L>", lambda event: b())
-root.bind("<Control-f> ", lambda event:toggle_window())
-scrollbar.config(command=text_widget.yview)
-root.grid_rowconfigure(1, weight=1)
-root.grid_columnconfigure(0, weight=1)
-
-
-try:
-    if v % 2 == 1:
-        text_widget.delete('1.0', tk.END)
-        with open(a_path, 'r',encoding='utf-8') as f:
-            data = f.read()
-            text_widget.insert(tk.END, data)
-except:
-    pass
-
 def save_2():
         file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
             ("Text files", "*.txt"), ("All files", "*.*")])
@@ -389,48 +332,179 @@ def save_2():
 
         if file_path:
             shutil.copy(a_path, file_path)
+def read(filename, msg):
+    def read_and_split():
+        global index,index_
+        # 获取系统内存信息
+        mem = psutil.virtual_memory()
+        # 获取总物理内存
+        total_memory = mem.total
+        with open(filename, 'r',encoding='utf-8',errors = 'ignore') as f:
+            index = 0
+            while True:
+                f.seek(index * 52428800)
+                data = f.read(52428800)
+                if not data:
+                    folder = os.path.join(p, "text-temp")
+                    try:
+                        os.mkdir("text-temp")
+                    except:
+                        shutil.rmtree(folder)
+                        os.mkdir("text-temp")
+                    index -= 1
+                    progressbarOne['value'] -= 1
+                    while True:
+                        progressbarOne['value'] += 1
+                        try:
+                            shutil.move(f'{filename}_{index}', folder)
+                            index -= 1
+                        except:
+                            try:
+                                os.remove(f'{filename}_{index}')
+                            except:
+                                window3.destroy()
+                                root.attributes("-disabled", 0)
+                                index = 0
+                                index_ = 1
+                                folder_t = (folder + "\\" + f'{filename}_{index}')
+                                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
+                                 a = f.read()
+                                 text_widget.insert(tk.END, a)
+                            break
+                    break
+                with open(f'{filename}_{index}', 'w',encoding='utf-8',errors = 'ignore') as f1:
+                    f1.write(str(data))
+                index += 1
+                progressbarOne['value'] += 1
+
+
+    thread = threading.Thread(target=read_and_split)
+    thread.start()
 
 def i(files):
-     msg = '\n'.join((item.decode('gbk') for item in files))
-     size = os.path.getsize(msg)
-     if size < 262144000:
-         with open(msg, 'r',encoding='utf-8') as f:
-             data = f.read()
-             text_widget.insert(tk.END, data)
-     else:
-         filename = os.path.basename(msg)
-         with open(msg, 'r',encoding='utf-8') as f:
-             with open(filename, 'rb') as f:
-                 index = 0
-                 while True:
-                     f.seek(index * 10 * 1024 * 1024)
-                     data = f.read(10 * 1024 * 1024)
-                     if not data:
-                         folder = os.path.join(p, "text-temp")
-                         try:
-                            os.mkdir("text-temp")
-                         except:
-                            shutil.rmtree(folder)
-                            os.mkdir("text-temp")
-                         index -= 1
-                         while True:
-                             try:
-                                shutil.move(f'{filename}_{index}', folder)
-                                index -= 1
-                             except:
-                                try:
-                                    os.remove(f'{filename}_{index}')
-                                except:
-                                    pass
-                                break
-                         break
-                     with open(f'{filename}_{index}', 'wb') as f1:
-                         f1.write(data)
-                     index += 1
+    global progressbarOne,window3,filename
+    msg = '\n'.join((item.decode('gbk') for item in files))
+    filename = os.path.basename(msg)
+    size = os.path.getsize(msg)
+    
+    if size < 73400320:
+        with open(msg, 'r', encoding='utf-8') as f:
+            data = f.read()
+            text_widget.insert(tk.END, data)
+    else:
+        size = os.path.getsize(msg)
+        division = size//52428800
+        window3 = tk.Toplevel(root)
+        window3.title("导入")
+        window3.resizable(0, 0)
+        window3.iconbitmap(icon_path)
+        window3.minsize(400, 50)
+        window3.maxsize(400, 50)
+        window3.wm_attributes("-topmost", True)
+        root.attributes("-disabled", 1)
+        lbl = ttk.Label(window3, text="正在导入中").pack(padx=5,pady=5)
+        def on2():
+            messagebox.showerror("错误", message="导入过程中，请勿退出",parent=window3)
+        progressbarOne = tkinter.ttk.Progressbar(window3)
+        progressbarOne.pack(pady=5,fill=X)
+        progressbarOne['maximum'] = division
+        progressbarOne['value'] = 0
+        window3.protocol("WM_DELETE_WINDOW", on2)
+        read(filename, msg)
+        window3.mainloop()
+        
 
+def next_page():
+    global index,index_
+    if index_ ==  1:
+        index += 1
+        folder = os.path.join(p, "text-temp")
+        folder_t = (folder + "\\" + f'{filename}_{index}')
+        with open(folder_t, 'r',encoding='utf-8') as f:
+            text_widget.delete('1.0', tk.END)
+            a = f.read()
+            text_widget.insert(tk.END, a)
+    else:
+        messagebox.showerror("错误", message="仅限大于50M的text文本文件进行此操作",parent=root)
+    
+if __name__ == '__main__':
+ p = os.path.dirname(__file__)
+ a_path = os.path.join(p, "a")
+ b_path = os.path.join(p, "b")
+ c_path = os.path.join(p,"c")
+ d_path = os.path.join(p,"d")
+ e_path = os.path.join(p,"e")
+ f_path = os.path.join(p,"f")
+ icon_path = os.path.join(p, "aaa.ico")
+ v = int(load() or 0)
+ v2 = int(load2() or 1)
+ v3 = int(load3() or 0)
+ v4 = int(load4() or 0)
+ menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
+ image = Image.open(icon_path)
+ icon = pystray.Icon("icon", image, "轻量记事本", menu)
 
-window2 = None
-windnd.hook_dropfiles(root,func=i)
-root.protocol('WM_DELETE_WINDOW', on_exit)
-threading.Thread(target=icon.run, daemon=True).start()
-root.mainloop()
+ root = tk.Tk()
+ root.title("轻量记事本")
+ root.iconbitmap(icon_path)
+ font_style1 = tkFont.Font(family="宋体", size=12)
+ font_style2 = tkFont.Font(family="等线", size=12)
+ font_style3 = tkFont.Font(family="黑体", size=12)
+ font_style = None
+
+ if v2 % 2 == 1:
+    font_style = font_style1
+ elif v3 % 2 == 1:
+    font_style = font_style2
+ elif v4 % 2 == 1:
+    font_style = font_style3
+    
+ ctypes.windll.shcore.SetProcessDpiAwareness(1)
+ ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
+ root.tk.call('tk', 'scaling', ScaleFactor / 75)
+ style = ttk.Style()
+ current_theme = load_theme()
+ if current_theme in style.theme_names():
+    style.theme_use(current_theme)
+ 下拉菜单组 = ["保存", "设置","小工具"]
+ 下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
+ 下拉框.grid(row=0, column=0, sticky="e",pady=5)
+ 下拉框.bind("<Button-3>", 下拉框事件)
+ 下拉框.set("保存")
+ scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
+ scrollbar.grid(row=1, column=1, sticky="ns")
+ text_widget = tk.Text(root, wrap="word",
+                          yscrollcommand=scrollbar.set, font=font_style)
+ text_widget.grid(row=1, column=0, sticky="nsew")
+ text_widget.tag_configure("found", background="yellow")
+ t=text_widget.get("1.0",tk.END)
+ text_widget.focus_set()
+ w = ttk.Frame(root)
+ w.grid(row=2,column=0,sticky=E)
+ b1 = ttk.Button(w, text="分离控制", bootstyle="link", command=x)
+ b1.pack(padx=5,pady=5,side='left')
+ b2 = ttk.Button(w, text="下一页", bootstyle="link", command=next_page)
+ b2.pack(padx=5,pady=5,side='right')
+ b3 = ttk.Button(w, text="上一页", bootstyle="link", command=x)
+ b3.pack(padx=5,pady=5, side='right')
+ window2 = None
+ windnd.hook_dropfiles(root,func=i)
+ root.protocol('WM_DELETE_WINDOW', on_exit)
+ threading.Thread(target=icon.run, daemon=True).start()
+ root.bind("<Shift_L> ", a)
+ root.bind("<Control_L>", lambda event: b())
+ root.bind("<Control-f> ", lambda event:toggle_window())
+ scrollbar.config(command=text_widget.yview)
+ root.grid_rowconfigure(1, weight=1)
+ root.grid_columnconfigure(0, weight=1)
+ index_ = 0
+
+ try:
+    if v % 2 == 1:
+        text_widget.delete('1.0', tk.END)
+        with open(a_path, 'r',encoding='utf-8') as f:
+            data = f.read()
+            text_widget.insert(tk.END, data)
+ except:
+    pass
+ root.mainloop()
