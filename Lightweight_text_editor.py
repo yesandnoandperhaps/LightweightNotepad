@@ -398,23 +398,36 @@ def i(files):
              data = f.read()
              text_widget.insert(tk.END, data)
      else:
-         window = tk.Toplevel(root)
-         window.attributes("-topmost", 1)
-         root.attributes("-disabled", 1)
-         window.title("导入")
-         window.iconbitmap(icon_path)
-         lbl = ttk.Label(window, text="正在导入文件")
-         lbl.pack(side='top',anchor='center')
-         progressbarOne = tkinter.ttk.Progressbar(window)
-         progressbarOne.pack(side='top',anchor='center',fill=X)
-         progressbarOne['maximum'] = 100
-         progressbarOne['value'] = 0
-         for i in range(100):
-             # 每次更新加1
-             progressbarOne['value'] = i + 1
-             # 更新画面
-             window.update()
-             time.sleep(0.05)
+         filename = os.path.basename(msg)
+         with open(msg, 'r',encoding='utf-8') as f:
+             with open(filename, 'rb') as f:
+                 index = 0
+                 while True:
+                     f.seek(index * 10 * 1024 * 1024)
+                     data = f.read(10 * 1024 * 1024)
+                     if not data:
+                         folder = os.path.join(p, "text-temp")
+                         try:
+                            os.mkdir("text-temp")
+                         except:
+                            shutil.rmtree(folder)
+                            os.mkdir("text-temp")
+                         index -= 1
+                         while True:
+                             try:
+                                shutil.move(f'{filename}_{index}', folder)
+                                index -= 1
+                             except:
+                                try:
+                                    os.remove(f'{filename}_{index}')
+                                except:
+                                    pass
+                                break
+                         break
+                     with open(f'{filename}_{index}', 'wb') as f1:
+                         f1.write(data)
+                     index += 1
+
 
 window2 = None
 windnd.hook_dropfiles(root,func=i)
