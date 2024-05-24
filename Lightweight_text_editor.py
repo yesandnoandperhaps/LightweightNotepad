@@ -36,7 +36,10 @@ def save(theme):
     with open(f_path,"w",encoding='utf-8')as f:
         f.write(str(v4))
     with open(h_path,"w",encoding='utf-8')as f:
-        f.write(str(combobox1_get))
+        f.write(combobox1.get())
+    with open(i_path,"w",encoding='utf-8')as f:
+        f.write(combobox2.get())
+
 
 
 def load_theme():
@@ -72,6 +75,12 @@ def load4():
 def load5():
     try:
         with open(h_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+def load6():
+    try:
+        with open(i_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
@@ -163,7 +172,7 @@ def gadget():
 
 
 def root_window():
-    global theme_cbo,combobox1_get
+    global theme_cbo,combobox1,combobox2
     window = ttk.Toplevel()
     window.resizable(0,0)
     def bao_chun(): 
@@ -197,12 +206,37 @@ def root_window():
     consider_checkbutton.grid(column=0,row=0,padx=10,pady=10)
     w5lb1 = ttk.Label(w5,text="大文件定义:")
     w5lb1.grid(column=1,row=0,padx=10,pady=10)
+    w5lb2 = ttk.Label(w5,text="大文件分割:")
+    w5lb2.grid(column=1,row=1,padx=10,pady=10)
+    combobox2_group1 = ["等于大文件定义","5MB","10MB","15MB","30MB"]
     combobox1_group1 = [ "50MB", "70MB", "128MB", "256MB", "512MB"]
     combobox1 = ttk.Combobox(master=w5, values=combobox1_group1)
-    combobox1.grid(row=0, column=1,padx=10,pady=10)
-    combobox1.bind("<Button-3>", 下拉框事件)
+    combobox1.grid(row=0, column=2,padx=10,pady=10)
     combobox1.set("70MB")
-    combobox1_get = combobox1.get()
+    if _size_ == ("70MB"):
+        combobox1.set("70MB")
+    elif _size_ == ("50MB"):
+        combobox1.set("50MB")
+    elif _size_ == ("128MB"):
+        combobox1.set("128MB")
+    elif _size_ == ("256MB"):
+        combobox1.set("256MB")
+    elif _size_ == ("512MB"):
+        combobox1.set("512MB")
+    
+    combobox2 = ttk.Combobox(master=w5, values=combobox2_group1)
+    combobox2.grid(row=1, column=2,padx=10,pady=10)
+    combobox2.set("等于大文件定义")
+    if divide_up == ("等于大文件定义"):
+        combobox2.set("等于大文件定义")
+    elif divide_up == ("5MB"):
+        combobox2.set("5MB")
+    elif divide_up == ("10MB"):
+        combobox2.set("10MB")
+    elif divide_up == ("15MB"):
+        combobox2.set("15MB")
+    elif divide_up == ("30MB"):
+        combobox2.set("30MB")
     style = ttk.Style()
     theme_names = style.theme_names()
 
@@ -270,7 +304,7 @@ def on_exit():
 
 def 前_下拉框事件():
         if 下拉框.get() == "保存":
-            save_2()
+            save_t()
         elif 下拉框.get() == "设置":
             root_window()
         elif 下拉框.get() == "小工具":
@@ -361,16 +395,12 @@ def save_2():
             shutil.copy(a_path, file_path)
 def read(filename, msg):
     def read_and_split():
-        global index,index_
-        # 获取系统内存信息
-        mem = psutil.virtual_memory()
-        # 获取总物理内存
-        total_memory = mem.total
+        global index,index_,t_size
         with open(filename, 'r',encoding='utf-8',errors = 'ignore') as f:
             index = 0
             while True:
-                f.seek(index * 52428800)
-                data = f.read(52428800)
+                f.seek(index * t_divide_up)
+                data = f.read(t_divide_up)
                 if not data:
                     folder = os.path.join(p, "text-temp")
                     try:
@@ -408,19 +438,60 @@ def read(filename, msg):
     thread = threading.Thread(target=read_and_split)
     thread.start()
 
+def save_tf():
+    def save_tt():
+        folder = os.path.join(p, "text-temp")
+        filename_ = os.path.join(folder, f'{filename}')
+        index = 0
+        while True:
+            try:
+                folder_t = (folder + "\\" + f'{filename}_{index}')
+                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
+                    a = f.read()
+                with open(filename_,'a',encoding='utf-8',errors = 'ignore') as f:
+                    f.write(a)
+                    index += 1
+            except:
+                icon.notify("文件已成功保存", "Lightweight text editor")
+                break
+    thread = threading.Thread(target=save_tt)
+    thread.start()
+
+def save_t():
+    size = os.path.getsize(msg)
+    filename = os.path.basename(msg)
+    if os.path.exists(msg):
+        if size < t_size:
+            with open(msg, 'w', encoding='utf-8') as f:
+                lines = text_widget.get("1.0","end")
+                f.writelines(lines)
+                icon.notify("文件已成功保存", "Lightweight text editor")
+        else:
+            if index_ ==  1:
+                folder = os.path.join(p, "text-temp")
+                folder_t = (folder + "\\" + f'{filename}_{index}')
+                with open(folder_t, 'w',encoding='utf-8') as f:
+                    lines = text_widget.get("1.0","end")
+                    f.writelines(lines)
+                    save_tf()
+            else:
+                pass
+    else:
+        save_2()
+                
 def i(files):
-    global progressbarOne,window3,filename
+    global progressbarOne,window3,filename,t_size,msg
     msg = '\n'.join((item.decode('gbk') for item in files))
     filename = os.path.basename(msg)
     size = os.path.getsize(msg)
     
-    if size < 73400320:
+    if size < t_size:
         with open(msg, 'r', encoding='utf-8') as f:
             data = f.read()
             text_widget.insert(tk.END, data)
     else:
         size = os.path.getsize(msg)
-        division = size//52428800
+        division = size//t_divide_up
         window3 = tk.Toplevel(root)
         window3.title("导入")
         window3.resizable(0, 0)
@@ -432,7 +503,7 @@ def i(files):
         lbl = ttk.Label(window3, text="正在导入中").pack(padx=5,pady=5)
         def on2():
             messagebox.showerror("错误", message="导入过程中，请勿退出",parent=window3)
-        progressbarOne = tkinter.ttk.Progressbar(window3)
+        progressbarOne = tkinter.ttk.Progressbar(window3,bootstyle="striped")
         progressbarOne.pack(pady=5,fill=X)
         progressbarOne['maximum'] = division
         progressbarOne['value'] = 0
@@ -440,21 +511,70 @@ def i(files):
         read(filename, msg)
         window3.mainloop()
         
-
 def next_page():
     global index,index_
     if index_ ==  1:
-        index += 1
-        folder = os.path.join(p, "text-temp")
-        folder_t = (folder + "\\" + f'{filename}_{index}')
-        with open(folder_t, 'r',encoding='utf-8') as f:
-            text_widget.delete('1.0', tk.END)
-            a = f.read()
-            text_widget.insert(tk.END, a)
+        try:
+         index += 1
+         folder = os.path.join(p, "text-temp")
+         folder_t = (folder + "\\" + f'{filename}_{index}')
+         with open(folder_t, 'r',encoding='utf-8') as f:
+             text_widget.delete('1.0', tk.END)
+             a = f.read()
+             text_widget.insert(tk.END, a)
+        except:
+            messagebox.showerror("错误", message="已经是尾页",parent=root)
+            index -= 1
+            folder = os.path.join(p, "text-temp")
+            folder_t = (folder + "\\" + f'{filename}_{index}')
+            with open(folder_t, 'r',encoding='utf-8') as f:
+             text_widget.delete('1.0', tk.END)
+             a = f.read()
+             text_widget.insert(tk.END, a)
     else:
-        messagebox.showerror("错误", message="仅限大于50M的text文本文件进行此操作",parent=root)
-    
+        messagebox.showerror("错误", message="仅限大文件操作",parent=root)
+
+def return_page():
+    global index,index_
+    if index_ ==  1:
+        try:
+         index -= 1
+         folder = os.path.join(p, "text-temp")
+         folder_t = (folder + "\\" + f'{filename}_{index}')
+         with open(folder_t, 'r',encoding='utf-8') as f:
+             text_widget.delete('1.0', tk.END)
+             a = f.read()
+             text_widget.insert(tk.END, a)
+        except:
+            messagebox.showerror("错误", message="已经是首页",parent=root)
+            index += 1
+            folder = os.path.join(p, "text-temp")
+            folder_t = (folder + "\\" + f'{filename}_{index}')
+            with open(folder_t, 'r',encoding='utf-8') as f:
+             text_widget.delete('1.0', tk.END)
+             a = f.read()
+             text_widget.insert(tk.END, a)
+    else:
+        messagebox.showerror("错误", message="仅限大文件操作",parent=root)
+def sever():
+    w.grid_forget()
+    window = tk.Toplevel(root)
+    window.title("分离控制")
+    window.resizable(0, 0)
+    window.iconbitmap(icon_path)
+    window.minsize(400, 50)
+    window.maxsize(400, 50)
+    b2 = ttk.Button(window, text="下一页", bootstyle="link", command=next_page)
+    b2.pack(padx=5,pady=5,side='right')
+    b3 = ttk.Button(window, text="上一页", bootstyle="link", command=return_page)
+    b3.pack(padx=5,pady=5, side='left')
+    def on2():
+        window.destroy()
+        w.grid(row=2,column=0,sticky=E)
+    window.protocol("WM_DELETE_WINDOW", on2)
+    window.mainloop()
 if __name__ == '__main__':
+ global t_size
  p = os.path.dirname(__file__)
  a_path = os.path.join(p, "a")
  b_path = os.path.join(p, "b")
@@ -463,16 +583,18 @@ if __name__ == '__main__':
  e_path = os.path.join(p, "e")
  f_path = os.path.join(p, "f")
  h_path = os.path.join(p, "h")
+ i_path = os.path.join(p, "i")
  icon_path = os.path.join(p, "aaa.ico")
  v = int(load() or 0)
  v2 = int(load2() or 1)
  v3 = int(load3() or 0)
  v4 = int(load4() or 0)
  _size_ = (load5() or "70MB")
+ divide_up = (load6() or "等于大文件定义")
+
  menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
  image = Image.open(icon_path)
  icon = pystray.Icon("icon", image, "轻量记事本", menu)
-
  root = tk.Tk()
  root.title("轻量记事本")
  root.iconbitmap(icon_path)
@@ -480,14 +602,86 @@ if __name__ == '__main__':
  font_style2 = tkFont.Font(family="等线", size=12)
  font_style3 = tkFont.Font(family="黑体", size=12)
  font_style = None
-
+ t_size = 0
+ t_divide_up = 0
  if v2 % 2 == 1:
     font_style = font_style1
  elif v3 % 2 == 1:
     font_style = font_style2
  elif v4 % 2 == 1:
     font_style = font_style3
-    
+
+ if _size_ == ("70MB"):
+     if divide_up == ("等于大文件定义"):
+        t_divide_up = 73400320
+        t_size = 73400320
+     else:
+        t_size = 73400320
+        if divide_up == ("5MB"):
+            t_divide_up = 5242880
+        elif divide_up == ("10MB"):
+            t_divide_up = 10485760
+        elif divide_up == ("15MB"):
+            t_divide_up = 15728640 
+        elif divide_up == ("30MB"):
+            t_divide_up = 31457280
+ elif _size_ == ("50MB"):
+     if divide_up == ("等于大文件定义"):
+        t_divide_up = 52428800
+        t_size = 52428800
+     else:
+        t_size = 52428800
+        if divide_up == ("5MB"):
+            t_divide_up = 5242880
+        elif divide_up == ("10MB"):
+            t_divide_up = 10485760
+        elif divide_up == ("15MB"):
+            t_divide_up = 15728640 
+        elif divide_up == ("30MB"):
+            t_divide_up = 31457280
+ elif _size_ == ("128MB"):
+     if divide_up == ("等于大文件定义"):
+        t_divide_up = 134217728
+        t_size = 134217728
+     else:
+        t_size = 134217728
+        if divide_up == ("5MB"):
+            t_divide_up = 5242880
+        elif divide_up == ("10MB"):
+            t_divide_up = 10485760
+        elif divide_up == ("15MB"):
+            t_divide_up = 15728640 
+        elif divide_up == ("30MB"):
+            t_divide_up = 31457280
+ elif _size_ == ("256MB"):
+     if divide_up == ("等于大文件定义"):
+        t_divide_up = 268435456
+        t_size = 268435456
+     else:
+        t_size = 268435456
+        if divide_up == ("5MB"):
+            t_divide_up = 5242880
+        elif divide_up == ("10MB"):
+            t_divide_up = 10485760
+        elif divide_up == ("15MB"):
+            t_divide_up = 15728640 
+        elif divide_up == ("30MB"):
+            t_divide_up = 31457280
+ elif _size_ == ("512MB"):
+     if divide_up == ("等于大文件定义"):
+        t_divide_up = 536870912
+        t_size = 536870912
+     else:
+        t_size = 536870912
+        if divide_up == ("5MB"):
+            t_divide_up = 5242880
+        elif divide_up == ("10MB"):
+            t_divide_up = 10485760
+        elif divide_up == ("15MB"):
+            t_divide_up = 15728640 
+        elif divide_up == ("30MB"):
+            t_divide_up = 31457280
+ 
  ctypes.windll.shcore.SetProcessDpiAwareness(1)
  ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
  root.tk.call('tk', 'scaling', ScaleFactor / 75)
@@ -510,11 +704,11 @@ if __name__ == '__main__':
  text_widget.focus_set()
  w = ttk.Frame(root)
  w.grid(row=2,column=0,sticky=E)
- b1 = ttk.Button(w, text="分离控制", bootstyle="link", command=x)
+ b1 = ttk.Button(w, text="分离控制", bootstyle="link", command=sever)
  b1.pack(padx=5,pady=5,side='left')
  b2 = ttk.Button(w, text="下一页", bootstyle="link", command=next_page)
  b2.pack(padx=5,pady=5,side='right')
- b3 = ttk.Button(w, text="上一页", bootstyle="link", command=x)
+ b3 = ttk.Button(w, text="上一页", bootstyle="link", command=return_page)
  b3.pack(padx=5,pady=5, side='right')
  window2 = None
  windnd.hook_dropfiles(root,func=i)
