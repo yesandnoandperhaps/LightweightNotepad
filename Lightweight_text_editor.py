@@ -611,10 +611,12 @@ def sever():
     b2 = ttk.Button(window, text="下一页", bootstyle="link", command=next_page)
     b2.pack(padx=5,pady=5,side='right')
     b3 = ttk.Button(window, text="上一页", bootstyle="link", command=return_page)
-    b3.pack(padx=5,pady=5, side='left')
+    b3.pack(padx=5,pady=5, side='right')
     def on2():
         window.destroy()
         w.grid(row=2,column=0,sticky=E)
+    b4 = ttk.Button(window, text="取消分离", bootstyle="link", command=on2)
+    b4.pack(padx=5,pady=5,side='left')
     window.protocol("WM_DELETE_WINDOW", on2)
     window.mainloop()
 if __name__ == '__main__':
