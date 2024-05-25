@@ -419,16 +419,24 @@ def read(filename, msg):
                             try:
                                 os.remove(f'{filename}_{index}')
                             except:
-                                window3.destroy()
-                                root.attributes("-disabled", 0)
                                 index = 0
                                 index_ = 1
                                 folder_t = (folder + "\\" + f'{filename}_{index}')
+                                
+                                size = os.path.getsize(msg)
+                                division = size//t_divide_up
+                                division08=division*0.1
+                                progressbarOne['value'] -= division08
+                                
                                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
-                                 a = f.read()
-                                 text_widget.insert(tk.END, a)
+                                    a = f.read()
+                                    progressbarOne['value'] += division08
+                                    window3.destroy()
+                                    root.attributes("-disabled", 0)
+                                    text_widget.insert(tk.END, a)
                             break
                     break
+
                 with open(f'{filename}_{index}', 'w',encoding='utf-8',errors = 'ignore') as f1:
                     f1.write(str(data))
                 index += 1
@@ -438,29 +446,64 @@ def read(filename, msg):
     thread = threading.Thread(target=read_and_split)
     thread.start()
 
-def save_tf():
-    def save_tt():
-        folder = os.path.join(p, "text-temp")
-        filename_ = os.path.join(folder, f'{filename}')
-        index = 0
-        while True:
-            try:
-                folder_t = (folder + "\\" + f'{filename}_{index}')
-                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
-                    a = f.read()
-                with open(filename_,'a',encoding='utf-8',errors = 'ignore') as f:
-                    f.write(a)
-                    index += 1
-            except:
-                icon.notify("文件已成功保存", "Lightweight text editor")
-                break
-    thread = threading.Thread(target=save_tt)
-    thread.start()
+def save_ff():
+
+    global progressbarOne2
+
+    def save_tf():
+     
+     def save_tt():
+         folder = os.path.join(p, "text-temp")
+         filename_ = os.path.join(folder, f'{filename}')
+         index = 0
+         while True:
+             try:
+                 folder_t = (folder + "\\" + f'{filename}_{index}')
+                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
+                     a = f.read()
+                     index += 1
+                 with open(filename_,'a',encoding='utf-8',errors = 'ignore') as f:
+                     f.write(a)
+                     progressbarOne2['value'] += 1
+             except:
+                 index -= 1
+                 print(index)
+                 division08=division*0.1
+                 progressbarOne2['value'] -= division08
+                 shutil.copy(filename_, msg)
+                 progressbarOne2['value'] += division08
+                 window4.destroy()
+                 root.attributes("-disabled", 0)
+                 icon.notify("文件已成功保存", "Lightweight text editor")
+                 break
+     thread = threading.Thread(target=save_tt)
+     thread.start()
+    size = os.path.getsize(msg)
+    division = size//t_divide_up
+    window4 = tk.Toplevel(root)
+    window4.title("保存")
+    window4.resizable(0, 0)
+    window4.iconbitmap(icon_path)
+    window4.minsize(400, 50)
+    window4.maxsize(400, 50)
+    window4.wm_attributes("-topmost", True)
+    root.attributes("-disabled", 1)
+    lbl = ttk.Label(window4, text="正在保存中").pack(padx=5,pady=5)
+    def on2():
+        messagebox.showerror("错误", message="正在保存中，请勿退出",parent=window4)
+    progressbarOne2 = tkinter.ttk.Progressbar(window4,bootstyle="striped")
+    progressbarOne2.pack(pady=5,fill=X)
+    progressbarOne2['maximum'] = division
+    progressbarOne2['value'] = 0
+    window4.protocol("WM_DELETE_WINDOW", on2)
+    save_tf()
+    window4.mainloop()
 
 def save_t():
-    size = os.path.getsize(msg)
-    filename = os.path.basename(msg)
-    if os.path.exists(msg):
+    try:
+     size = os.path.getsize(msg)
+     filename = os.path.basename(msg)
+     if os.path.exists(msg):
         if size < t_size:
             with open(msg, 'w', encoding='utf-8') as f:
                 lines = text_widget.get("1.0","end")
@@ -473,12 +516,13 @@ def save_t():
                 with open(folder_t, 'w',encoding='utf-8') as f:
                     lines = text_widget.get("1.0","end")
                     f.writelines(lines)
-                    save_tf()
+                    save_ff()
             else:
                 pass
-    else:
+     else:
         save_2()
-                
+    except:
+        save_2()          
 def i(files):
     global progressbarOne,window3,filename,t_size,msg
     msg = '\n'.join((item.decode('gbk') for item in files))
