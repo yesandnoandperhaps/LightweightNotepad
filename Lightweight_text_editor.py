@@ -23,6 +23,7 @@ import time
 import multiprocessing
 import threading
 import psutil
+import re
 
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
@@ -39,8 +40,10 @@ def save(theme):
         f.write(combobox1.get())
     with open(i_path,"w",encoding='utf-8')as f:
         f.write(combobox2.get())
-
-
+    with open(j_path,"w",encoding="utf-8")as f:
+        f.write(combobox0.get()) 
+    with open(k_path,"w",encoding="utf-8")as f:
+        f.write(combobox3.get()) 
 
 def load_theme():
     try:
@@ -81,6 +84,18 @@ def load5():
 def load6():
     try:
         with open(i_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+def load7():
+    try:
+        with open(j_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+def load8():
+    try:
+        with open(k_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
@@ -172,7 +187,7 @@ def gadget():
 
 
 def root_window():
-    global theme_cbo,combobox1,combobox2
+    global theme_cbo,combobox1,combobox2,combobox0,combobox3
     window = ttk.Toplevel()
     window.resizable(0,0)
     def bao_chun(): 
@@ -204,14 +219,20 @@ def root_window():
     consider_checkbutton = ttk.Checkbutton(
         w3, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
     consider_checkbutton.grid(column=0,row=0,padx=10,pady=10)
+    w5lb0 = ttk.Label(w5,text="区分文件:")
+    w5lb0.grid(column=1,row=0,padx=10,pady=10)
+    w5lb3 = ttk.Label(w5,text="文件循环导入值:")
+    w5lb3.grid(column=1,row=1,padx=10,pady=10)
     w5lb1 = ttk.Label(w5,text="大文件定义:")
-    w5lb1.grid(column=1,row=0,padx=10,pady=10)
+    w5lb1.grid(column=1,row=2,padx=10,pady=10)
     w5lb2 = ttk.Label(w5,text="大文件分割:")
-    w5lb2.grid(column=1,row=1,padx=10,pady=10)
+    w5lb2.grid(column=1,row=3,padx=10,pady=10)
     combobox2_group1 = ["等于大文件定义","5MB","10MB","15MB","30MB"]
     combobox1_group1 = [ "50MB", "70MB", "128MB", "256MB", "512MB"]
+    combobox0_group1 = ["开启","关闭"]
+    combobox3_group1 = ["5MB","10MB","30MB","50MB","70MB", "128MB", "256MB", "512MB"]
     combobox1 = ttk.Combobox(master=w5, values=combobox1_group1)
-    combobox1.grid(row=0, column=2,padx=10,pady=10)
+    combobox1.grid(row=2, column=2,padx=10,pady=10)
     combobox1.set("70MB")
     if _size_ == ("70MB"):
         combobox1.set("70MB")
@@ -225,7 +246,7 @@ def root_window():
         combobox1.set("512MB")
     
     combobox2 = ttk.Combobox(master=w5, values=combobox2_group1)
-    combobox2.grid(row=1, column=2,padx=10,pady=10)
+    combobox2.grid(row=3, column=2,padx=10,pady=10)
     combobox2.set("等于大文件定义")
     if divide_up == ("等于大文件定义"):
         combobox2.set("等于大文件定义")
@@ -237,6 +258,38 @@ def root_window():
         combobox2.set("15MB")
     elif divide_up == ("30MB"):
         combobox2.set("30MB")
+
+    combobox0 = ttk.Combobox(master=w5, values=combobox0_group1)
+    combobox0.grid(row=0, column=2,padx=10,pady=10)
+    combobox0.set("开启")
+
+    if onandoff == ("开启"):
+        combobox0.set("开启")
+    elif onandoff == ("关闭"):
+        combobox0.set("关闭")
+
+    combobox3 = ttk.Combobox(master=w5, values=combobox3_group1)
+    combobox3.grid(row=1, column=2,padx=10,pady=10)
+    combobox3.set("30MB")
+
+    match circular:
+        case "5MB":
+            combobox3.set("5MB")
+        case "10MB":
+            combobox3.set("10MB")
+        case "30MB":
+            combobox3.set("30MB")
+        case "50MB":
+            combobox3.set("50MB")
+        case "70MB":
+            combobox3.set("70MB")
+        case "128MB":
+            combobox3.set("128MB")
+        case "256MB":
+            combobox3.set("256MB")
+        case "512MB":
+            combobox3.set("512MB")
+
     style = ttk.Style()
     theme_names = style.theme_names()
 
@@ -384,6 +437,7 @@ def toggle_window():
         two_window()
 
 def save_2():
+    def save_2t():
         file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
             ("Text files", "*.txt"), ("All files", "*.*")])
         
@@ -393,10 +447,15 @@ def save_2():
 
         if file_path:
             shutil.copy(a_path, file_path)
+
+    thread = threading.Thread(target=save_2t)
+    thread.start()
+        
+
 def read(filename, msg):
     def read_and_split():
         global index,index_,t_size
-        with open(filename, 'r',encoding='utf-8',errors = 'ignore') as f:
+        with open(msg, 'r',encoding='utf-8',errors = 'ignore') as f:
             index = 0
             while True:
                 f.seek(index * t_divide_up)
@@ -431,9 +490,9 @@ def read(filename, msg):
                                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
                                     a = f.read()
                                     progressbarOne['value'] += division08
+                                    text_widget.insert(tk.END, a)
                                     window3.destroy()
                                     root.attributes("-disabled", 0)
-                                    text_widget.insert(tk.END, a)
                             break
                     break
 
@@ -523,6 +582,7 @@ def save_t():
         save_2()
     except:
         save_2()          
+
 def i(files):
     global progressbarOne,window3,filename,t_size,msg
     msg = '\n'.join((item.decode('gbk') for item in files))
@@ -533,6 +593,26 @@ def i(files):
         with open(msg, 'r', encoding='utf-8') as f:
             data = f.read()
             text_widget.insert(tk.END, data)
+
+    elif onandoff == ("关闭"):
+        
+        def save_ttt():
+            icon.notify("正在导入文件，不建议操作当前窗口", "Lightweight text editor")
+            with open(msg, 'r', encoding='utf-8') as f:
+                
+                while True:
+
+                    data = f.readlines(circular_num)
+
+                    if not data:
+                        icon.notify("导入成功", "Lightweight text editor")
+                        break
+
+                    text_widget.insert(tk.END, ''.join(data))
+                    
+        thread = threading.Thread(target=save_ttt)
+        thread.start()
+            
     else:
         size = os.path.getsize(msg)
         division = size//t_divide_up
@@ -620,7 +700,7 @@ def sever():
     window.protocol("WM_DELETE_WINDOW", on2)
     window.mainloop()
 if __name__ == '__main__':
- global t_size
+ global t_size,circular_num
  p = os.path.dirname(__file__)
  a_path = os.path.join(p, "a")
  b_path = os.path.join(p, "b")
@@ -630,6 +710,8 @@ if __name__ == '__main__':
  f_path = os.path.join(p, "f")
  h_path = os.path.join(p, "h")
  i_path = os.path.join(p, "i")
+ j_path = os.path.join(p, "j")
+ k_path = os.path.join(p, "k")
  icon_path = os.path.join(p, "aaa.ico")
  v = int(load() or 0)
  v2 = int(load2() or 1)
@@ -637,6 +719,8 @@ if __name__ == '__main__':
  v4 = int(load4() or 0)
  _size_ = (load5() or "70MB")
  divide_up = (load6() or "等于大文件定义")
+ onandoff = (load7() or "开启")
+ circular = (load8() or "30MB")
 
  menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
  image = Image.open(icon_path)
@@ -650,6 +734,7 @@ if __name__ == '__main__':
  font_style = None
  t_size = 0
  t_divide_up = 0
+ circular_num = 31457280
  if v2 % 2 == 1:
     font_style = font_style1
  elif v3 % 2 == 1:
@@ -727,7 +812,27 @@ if __name__ == '__main__':
             t_divide_up = 15728640 
         elif divide_up == ("30MB"):
             t_divide_up = 31457280
- 
+
+ match circular:
+     case "5MB":
+         circular_num = 5242880
+     case "10MB":
+         circular_num = 10485760
+     case "30MB":
+         circular_num = 31457280
+     case "50MB":
+         circular_num = 52428800
+     case "70MB":
+         circular_num = 73400320
+     case "128MB":
+         circular_num = 134217728
+     case "256MB":
+         circular_num = 268435456
+     case "512MB":
+         circular_num = 536870912
+     case _:
+         circular_num = 31457280
+
  ctypes.windll.shcore.SetProcessDpiAwareness(1)
  ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
  root.tk.call('tk', 'scaling', ScaleFactor / 75)
