@@ -36,6 +36,10 @@ def save(theme):
         f.write(str(v3))
     with open(f_path,"w",encoding='utf-8')as f:
         f.write(str(v4))
+    with open(l_path,"w",encoding='utf-8')as f:
+        f.write(str(v5))
+    with open(m_path,"w",encoding='utf-8')as f:
+        f.write(str(v6))
     with open(h_path,"w",encoding='utf-8')as f:
         f.write(combobox1.get())
     with open(i_path,"w",encoding='utf-8')as f:
@@ -99,6 +103,18 @@ def load8():
             return f.read()
     except FileNotFoundError:
         pass
+def load9():
+    try:
+        with open(l_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+def load10():
+    try:
+        with open(m_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
 def s():
     global v
     v = v + 1
@@ -111,6 +127,12 @@ def s3():
 def s4():
     global v4
     v4 = v4+1
+def s5():
+    global v5
+    v5 = v5+1
+def s6():
+    global v6
+    v6 = v6+1
 
 
 def x():
@@ -167,6 +189,7 @@ def x():
             shutil.copy(g_path, file_path)
 
     window.mainloop()
+
 def gadget():
         
     def z():
@@ -187,162 +210,241 @@ def gadget():
 
 
 def root_window():
-    global theme_cbo,combobox1,combobox2,combobox0,combobox3
+    
     window = ttk.Toplevel()
     window.resizable(0,0)
-    def bao_chun(): 
-        global v2,v3,v4
-        p1=v2%2
-        p2=v3%2
-        p3=v4%2
-        if p1+p2+p3==1:
-            save(theme_cbo.get())    
-        else:
-            messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
     window.title("轻量记事本-设置")
     window.iconbitmap(icon_path)
-    window_Button_two = ttk.Button(
-        window, text="返回", bootstyle="outline", command=window.destroy)
-    window_Button_two.grid(column=4,row=0,padx=10,pady=10)
-    window_Button = ttk.Button(
-        window, text="保存当前设置", bootstyle="outline", command=bao_chun)
-    window_Button.grid(column=3,row=0,padx=10,pady=10)
-    w3 = ttk.Frame(window)
-    w3.grid(row=3,column=1,sticky=W)
-    w5 = ttk.Frame(window)
-    w5.grid(row=4,column=1,sticky=W)
-    consider_var = ttk.IntVar()
-    if v % 2 == 1:
-        consider_var.set(1)
-    else:
-        consider_var.set(0)
-    consider_checkbutton = ttk.Checkbutton(
-        w3, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
-    consider_checkbutton.grid(column=0,row=0,padx=10,pady=10)
-    w5lb0 = ttk.Label(w5,text="区分文件:")
-    w5lb0.grid(column=1,row=0,padx=10,pady=10)
-    w5lb3 = ttk.Label(w5,text="文件循环导入值:")
-    w5lb3.grid(column=1,row=1,padx=10,pady=10)
-    w5lb1 = ttk.Label(w5,text="大文件定义:")
-    w5lb1.grid(column=1,row=2,padx=10,pady=10)
-    w5lb2 = ttk.Label(w5,text="大文件分割:")
-    w5lb2.grid(column=1,row=3,padx=10,pady=10)
-    combobox2_group1 = ["等于大文件定义","5MB","10MB","15MB","30MB"]
-    combobox1_group1 = [ "50MB", "70MB", "128MB", "256MB", "512MB"]
-    combobox0_group1 = ["开启","关闭"]
-    combobox3_group1 = ["5MB","10MB","30MB","50MB","70MB", "128MB", "256MB", "512MB"]
-    combobox1 = ttk.Combobox(master=w5, values=combobox1_group1)
-    combobox1.grid(row=2, column=2,padx=10,pady=10)
-    combobox1.set("70MB")
-    if _size_ == ("70MB"):
-        combobox1.set("70MB")
-    elif _size_ == ("50MB"):
-        combobox1.set("50MB")
-    elif _size_ == ("128MB"):
-        combobox1.set("128MB")
-    elif _size_ == ("256MB"):
-        combobox1.set("256MB")
-    elif _size_ == ("512MB"):
-        combobox1.set("512MB")
+
+    def w_root1():
+
+        global theme_cbo
+
+        def bao_chun(): 
+            global v2,v3,v4
+            p1=v2%2
+            p2=v3%2
+            p3=v4%2
+            if p1+p2+p3==1:
+                save(theme_cbo.get())    
+            else:
+                messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
+        
+        def change_theme(event):
+            theme_cbo_value = theme_cbo.get()
+            style.theme_use(theme_cbo_value)
+            theme_cbo.selection_clear()
+        
+        w_ = ttk.Frame(window)
+        w_.grid(row=0,column=0,sticky=W)
+        
+        lbl = ttk.Label(w_, text="选择主题:")
+        lbl.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
     
-    combobox2 = ttk.Combobox(master=w5, values=combobox2_group1)
-    combobox2.grid(row=3, column=2,padx=10,pady=10)
-    combobox2.set("等于大文件定义")
-    if divide_up == ("等于大文件定义"):
-        combobox2.set("等于大文件定义")
-    elif divide_up == ("5MB"):
-        combobox2.set("5MB")
-    elif divide_up == ("10MB"):
-        combobox2.set("10MB")
-    elif divide_up == ("15MB"):
-        combobox2.set("15MB")
-    elif divide_up == ("30MB"):
-        combobox2.set("30MB")
+        lb2 = ttk.Label(w_, text="选择字体:")
+        lb2.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
 
-    combobox0 = ttk.Combobox(master=w5, values=combobox0_group1)
-    combobox0.grid(row=0, column=2,padx=10,pady=10)
-    combobox0.set("开启")
+        window_Button_two = ttk.Button(w_, text="返回", bootstyle="outline", command=window.destroy)
+        window_Button_two.grid(column=4,row=0,padx=10,pady=10)
+        window_Button = ttk.Button(w_, text="保存当前设置", bootstyle="outline", command=bao_chun)
+        window_Button.grid(column=3,row=0,padx=10,pady=10)
 
-    if onandoff == ("开启"):
-        combobox0.set("开启")
-    elif onandoff == ("关闭"):
-        combobox0.set("关闭")
+        w2 = ttk.Frame(w_)
+        w2.grid(row=1,column=1,sticky=W)
 
-    combobox3 = ttk.Combobox(master=w5, values=combobox3_group1)
-    combobox3.grid(row=1, column=2,padx=10,pady=10)
-    combobox3.set("30MB")
+        consider_var_2 = ttk.IntVar()
+        if v2 % 2 == 1:
+            consider_var_2.set(1)
+        else:
+            consider_var_2.set(0)
+        consider_checkbutton2 = ttk.Checkbutton(w2, text="宋体", variable=consider_var_2, command=s2, bootstyle="round-toggle")
+        consider_checkbutton2.grid(column=1,row=1,padx=10,pady=10)
 
-    match circular:
-        case "5MB":
-            combobox3.set("5MB")
-        case "10MB":
-            combobox3.set("10MB")
-        case "30MB":
-            combobox3.set("30MB")
-        case "50MB":
-            combobox3.set("50MB")
-        case "70MB":
-            combobox3.set("70MB")
-        case "128MB":
-            combobox3.set("128MB")
-        case "256MB":
-            combobox3.set("256MB")
-        case "512MB":
-            combobox3.set("512MB")
+        consider_var_3 = ttk.IntVar()
+        if v3 % 2 == 1:
+            consider_var_3.set(1)
+        else:
+            consider_var_3.set(0)
+        consider_checkbutton3 = ttk.Checkbutton(w2, text="等线", variable=consider_var_3, command=s3, bootstyle="round-toggle")
+        consider_checkbutton3.grid(column=2,row=1,padx=10,pady=10)
 
-    style = ttk.Style()
-    theme_names = style.theme_names()
+        consider_var_4 = ttk.IntVar()
+        if v4 % 2 == 1:
+            consider_var_4.set(1)
+        else:
+            consider_var_4.set(0)
+        consider_checkbutton4 = ttk.Checkbutton(w2, text="黑体", variable=consider_var_4, command=s4, bootstyle="round-toggle")
+        consider_checkbutton4.grid(column=3,row=1,padx=10,pady=10)
 
-    lbl = ttk.Label(window, text="选择主题:")
-    lbl.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
-    lb2 = ttk.Label(window, text="选择字体:")
-    lb2.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
-    lb3 = ttk.Label(window, text="关联设置:")
-    lb3.grid(column=0,row=3,padx=10,pady=10,ipadx=5)
-    lb4 = ttk.Label(window, text="文件设置:")
-    lb4.grid(column=0,row=4,padx=10,pady=10,ipadx=5)
+        w4 = ttk.Frame(w_)
+        w4.grid(row=0,column=1,sticky=W)
+
+        style = ttk.Style()
+        theme_names = style.theme_names()
+        theme_cbo = ttk.Combobox(master=w4, values=theme_names)
+        theme_cbo.grid(column=1,row=0,padx=10,pady=10)
+        theme_cbo.current(theme_names.index(style.theme_use()))
+        theme_cbo.bind('<<ComboboxSelected>>', change_theme)
+        
+    w_root1()
+    
     sep = Separator(window)
-    sep.grid(column=0, row=2,pady=50)
-    w4 = ttk.Frame(window)
-    w4.grid(row=0,column=1,sticky=W)
-    theme_cbo = ttk.Combobox(master=w4, values=theme_names)
-    theme_cbo.grid(column=1,row=0,padx=10,pady=10)
-    theme_cbo.current(theme_names.index(style.theme_use()))
-    theme_cbo.bind('<<ComboboxSelected>>', change_theme)
-    w2 = ttk.Frame(window)
-    w2.grid(row=1,column=1,sticky=W)
+    sep.grid(column=0, row=1,pady=30,ipadx=300)
+
+    def w_root2():
+        w_2 = ttk.Frame(window)
+        w_2.grid(row=2,column=0,sticky=W)
+        
+        lb3 = ttk.Label(w_2, text="关联设置:")
+        lb3.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
+
+        consider_var = ttk.IntVar()
+        if v % 2 == 1:
+            consider_var.set(1)
+        else:
+            consider_var.set(0)
+        consider_checkbutton = ttk.Checkbutton(w_2, text="是否关联上一次保存的文件", variable=consider_var, command=s, bootstyle="round-toggle")
+        consider_checkbutton.grid(column=1,row=0,padx=10,pady=10)
+
+    w_root2()
     
-    consider_var_2 = ttk.IntVar()
-    if v2 % 2 == 1:
-        consider_var_2.set(1)
-    else:
-        consider_var_2.set(0)
-    consider_checkbutton2 = ttk.Checkbutton(w2, text="宋体", variable=consider_var_2, command=s2, bootstyle="round-toggle")
-    consider_checkbutton2.grid(column=1,row=1,padx=10,pady=10)
+    sep2 = Separator(window)
+    sep2.grid(column=0, row=3,pady=30,ipadx=300)
+    
+    def w_root3():
+        w_3 = ttk.Frame(window)
+        w_3.grid(row=4,column=0,sticky=W)
+        
+        
+        lb4 = ttk.Label(w_3, text="文件设置:")
+        lb4.grid(column=0,row=0,padx=10,pady=10,ipadx=5,sticky=W)
 
-    consider_var_3 = ttk.IntVar()
-    if v3 % 2 == 1:
-        consider_var_3.set(1)
-    else:
-        consider_var_3.set(0)
-    consider_checkbutton3 = ttk.Checkbutton(w2, text="等线", variable=consider_var_3, command=s3, bootstyle="round-toggle")
-    consider_checkbutton3.grid(column=2,row=1,padx=10,pady=10)
+        w5 = ttk.Frame(w_3)
+        w5.grid(row=0,column=1,sticky=W)
 
-    consider_var_4 = ttk.IntVar()
-    if v4 % 2 == 1:
-        consider_var_4.set(1)
-    else:
-        consider_var_4.set(0)
-    consider_checkbutton4 = ttk.Checkbutton(w2, text="黑体", variable=consider_var_4, command=s4, bootstyle="round-toggle")
-    consider_checkbutton4.grid(column=3,row=1,padx=10,pady=10)
+        def combobox():
+            global combobox1,combobox2,combobox0,combobox3
+
+            w5lb0 = ttk.Label(w5,text="区分文件:")
+            w5lb0.grid(column=0,row=0,padx=10,pady=10)
+            w5lb3 = ttk.Label(w5,text="文件循环导入值:")
+            w5lb3.grid(column=0,row=1,padx=10,pady=10)
+            w5lb1 = ttk.Label(w5,text="大文件定义:")
+            w5lb1.grid(column=0,row=2,padx=10,pady=10)
+            w5lb2 = ttk.Label(w5,text="大文件分割:")
+            w5lb2.grid(column=0,row=3,padx=10,pady=10)
+
+            combobox2_group1 = ["等于大文件定义","5MB","10MB","15MB","30MB"]
+            combobox1_group1 = [ "50MB", "70MB", "128MB", "256MB", "512MB"]
+            combobox0_group1 = ["开启","关闭"]
+            combobox3_group1 = ["5MB","10MB","30MB","50MB","70MB", "128MB", "256MB", "512MB"]
+
+            combobox1 = ttk.Combobox(master=w5, values=combobox1_group1)
+            combobox1.grid(row=2, column=2,padx=10,pady=10)
+
+            combobox2 = ttk.Combobox(master=w5, values=combobox2_group1)
+            combobox2.grid(row=3, column=2,padx=10,pady=10)
+
+            combobox0 = ttk.Combobox(master=w5, values=combobox0_group1)
+            combobox0.grid(row=0, column=2,padx=10,pady=10)
+
+            combobox3 = ttk.Combobox(master=w5, values=combobox3_group1)
+            combobox3.grid(row=1, column=2,padx=10,pady=10)
+            combobox0.set("开启")
+            combobox1.set("70MB")
+            combobox2.set("等于大文件定义")
+            combobox3.set("30MB")
+
+            match _size_:
+                case "70MB":
+                    combobox1.set("70MB")
+                case "50MB":
+                    combobox1.set("50MB")
+                case "128MB":
+                    combobox1.set("128MB")
+                case "256MB":
+                    combobox1.set("256MB")
+                case "512MB":
+                    combobox1.set("512MB")
+
+            match divide_up:
+                case "等于大文件定义":
+                    combobox2.set("等于大文件定义")
+                case "5MB":
+                    combobox2.set("5MB")
+                case "10MB":
+                    combobox2.set("10MB")
+                case "15MB":
+                    combobox2.set("15MB")
+                case "30MB":
+                    combobox2.set("30MB")
+
+            match onandoff:
+                case "开启":
+                    combobox0.set("开启")
+                case "关闭":
+                    combobox0.set("关闭")
+
+            match circular:
+                case "5MB":
+                    combobox3.set("5MB")
+                case "10MB":
+                    combobox3.set("10MB")
+                case "30MB":
+                    combobox3.set("30MB")
+                case "50MB":
+                    combobox3.set("50MB")
+                case "70MB":
+                    combobox3.set("70MB")
+                case "128MB":
+                    combobox3.set("128MB")
+                case "256MB":
+                    combobox3.set("256MB")
+                case "512MB":
+                    combobox3.set("512MB")
+        
+        combobox()
+
+    w_root3()
+    
+    sep3 = Separator(window)
+    sep3.grid(column=0, row=5,pady=30,ipadx=300)
+    
+    def w_root4():
+        w_4 = ttk.Frame(window)
+        w_4.grid(row=6,column=0,sticky=W)
+
+        w_4_1 = ttk.Frame(w_4)
+        w_4_1.grid(column=1,row=1,sticky=W)
+
+        lb5 = ttk.Label(w_4, text="小工具设置:")
+        lb5.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
+
+        lb6 = ttk.Label(w_4, text="小六壬:")
+        lb6.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
+
+        consider_var = ttk.IntVar()
+        if v5 % 2 == 1:
+            consider_var.set(1)
+        else:
+            consider_var.set(0)
+        consider_checkbutton = ttk.Checkbutton(w_4_1, text="使用三宫定义", variable=consider_var, command=s5, bootstyle="round-toggle")
+        consider_checkbutton.grid(column=0,row=0,padx=10,pady=10,sticky=W)
+
+        consider_var2 = ttk.IntVar()
+        if v6 % 2 == 1:
+            consider_var2.set(1)
+        else:
+            consider_var2.set(0)
+        consider_checkbutton2 = ttk.Checkbutton(w_4_1, text="不计算吉值", variable=consider_var2, command=s6, bootstyle="round-toggle")
+        consider_checkbutton2.grid(column=0,row=1,padx=10,pady=10,sticky=W)
+    
+    w_root4()
+
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
+    
     window.mainloop()
-
-def change_theme(event):
-    theme_cbo_value = theme_cbo.get()
-    style.theme_use(theme_cbo_value)
-    theme_cbo.selection_clear()
 
 def quit_window(icon: pystray.Icon):
     icon.stop()
@@ -712,11 +814,15 @@ if __name__ == '__main__':
  i_path = os.path.join(p, "i")
  j_path = os.path.join(p, "j")
  k_path = os.path.join(p, "k")
+ l_path = os.path.join(p, "l")
+ m_path = os.path.join(p, "m")
  icon_path = os.path.join(p, "aaa.ico")
  v = int(load() or 0)
  v2 = int(load2() or 1)
  v3 = int(load3() or 0)
  v4 = int(load4() or 0)
+ v5 = int(load9() or 0)
+ v6 = int(load10() or 0)
  _size_ = (load5() or "70MB")
  divide_up = (load6() or "等于大文件定义")
  onandoff = (load7() or "开启")
