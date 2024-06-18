@@ -104,84 +104,199 @@ class num:
         c_num3 = round(-3-c_num1-c_num2, 2)
         return c_num1, c_num2, c_num3
 
-    def L_(self):
-        pbx,pby,pbz = self.L()
-
-    def D_(self):
-        pax,pay,paz = self.D()
-
     def judgment_f(self):
         t_r_d_list = [self.t, self.r, self.d]
         sorted_trd_list = sorted(t_r_d_list)
         listj = [0,1,2,3,4,5]
-        if len(list(set(sorted_trd_list).intersection(set(listj)))) == 3:
 
-            for _ in sorted_trd_list:
-                match _:
-                    case 1:
-                        self.D_()
-                    case 2:
-                        self.L_()
-                    case 3:
-                        self.S_()
+        def compare_list():
+
+            if len(list(set(sorted_trd_list).intersection(set(listj)))) == 3:
+
+                counter = 0
+
+                for _ in sorted_trd_list:
+                    if counter == 0:
+                        match _:
+                            case 1:
+                                pax,pay,paz = self.D()
+                            case 2:
+                                pax,pay,paz = self.L()
+                            case 3:
+                                pax,pay,paz = self.S()
+                            case 4:
+                                pax,pay,paz = self.C()
+                            case 5:
+                                pax,pay,paz = self.X()
+                            case 0:
+                                pax,pay,paz = self.K()
+                        counter = counter + 1
+                    elif counter == 1:
+                        match _:
+                            case 1:
+                                pbx,pby,pbz = self.D()
+                            case 2:
+                                pbx,pby,pbz = self.L()
+                            case 3:
+                                pbx,pby,pbz = self.S()
+                            case 4:
+                                pbx,pby,pbz = self.C()
+                            case 5:
+                                pbx,pby,pbz = self.X()
+                            case 0:
+                                pbx,pby,pbz = self.K()
+                        counter = counter + 1
+                    elif counter == 2:
+                        match _:
+                            case 1:
+                                pcx,pcy,pcz = self.D()
+                            case 2:
+                                pcx,pcy,pcz = self.L()
+                            case 3:
+                                pcx,pcy,pcz = self.S()
+                            case 4:
+                                pcx,pcy,pcz = self.C()
+                            case 5:
+                                pcx,pcy,pcz = self.X()
+                            case 0:
+                                pcx,pcy,pcz = self.K()
+                        counter = counter + 1
+                    else:
+                        break
         
-        elif len(list(set(sorted_trd_list).intersection(set(listj)))) == 2:
-            
-            h = list(set(sorted_trd_list).intersection(set(listj)))
+            elif len(list(set(sorted_trd_list).intersection(set(listj)))) == 2:
 
-            c = sorted_trd_list.count(h[0])
+                h = list(set(sorted_trd_list).intersection(set(listj)))
 
-            def h0():
-                match h[0]:
-                    case 1:
-                        pcx,pcy,pcz = self.D()
-                    case 2:
-                        pcx,pcy,pcz = self.L()
-                    case 3:
-                        pcx,pcy,pcz = self.S()
-                    case 4:
-                        pcx,pcy,pcz = self.C()
-                    case 5:
-                        pcx,pcy,pcz = self.X()
-                    case 0:
-                        pcx,pcy,pcz = self.K()
-                return pcx,pcy,pcz
+                c = sorted_trd_list.count(h[0])
 
-            match c:
-                case 1:
-                    h[1]#2
-                    match h[1]:
-                        case 1:
-                            pax,pay,paz = self.D()
-                            pbx,pby,pbz = self.D()
-                            pcx,pcy,pcz = h0()
-                        case 2:
-                            pax,pay,paz = self.L()
-                            pbx,pby,pbz = self.L()
-                            pcx,pcy,pcz = h0()
-                        case 3:
-                            pax,pay,paz = self.S()
-                            pbx,pby,pbz = self.S()
-                            pcx,pcy,pcz = h0()
-                        case 4:
-                            pax,pay,paz = self.C()
-                            pbx,pby,pbz = self.C()
-                            pcx,pcy,pcz = h0()
-                        case 5:
-                            pax,pay,paz = self.X()
-                            pbx,pby,pbz = self.X()
-                            pcx,pcy,pcz = h0()
-                        case 0:
-                            pax,pay,paz = self.K()
-                            pbx,pby,pbz = self.K()
-                            pcx,pcy,pcz = h0()
-                case 2:
-                    h[0]#1
+                def h0():
                     match h[0]:
                         case 1:
-                            pax,pay,paz=self.D()
+                            pcx,pcy,pcz = self.D()
+                        case 2:
+                            pcx,pcy,pcz = self.L()
+                        case 3:
+                            pcx,pcy,pcz = self.S()
+                        case 4:
+                            pcx,pcy,pcz = self.C()
+                        case 5:
+                            pcx,pcy,pcz = self.X()
+                        case 0:
+                            pcx,pcy,pcz = self.K()
+                    return pcx,pcy,pcz
+            
+                def h1():
+                    match h[0]:
+                        case 1:
+                            pbx,pby,pbz = self.D()
+                            pcx,pcy,pcz = self.D()
+                        case 2:
+                            pbx,pby,pbz = self.L()
+                            pcx,pcy,pcz = self.L()
+                        case 3:
+                            pbx,pby,pbz = self.S()
+                            pcx,pcy,pcz = self.S()
+                        case 4:
+                            pbx,pby,pbz = self.C()
+                            pcx,pcy,pcz = self.C()
+                        case 5:
+                            pbx,pby,pbz = self.X()
+                            pcx,pcy,pcz = self.X()
+                        case 0:
+                            pbx,pby,pbz = self.K()
+                            pcx,pcy,pcz = self.K()
+                    return pbx,pby,pbz,pcx,pcy,pcz
+            
+                def c_():
+                    match c:
+                        case 1:
+                            #h[1]-2
+                            match h[1]:
+                                case 1:
+                                    pax,pay,paz = self.D()
+                                    pbx,pby,pbz = self.D()
+                                    pcx,pcy,pcz = h0()
+                                case 2:
+                                    pax,pay,paz = self.L()
+                                    pbx,pby,pbz = self.L()
+                                    pcx,pcy,pcz = h0()
+                                case 3:
+                                    pax,pay,paz = self.S()
+                                    pbx,pby,pbz = self.S()
+                                    pcx,pcy,pcz = h0()
+                                case 4:
+                                    pax,pay,paz = self.C()
+                                    pbx,pby,pbz = self.C()
+                                    pcx,pcy,pcz = h0()
+                                case 5:
+                                    pax,pay,paz = self.X()
+                                    pbx,pby,pbz = self.X()
+                                    pcx,pcy,pcz = h0()
+                                case 0:
+                                    pax,pay,paz = self.K()
+                                    pbx,pby,pbz = self.K()
+                                    pcx,pcy,pcz = h0()
+                        case 2:
+                            #h[0]-1
+                            match h[0]:
+                                case 1:
+                                    pax,pay,paz = self.D()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                case 2:
+                                    pax,pay,paz = self.L()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                case 3:
+                                    pax,pay,paz = self.S()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                case 4:
+                                    pax,pay,paz = self.C()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                case 5:
+                                    pax,pay,paz = self.X()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                case 0:
+                                    pax,pay,paz = self.K()
+                                    pbx,pby,pbz,pcx,pcy,pcz = h1()
+                                
+                    return pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz
+            
+                pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = c_()
 
+            else:
+                match self.t:
+                    case 1:
+                        pax,pay,paz = self.D()
+                        pbx,pby,pbz = self.D()
+                        pcx,pcy,pcz = self.D()
+                    case 2:
+                        pax,pay,paz = self.L()
+                        pbx,pby,pbz = self.L()
+                        pcx,pcy,pcz = self.L()
+                    case 3:
+                        pax,pay,paz = self.S()
+                        pbx,pby,pbz = self.S()
+                        pcx,pcy,pcz = self.S()
+                    case 4:
+                        pax,pay,paz = self.C()
+                        pbx,pby,pbz = self.C()
+                        pcx,pcy,pcz = self.C()
+                    case 5:
+                        pax,pay,paz = self.X()
+                        pbx,pby,pbz = self.X()
+                        pcx,pcy,pcz = self.X()
+                    case 0:
+                        pax,pay,paz = self.K()
+                        pbx,pby,pbz = self.K()
+                        pcx,pcy,pcz = self.K()
+            
+            return pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz
+        
+        pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = compare_list()
 
+        t = T(pax=pax,pay=pay,paz=paz,pbx=pbx,pby=pby,pbz=pbz,pcx=pcx,pcy=pcy,pcz=pcz)
+        
+        return t.incentre()
                     
 
                                        
@@ -198,6 +313,7 @@ def numgua():
     initial_text1 = "天宫：{}\n".format(g.get(t, "空亡，"))
     initial_text1 += "人宫：{}\n".format(g.get(r, "空亡，"))
     initial_text1 += "地宫：{}\n".format(g.get(d, "空亡，"))
+    num_t = num(t=t,r=r,d=d)
     
     with open(g_path, 'w',encoding='utf-8') as f:
         f.write(initial_text1)
@@ -209,14 +325,19 @@ def numgua():
         case 1:
             match vc6:
                 case 0:
-                    print("三宫定义，并计算吉值")
+                    initial_text1 += "未完成\n"
+                    #三宫定义，并计算吉值
                 case 1:
-                    print("三宫定义，不计算吉值")
+                    #三宫定义，不计算吉值
+                    pass
             pass
         case 0:
             match vc6:
                 case 0:
-                    print("非三宫定义，并计算吉值")
+                    yes = num_t.judgment_f()
+                    initial_text1 += "吉值：{}\n".format(yes)
+                    #非三宫定义，并计算吉值
                 case 1:
-                    print("非三宫定义，不计算吉值")
+                    #非三宫定义，不计算吉值
+                    pass
     return initial_text1

@@ -478,6 +478,10 @@ def b():
     if deleted_text:
         deleted_content = deleted_text.pop()
         text_widget.insert(tk.END, deleted_content)
+
+def c():
+    text_widget.insert(tk.END, "\n")
+
 def on():
     text_widget.tag_configure("found", background="")
     toggle_window()
@@ -639,6 +643,7 @@ def save_ff():
                  break
      thread = threading.Thread(target=save_tt)
      thread.start()
+
     size = os.path.getsize(msg)
     division = size//t_divide_up
     window4 = tk.Toplevel(root)
@@ -971,8 +976,9 @@ if __name__ == '__main__':
  windnd.hook_dropfiles(root,func=i)
  root.protocol('WM_DELETE_WINDOW', on_exit)
  threading.Thread(target=icon.run, daemon=True).start()
- root.bind("<Shift_L> ", a)
- root.bind("<Control_L>", lambda event: b())
+ root.bind("<Control-z> ", a)
+ root.bind("<Control-y>", lambda event: b())
+ root.bind("<Shift_L>",lambda event: c())
  root.bind("<Control-f> ", lambda event:toggle_window())
  scrollbar.config(command=text_widget.yview)
  root.grid_rowconfigure(1, weight=1)
