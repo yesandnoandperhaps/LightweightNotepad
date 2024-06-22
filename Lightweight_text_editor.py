@@ -53,6 +53,10 @@ def x_save():
     with open(n_path,"w",encoding='utf-8')as f:
         f.write(str(num_wv1))
 
+def x_save2(r):
+    with open(p_path,"w",encoding='utf-8')as f:
+        f.write(str(r))
+
 def load_theme():
     try:
         with open(b_path, 'r',encoding='utf-8') as file:
@@ -125,6 +129,12 @@ def load11():
             return f.read()
     except FileNotFoundError:
         pass
+def load12():
+    try:
+        with open(p_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
 def s():
     global v
     v = v + 1
@@ -148,11 +158,64 @@ def wv_1():
     num_wv1 = num_wv1 + 1
     x_save()
 
-
 def x():
-    window = tk.Toplevel(root)
+    window = ttk.Toplevel(root)
     window.title("小六壬")
     window.iconbitmap(icon_path)
+    
+    def LoopOutput():
+        file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt", 
+                                                 filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+        def LoopOutput_X():
+            entry_ = entry.get()
+            num = 0
+            entry___ = re.findall('[^0-9]', entry_)
+            match entry___:
+                case []:
+                    with open(o_path, 'w',encoding='utf-8') as f:
+                        f.truncate()
+                    while True:
+                        if num == int(entry_):
+                            shutil.copy(o_path, file_path)
+                            text_widget.delete(1.0, END)
+                            text_widget.insert(tk.END,"已完成循环")
+                            break
+                        with open(o_path, 'a+',encoding='utf-8') as f:
+                                if t_rule_num == 0:
+                                    f.write(XiaoLliuren.numgua2())
+                                elif t_rule_num == 1:
+                                    f.write(XiaoLliuren.numgua())
+                        num = num + 1
+                        text_widget.delete(1.0, END)
+                        text_widget.insert(tk.END,"已循环次数：{}".format(num))
+                case _:
+                   messagebox.showerror("错误", message="请只输入整数",parent=window)
+        
+        def T_LoopOutput_X():
+            text_widget.delete(1.0, END)
+            text_widget.insert(tk.END,"已循环次数：0")
+            thread = threading.Thread(target=LoopOutput_X)
+            thread.start()
+            
+        combo.grid_remove()
+        w2 = ttk.Frame(window)
+        w2.grid(row=0,column=0,sticky=W)
+        entry = tk.Entry(w2)
+        entry.pack(padx=5,pady=5,side='right')
+        entry.config(font=font_style)
+        text = ttk.Label(w2, text="循环次数").pack(padx=5,pady=5,side='right')
+        entry.focus_set()
+        entry.bind('<Return>', lambda event: T_LoopOutput_X())
+    def CountB2_2():
+        rule_num = 1
+        b2.config(text="常规循环输出",command=CountB2_1)
+        x_save2(rule_num)
+
+    def CountB2_1():
+        rule_num = 0
+        b2.config(text="只循环输出吉值",command=CountB2_2)
+        x_save2(rule_num)
+
     def generate_and_display():
         text_widget.delete(1.0, END)
         if combo.get() == "算一卦":
@@ -184,9 +247,13 @@ def x():
                 下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
             前_下拉框事件()
 
-    下拉菜单组 = ["返回", "保存数据", "上传数据","打开首页"]
+    match num_wv1%2:
+        case 1:
+            下拉菜单组 = ["返回", "保存数据", "上传数据","打开首页"]
+        case _:
+            下拉菜单组 = ["返回", "保存数据", "上传数据"]
     下拉框 = ttk.Combobox(window, values=下拉菜单组, state="readonly")
-    下拉框.grid(row=0, column=0, sticky="e")
+    下拉框.grid(row=0, column=0, padx=5, pady=5, sticky="e")
     下拉框.bind("<Button-3>", 下拉框事件)
     下拉框.set("返回")
     scrollbar = ttk.Scrollbar(window, style="TScrollbar", bootstyle="round")
@@ -198,6 +265,15 @@ def x():
     
     w = ttk.Frame(window)
     w.grid(row=2,column=0,sticky=E)
+    if t_rule_num == 1:
+        b2 = ttk.Button(w, text="常规循环输出", bootstyle="outline", command=CountB2_1)
+        b2.pack(padx=5,pady=5,side='right')
+    elif t_rule_num == 0:
+        b2 = ttk.Button(w, text="只循环输出吉值", bootstyle="outline", command=CountB2_2)
+        b2.pack(padx=5,pady=5,side='right')
+    b1 = ttk.Button(w, text="循环输出", bootstyle="outline", command=LoopOutput)
+    b1.pack(padx=5,pady=5,side='right')
+    Separator(w, orient=VERTICAL).pack(fill=Y,padx=5,pady=5,side='right')
     wv1 = ttk.IntVar()
     if num_wv1 % 2 == 1:
         wv1.set(1)
@@ -847,6 +923,8 @@ if __name__ == '__main__':
     l_path = os.path.join(p, "l")
     m_path = os.path.join(p, "m")
     n_path = os.path.join(p, "n")
+    o_path = os.path.join(p, "o")
+    p_path = os.path.join(p, "p")
     icon_path = os.path.join(p, "aaa.ico")
     v = int(load() or 0)
     v2 = int(load2() or 1)
@@ -859,6 +937,7 @@ if __name__ == '__main__':
     divide_up = (load6() or "等于大文件定义")
     onandoff = (load7() or "开启")
     circular = (load8() or "30MB")
+    t_rule_num = int(load12() or 1)
 
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(icon_path)
