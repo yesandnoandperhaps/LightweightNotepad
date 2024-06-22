@@ -49,6 +49,10 @@ def save(theme):
     with open(k_path,"w",encoding="utf-8")as f:
         f.write(combobox3.get()) 
 
+def x_save():
+    with open(n_path,"w",encoding='utf-8')as f:
+        f.write(str(num_wv1))
+
 def load_theme():
     try:
         with open(b_path, 'r',encoding='utf-8') as file:
@@ -115,6 +119,12 @@ def load10():
             return f.read()
     except FileNotFoundError:
         pass
+def load11():
+    try:
+        with open(n_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
 def s():
     global v
     v = v + 1
@@ -133,6 +143,10 @@ def s5():
 def s6():
     global v6
     v6 = v6+1
+def wv_1():
+    global num_wv1
+    num_wv1 = num_wv1 + 1
+    x_save()
 
 
 def x():
@@ -161,6 +175,8 @@ def x():
             save_data()
         if 下拉框.get() == "上传数据":
             window.destroy()
+        if 下拉框.get() == "打开首页":
+            root.deiconify()
 
     def 下拉框事件(event):
         x, y = event.x_root, event.y_root
@@ -168,7 +184,7 @@ def x():
                 下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
             前_下拉框事件()
 
-    下拉菜单组 = ["返回", "保存数据", "上传数据"]
+    下拉菜单组 = ["返回", "保存数据", "上传数据","打开首页"]
     下拉框 = ttk.Combobox(window, values=下拉菜单组, state="readonly")
     下拉框.grid(row=0, column=0, sticky="e")
     下拉框.bind("<Button-3>", 下拉框事件)
@@ -179,6 +195,16 @@ def x():
                           yscrollcommand=scrollbar.set, font=font_style)
     text_widget.grid(row=1, column=0, sticky="nsew")
     scrollbar.config(command=text_widget.yview)
+    
+    w = ttk.Frame(window)
+    w.grid(row=2,column=0,sticky=E)
+    wv1 = ttk.IntVar()
+    if num_wv1 % 2 == 1:
+        wv1.set(1)
+    else:
+        wv1.set(0)
+    consider_checkbutton2 = ttk.Checkbutton(w, text="本页为首", variable=wv1, command=wv_1, bootstyle="round-toggle")
+    consider_checkbutton2.pack(padx=5,pady=5,side='right')
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
 
@@ -807,190 +833,198 @@ def sever():
     window.protocol("WM_DELETE_WINDOW", on2)
     window.mainloop()
 if __name__ == '__main__':
- global t_size,circular_num
- p = os.path.dirname(__file__)
- a_path = os.path.join(p, "a")
- b_path = os.path.join(p, "b")
- c_path = os.path.join(p, "c")
- d_path = os.path.join(p, "d")
- e_path = os.path.join(p, "e")
- f_path = os.path.join(p, "f")
- h_path = os.path.join(p, "h")
- i_path = os.path.join(p, "i")
- j_path = os.path.join(p, "j")
- k_path = os.path.join(p, "k")
- l_path = os.path.join(p, "l")
- m_path = os.path.join(p, "m")
- icon_path = os.path.join(p, "aaa.ico")
- v = int(load() or 0)
- v2 = int(load2() or 1)
- v3 = int(load3() or 0)
- v4 = int(load4() or 0)
- v5 = int(load9() or 0)
- v6 = int(load10() or 0)
- _size_ = (load5() or "70MB")
- divide_up = (load6() or "等于大文件定义")
- onandoff = (load7() or "开启")
- circular = (load8() or "30MB")
+    p = os.path.dirname(__file__)
+    a_path = os.path.join(p, "a")
+    b_path = os.path.join(p, "b")
+    c_path = os.path.join(p, "c")
+    d_path = os.path.join(p, "d")
+    e_path = os.path.join(p, "e")
+    f_path = os.path.join(p, "f")
+    h_path = os.path.join(p, "h")
+    i_path = os.path.join(p, "i")
+    j_path = os.path.join(p, "j")
+    k_path = os.path.join(p, "k")
+    l_path = os.path.join(p, "l")
+    m_path = os.path.join(p, "m")
+    n_path = os.path.join(p, "n")
+    icon_path = os.path.join(p, "aaa.ico")
+    v = int(load() or 0)
+    v2 = int(load2() or 1)
+    v3 = int(load3() or 0)
+    v4 = int(load4() or 0)
+    v5 = int(load9() or 0)
+    v6 = int(load10() or 0)
+    num_wv1 = int(load11() or 0)
+    _size_ = (load5() or "70MB")
+    divide_up = (load6() or "等于大文件定义")
+    onandoff = (load7() or "开启")
+    circular = (load8() or "30MB")
 
- menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
- image = Image.open(icon_path)
- icon = pystray.Icon("icon", image, "轻量记事本", menu)
- root = tk.Tk()
- root.title("轻量记事本")
- root.iconbitmap(icon_path)
- font_style1 = tkFont.Font(family="宋体", size=12)
- font_style2 = tkFont.Font(family="等线", size=12)
- font_style3 = tkFont.Font(family="黑体", size=12)
- font_style = None
- t_size = 0
- t_divide_up = 0
- circular_num = 31457280
- if v2 % 2 == 1:
-    font_style = font_style1
- elif v3 % 2 == 1:
-    font_style = font_style2
- elif v4 % 2 == 1:
-    font_style = font_style3
+    menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
+    image = Image.open(icon_path)
+    icon = pystray.Icon("icon", image, "轻量记事本", menu)
+    root = tk.Tk()
+    root.title("轻量记事本")
+    root.iconbitmap(icon_path)
+    font_style1 = tkFont.Font(family="宋体", size=12)
+    font_style2 = tkFont.Font(family="等线", size=12)
+    font_style3 = tkFont.Font(family="黑体", size=12)
+    font_style = None
+    t_size = 0
+    t_divide_up = 0
+    circular_num = 31457280
+    if v2 % 2 == 1:
+        font_style = font_style1
+    elif v3 % 2 == 1:
+        font_style = font_style2
+    elif v4 % 2 == 1:
+        font_style = font_style3
 
- if _size_ == ("70MB"):
-     if divide_up == ("等于大文件定义"):
-        t_divide_up = 73400320
-        t_size = 73400320
-     else:
-        t_size = 73400320
-        if divide_up == ("5MB"):
-            t_divide_up = 5242880
-        elif divide_up == ("10MB"):
-            t_divide_up = 10485760
-        elif divide_up == ("15MB"):
-            t_divide_up = 15728640 
-        elif divide_up == ("30MB"):
-            t_divide_up = 31457280
- elif _size_ == ("50MB"):
-     if divide_up == ("等于大文件定义"):
-        t_divide_up = 52428800
-        t_size = 52428800
-     else:
-        t_size = 52428800
-        if divide_up == ("5MB"):
-            t_divide_up = 5242880
-        elif divide_up == ("10MB"):
-            t_divide_up = 10485760
-        elif divide_up == ("15MB"):
-            t_divide_up = 15728640 
-        elif divide_up == ("30MB"):
-            t_divide_up = 31457280
- elif _size_ == ("128MB"):
-     if divide_up == ("等于大文件定义"):
-        t_divide_up = 134217728
-        t_size = 134217728
-     else:
-        t_size = 134217728
-        if divide_up == ("5MB"):
-            t_divide_up = 5242880
-        elif divide_up == ("10MB"):
-            t_divide_up = 10485760
-        elif divide_up == ("15MB"):
-            t_divide_up = 15728640 
-        elif divide_up == ("30MB"):
-            t_divide_up = 31457280
- elif _size_ == ("256MB"):
-     if divide_up == ("等于大文件定义"):
-        t_divide_up = 268435456
-        t_size = 268435456
-     else:
-        t_size = 268435456
-        if divide_up == ("5MB"):
-            t_divide_up = 5242880
-        elif divide_up == ("10MB"):
-            t_divide_up = 10485760
-        elif divide_up == ("15MB"):
-            t_divide_up = 15728640 
-        elif divide_up == ("30MB"):
-            t_divide_up = 31457280
- elif _size_ == ("512MB"):
-     if divide_up == ("等于大文件定义"):
-        t_divide_up = 536870912
-        t_size = 536870912
-     else:
-        t_size = 536870912
-        if divide_up == ("5MB"):
-            t_divide_up = 5242880
-        elif divide_up == ("10MB"):
-            t_divide_up = 10485760
-        elif divide_up == ("15MB"):
-            t_divide_up = 15728640 
-        elif divide_up == ("30MB"):
-            t_divide_up = 31457280
+    if _size_ == ("70MB"):
+        if divide_up == ("等于大文件定义"):
+            t_divide_up = 73400320
+            t_size = 73400320
+        else:
+            t_size = 73400320
+            if divide_up == ("5MB"):
+                t_divide_up = 5242880
+            elif divide_up == ("10MB"):
+                t_divide_up = 10485760
+            elif divide_up == ("15MB"):
+                t_divide_up = 15728640 
+            elif divide_up == ("30MB"):
+                t_divide_up = 31457280
+    elif _size_ == ("50MB"):
+        if divide_up == ("等于大文件定义"):
+            t_divide_up = 52428800
+            t_size = 52428800
+        else:
+            t_size = 52428800
+            if divide_up == ("5MB"):
+                t_divide_up = 5242880
+            elif divide_up == ("10MB"):
+                t_divide_up = 10485760
+            elif divide_up == ("15MB"):
+                t_divide_up = 15728640 
+            elif divide_up == ("30MB"):
+                t_divide_up = 31457280
+    elif _size_ == ("128MB"):
+        if divide_up == ("等于大文件定义"):
+            t_divide_up = 134217728
+            t_size = 134217728
+        else:
+            t_size = 134217728
+            if divide_up == ("5MB"):
+                t_divide_up = 5242880
+            elif divide_up == ("10MB"):
+                t_divide_up = 10485760
+            elif divide_up == ("15MB"):
+                t_divide_up = 15728640 
+            elif divide_up == ("30MB"):
+                t_divide_up = 31457280
+    elif _size_ == ("256MB"):
+        if divide_up == ("等于大文件定义"):
+            t_divide_up = 268435456
+            t_size = 268435456
+        else:
+            t_size = 268435456
+            if divide_up == ("5MB"):
+                t_divide_up = 5242880
+            elif divide_up == ("10MB"):
+                t_divide_up = 10485760
+            elif divide_up == ("15MB"):
+                t_divide_up = 15728640 
+            elif divide_up == ("30MB"):
+                t_divide_up = 31457280
+    elif _size_ == ("512MB"):
+        if divide_up == ("等于大文件定义"):
+            t_divide_up = 536870912
+            t_size = 536870912
+        else:
+            t_size = 536870912
+            if divide_up == ("5MB"):
+                t_divide_up = 5242880
+            elif divide_up == ("10MB"):
+                t_divide_up = 10485760
+            elif divide_up == ("15MB"):
+                t_divide_up = 15728640 
+            elif divide_up == ("30MB"):
+                t_divide_up = 31457280
 
- match circular:
-     case "5MB":
-         circular_num = 5242880
-     case "10MB":
-         circular_num = 10485760
-     case "30MB":
-         circular_num = 31457280
-     case "50MB":
-         circular_num = 52428800
-     case "70MB":
-         circular_num = 73400320
-     case "128MB":
-         circular_num = 134217728
-     case "256MB":
-         circular_num = 268435456
-     case "512MB":
-         circular_num = 536870912
-     case _:
-         circular_num = 31457280
+    match circular:
+        case "5MB":
+            circular_num = 5242880
+        case "10MB":
+            circular_num = 10485760
+        case "30MB":
+            circular_num = 31457280
+        case "50MB":
+            circular_num = 52428800
+        case "70MB":
+            circular_num = 73400320
+        case "128MB":
+            circular_num = 134217728
+        case "256MB":
+            circular_num = 268435456
+        case "512MB":
+            circular_num = 536870912
+        case _:
+            circular_num = 31457280
 
- ctypes.windll.shcore.SetProcessDpiAwareness(1)
- ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
- root.tk.call('tk', 'scaling', ScaleFactor / 75)
- style = ttk.Style()
- current_theme = load_theme()
- if current_theme in style.theme_names():
-    style.theme_use(current_theme)
- 下拉菜单组 = ["保存", "设置","小工具"]
- 下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
- 下拉框.grid(row=0, column=0, sticky="e",pady=5)
- 下拉框.bind("<Button-3>", 下拉框事件)
- 下拉框.set("保存")
- scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
- scrollbar.grid(row=1, column=1, sticky="ns")
- text_widget = tk.Text(root, wrap="word",
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
+    root.tk.call('tk', 'scaling', ScaleFactor / 75)
+    style = ttk.Style()
+    current_theme = load_theme()
+    if current_theme in style.theme_names():
+        style.theme_use(current_theme)
+    下拉菜单组 = ["保存", "设置","小工具"]
+    下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
+    下拉框.grid(row=0, column=0, sticky="e",pady=5)
+    下拉框.bind("<Button-3>", 下拉框事件)
+    下拉框.set("保存")
+    scrollbar = ttk.Scrollbar(root, style="TScrollbar", bootstyle="round")
+    scrollbar.grid(row=1, column=1, sticky="ns")
+    text_widget = tk.Text(root, wrap="word",
                           yscrollcommand=scrollbar.set, font=font_style)
- text_widget.grid(row=1, column=0, sticky="nsew")
- text_widget.tag_configure("found", background="yellow")
- t=text_widget.get("1.0",tk.END)
- text_widget.focus_set()
- w = ttk.Frame(root)
- w.grid(row=2,column=0,sticky=E)
- b1 = ttk.Button(w, text="分离控制", bootstyle="link", command=sever)
- b1.pack(padx=5,pady=5,side='left')
- b2 = ttk.Button(w, text="下一页", bootstyle="link", command=next_page)
- b2.pack(padx=5,pady=5,side='right')
- b3 = ttk.Button(w, text="上一页", bootstyle="link", command=return_page)
- b3.pack(padx=5,pady=5, side='right')
- window2 = None
- windnd.hook_dropfiles(root,func=i)
- root.protocol('WM_DELETE_WINDOW', on_exit)
- threading.Thread(target=icon.run, daemon=True).start()
- root.bind("<Control-z> ", a)
- root.bind("<Control-y>", lambda event: b())
- root.bind("<Shift_L>",lambda event: c())
- root.bind("<Control-f> ", lambda event:toggle_window())
- scrollbar.config(command=text_widget.yview)
- root.grid_rowconfigure(1, weight=1)
- root.grid_columnconfigure(0, weight=1)
- index_ = 0
+    text_widget.grid(row=1, column=0, sticky="nsew")
+    text_widget.tag_configure("found", background="yellow")
+    t=text_widget.get("1.0",tk.END)
+    text_widget.focus_set()
+    w = ttk.Frame(root)
+    w.grid(row=2,column=0,sticky=E)
+    b1 = ttk.Button(w, text="分离控制", bootstyle="link", command=sever)
+    b1.pack(padx=5,pady=5,side='left')
+    b2 = ttk.Button(w, text="下一页", bootstyle="link", command=next_page)
+    b2.pack(padx=5,pady=5,side='right')
+    b3 = ttk.Button(w, text="上一页", bootstyle="link", command=return_page)
+    b3.pack(padx=5,pady=5, side='right')
+    window2 = None
+    windnd.hook_dropfiles(root,func=i)
+    root.protocol('WM_DELETE_WINDOW', on_exit)
+    threading.Thread(target=icon.run, daemon=True).start()
+    root.bind("<Control-z> ", a)
+    root.bind("<Control-y>", lambda event: b())
+    root.bind("<Shift_L>",lambda event: c())
+    root.bind("<Control-f> ", lambda event:toggle_window())
+    scrollbar.config(command=text_widget.yview)
+    root.grid_rowconfigure(1, weight=1)
+    root.grid_columnconfigure(0, weight=1)
+    index_ = 0
 
- try:
-    if v % 2 == 1:
-        text_widget.delete('1.0', tk.END)
-        with open(a_path, 'r',encoding='utf-8') as f:
-            data = f.read()
-            text_widget.insert(tk.END, data)
- except:
-    pass
- root.mainloop()
+    match num_wv1%2:
+        case 1:
+            root.withdraw()
+            x()
+        case _:
+            pass
+
+    try:
+        if v % 2 == 1:
+            text_widget.delete('1.0', tk.END)
+            with open(a_path, 'r',encoding='utf-8') as f:
+                data = f.read()
+                text_widget.insert(tk.END, data)
+    except:
+        pass
+    root.mainloop()
