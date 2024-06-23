@@ -1,29 +1,30 @@
+import io
 import tkinter as tk
 import tkinter.font as tkFont
+import tkinter.messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 import random
+from tkinter import PhotoImage
 from tkinter import filedialog
-from tkinter import font
 import ctypes
-from pathlib import Path
 import os
 import shutil
 import pystray
 from PIL import Image
 from pystray import MenuItem, Menu
 import threading
+import ttkbootstrap.icons
 import windnd
 from tkinter.ttk import Separator
 from tkinter import messagebox
 from XiaoLliuren import g_path
 import XiaoLliuren
 import tkinter.ttk
-import time
-import multiprocessing
 import threading
-import psutil
 import re
+import ttkbootstrap
+from PIL import Image
 
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
@@ -166,34 +167,62 @@ def x():
     def LoopOutput():
         file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt", 
                                                  filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
-        def LoopOutput_X():
-            entry_ = entry.get()
-            num = 0
-            entry___ = re.findall('[^0-9]', entry_)
-            match entry___:
-                case []:
-                    with open(o_path, 'w',encoding='utf-8') as f:
-                        f.truncate()
-                    while True:
-                        if num == int(entry_):
-                            shutil.copy(o_path, file_path)
-                            text_widget.delete(1.0, END)
-                            text_widget.insert(tk.END,"已完成循环")
-                            break
-                        with open(o_path, 'a+',encoding='utf-8') as f:
-                                if t_rule_num == 0:
-                                    f.write(XiaoLliuren.numgua2())
-                                elif t_rule_num == 1:
-                                    f.write(XiaoLliuren.numgua())
-                        num = num + 1
-                        text_widget.delete(1.0, END)
-                        text_widget.insert(tk.END,"已循环次数：{}".format(num))
-                case _:
-                   messagebox.showerror("错误", message="请只输入整数",parent=window)
-        
+        def entry2_():
+            icon.notify("循环过程中不可加入新循环\n强制退出循环<右Shift>", "Lightweight text editor")
+
+        def entry2_2():
+            window.destroy()
+            x()
         def T_LoopOutput_X():
+            def LoopOutput_X():
+                entry_ = entry.get()
+                num = 0
+                entry___ = re.findall('[^0-9]', entry_)
+                match entry___:
+                    case []:
+                        text_widget.insert(tk.END,"已循环次数：0")
+                        with open(o_path, 'w',encoding='utf-8') as f:
+                            f.truncate()
+                        while True:
+                            if num == int(entry_):
+                                shutil.copy(o_path, file_path)
+                                text_widget.delete(1.0, END)
+                                text_widget.insert(tk.END,"已完成循环")
+                                entry2.pack_forget()
+                                text2.pack_forget()
+                                entry.pack(padx=5,pady=5,side='right')
+                                entry.config(font=font_style)
+                                text.pack(padx=5,pady=5,side='right')
+                                break
+                            with open(o_path, 'a+',encoding='utf-8') as f:
+                                    if t_rule_num == 0:
+                                        f.write(XiaoLliuren.numgua2())
+                                    elif t_rule_num == 1:
+                                        f.write(XiaoLliuren.numgua())
+                            num = num + 1
+                            text_widget.delete(1.0, END)
+                            text_widget.insert(tk.END,"已循环次数：{}".format(num))
+                    case _:
+                        messagebox.showerror("错误", message="请只输入整数",parent=window)
+                        entry2.pack_forget()
+                        text2.pack_forget()
+                        entry.pack(padx=5,pady=5,side='right')
+                        entry.config(font=font_style)
+                        text.pack(padx=5,pady=5,side='right')
+
+            window.focus_set()
+            entrynum = entry.get()
+            entry.pack_forget()
+            text.pack_forget()
+            entry2 = tk.Entry(w2)
+            entry2.pack(padx=5,pady=5,side='right')
+            entry2.config(font=font_style)
+            entry2.insert(tk.END,entrynum)
+            entry2.bind('<Return>', lambda event: entry2_())
+            entry2.bind('<Shift_L>', lambda event: entry2_2())
+            text2 = ttk.Label(w2, text="循环次数")
+            text2.pack(padx=5,pady=5,side='right')
             text_widget.delete(1.0, END)
-            text_widget.insert(tk.END,"已循环次数：0")
             thread = threading.Thread(target=LoopOutput_X)
             thread.start()
             
@@ -203,7 +232,8 @@ def x():
         entry = tk.Entry(w2)
         entry.pack(padx=5,pady=5,side='right')
         entry.config(font=font_style)
-        text = ttk.Label(w2, text="循环次数").pack(padx=5,pady=5,side='right')
+        text = ttk.Label(w2, text="循环次数")
+        text.pack(padx=5,pady=5,side='right')
         entry.focus_set()
         entry.bind('<Return>', lambda event: T_LoopOutput_X())
     def CountB2_2():
@@ -926,6 +956,7 @@ if __name__ == '__main__':
     o_path = os.path.join(p, "o")
     p_path = os.path.join(p, "p")
     icon_path = os.path.join(p, "aaa.ico")
+    error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
     v2 = int(load2() or 1)
     v3 = int(load3() or 0)
@@ -938,7 +969,6 @@ if __name__ == '__main__':
     onandoff = (load7() or "开启")
     circular = (load8() or "30MB")
     t_rule_num = int(load12() or 1)
-
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(icon_path)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)

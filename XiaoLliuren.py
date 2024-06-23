@@ -1,3 +1,5 @@
+import decimal
+import multiprocessing
 import random
 import os
 import math
@@ -299,16 +301,25 @@ class num:
         return t.incentre()
                     
 
-                                       
-                   
-
-def numgua():
+def numqgua():
     new_num1 = round(random.uniform(0, 5))
     new_num2 = round(random.uniform(0, 5))
     new_num3 = round(random.uniform(0, 5))
     t = new_num1 % 6
     r = (new_num1 + new_num2 - 1) % 6
     d = (new_num1 + new_num2 + new_num3 - 2) % 6
+    return t,r,d                                
+
+def numgua2():
+    t,r,d = numqgua()
+    num_t = num(t=t,r=r,d=d)
+    a = str(num_t.judgment_f())
+    a_ = decimal.Decimal(a)
+    num_t_text = "{}\n".format(a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN))
+    return num_t_text
+
+def numgua():
+    t,r,d = numqgua()
     g = {1: "大安",2: "流连",3: "速喜",4: "赤口",5: "小吉",0: "空亡"}
     initial_text1 = "天宫：{}\n".format(g.get(t, "空亡，"))
     initial_text1 += "人宫：{}\n".format(g.get(r, "空亡，"))
