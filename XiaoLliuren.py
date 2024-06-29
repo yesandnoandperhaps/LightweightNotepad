@@ -13,6 +13,7 @@ p = os.path.dirname(__file__)
 g_path = os.path.join(p,"g")
 l_path = os.path.join(p, "l")
 m_path = os.path.join(p, "m")
+q_path = os.path.join(p, "q")
 def load9():
     try:
         with open(l_path, 'r',encoding='utf-8') as f:
@@ -25,6 +26,13 @@ def load10():
                 return f.read()
     except FileNotFoundError:
         pass
+def load13():
+    try:
+        with open(q_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+
 v5 = int(load9() or 0)
 v6 = int(load10() or 0)
 
@@ -310,12 +318,36 @@ def numqgua():
     d = (new_num1 + new_num2 + new_num3 - 2) % 6
     return t,r,d                                
 
-def numgua2():
+def numgua2_2():
     t,r,d = numqgua()
     num_t = num(t=t,r=r,d=d)
     a = str(num_t.judgment_f())
     a_ = decimal.Decimal(a)
     num_t_text = "{}\n".format(a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN))
+    if num_t_text == str(-0):
+        num_t_text = 0
+        return num_t_text
+    return num_t_text
+
+def numgua2_1():
+    t,r,d = numqgua()
+    num_t = num(t=t,r=r,d=d)
+    a = num_t.judgment_f()
+    num_t_text = "{}\n".format(a)
+    if num_t_text == str(-0):
+        num_t_text = 0
+        return num_t_text
+    return num_t_text
+
+def numgua2_0():
+    t,r,d = numqgua()
+    num_t = num(t=t,r=r,d=d)
+    a = str(num_t.judgment_f())
+    a_ = decimal.Decimal(a)
+    num_t_text = "{}\n".format(a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN))
+    if num_t_text == str(-0):
+        num_t_text = 0
+        return num_t_text
     return num_t_text
 
 def numgua():
@@ -345,8 +377,30 @@ def numgua():
         case 0:
             match vc6:
                 case 0:
-                    yes = num_t.judgment_f()
-                    initial_text1 += "吉值：{}\n".format(yes)
+                    t_rule_num2 = int(load13() or 2)
+                    match t_rule_num2:
+                        case 1:
+                            yes = num_t.judgment_f()
+                            if str(yes) == str(-0):
+                                yes = 0
+                                return yes
+                            initial_text1 += "吉值：{}\n".format(yes)
+                        case 0:
+                            a = str(num_t.judgment_f())
+                            a_ = decimal.Decimal(a)
+                            a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                            if a__ == str(-0):
+                                a__ = 0
+                                return a__
+                            initial_text1 += "吉值：{}\n".format(a__)
+                        case 2:
+                            a = str(num_t.judgment_f())
+                            a_ = decimal.Decimal(a)
+                            a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                            if a__ == str(-0):
+                                a__ = 0
+                                return a__
+                            initial_text1 += "吉值：{}\n".format(a__)
                     #非三宫定义，并计算吉值
                 case 1:
                     #非三宫定义，不计算吉值
