@@ -4,8 +4,6 @@ import tkinter.font as tkFont
 import tkinter.messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-import random
-from tkinter import PhotoImage
 from tkinter import filedialog
 import ctypes
 import os
@@ -14,18 +12,26 @@ import pystray
 from PIL import Image
 from pystray import MenuItem, Menu
 import threading
-import ttkbootstrap.icons
 import windnd
 from tkinter.ttk import Separator
 from tkinter import messagebox
 from XiaoLliuren import g_path
 import XiaoLliuren
 import tkinter.ttk
-import threading
 import re
-import ttkbootstrap
 from PIL import Image
 import pandas as pd
+import msvcrt
+import wmi
+
+def get_pid_by_name(process_name):
+    pid = None
+    c = wmi.WMI()
+    for process in c.Win32_Process():
+        if process.Name == process_name:
+            pid = process.ProcessId
+            break
+    return pid
 
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
@@ -176,10 +182,9 @@ def x():
     window.iconbitmap(icon_path)
     def LoopOutput2():
 
-        file_path_txt = filedialog.asksaveasfilename(parent=window, defaultextension=".txt", 
-                                                 filetypes=[("Text files", "*.txt")])
         file_path_csv = filedialog.asksaveasfilename(parent=window, defaultextension=".csv", 
-                                                 filetypes=[("csv", "*.csv")])
+                                                 filetypes=[("csv-utf-8", "*.csv")])
+        
         def entry2_():
             icon.notify("循环过程中不可加入新循环\n强制退出循环<右Shift>", "Lightweight text editor")
         def entry2__():
@@ -200,8 +205,8 @@ def x():
                         text_widget.insert(tk.END,"已循环次数：0")
                         while True:
                             if num == int(entry_):
-                                shutil.copy(o_path, file_path_txt)
-                                csv = pd.read_csv(file_path_txt, delimiter=', ', engine='python')
+                                shutil.copy(o_path, file_path_csv)
+                                csv = pd.read_csv(file_path_csv, delimiter=', ', engine='python')
                                 csv.to_csv(file_path_csv, index=False)
                                 text_widget.delete(1.0, END)
                                 text_widget.insert(tk.END,"已完成循环")
@@ -1171,6 +1176,7 @@ def sever():
     b4.pack(padx=5,pady=5,side='left')
     window.protocol("WM_DELETE_WINDOW", on2)
     window.mainloop()
+
 if __name__ == '__main__':
     p = os.path.dirname(__file__)
     a_path = os.path.join(p, "a")
