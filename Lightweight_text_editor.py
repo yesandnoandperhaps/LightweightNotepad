@@ -419,38 +419,42 @@ def x():
                 entry___ = re.findall('[^0-9]', entry_)
                 match entry___:
                     case []:
-                        text_widget.insert(tk.END,"已循环次数：0")
-                        with open(file_path, 'w',encoding='utf-8') as f:
-                            f.truncate()
-                        while True:
-                            if num == int(entry_):
-                                #shutil.copy(o_path, file_path)
+                        try:
+                            text_widget.insert(tk.END,"已循环次数：0")
+                            with open(file_path, 'w',encoding='utf-8') as f:
+                                f.truncate()
+                            while True:
+                                if num == int(entry_):
+                                    #shutil.copy(o_path, file_path)
+                                    text_widget.delete(1.0, END)
+                                    text_widget.insert(tk.END,"已完成循环")
+                                    entry2.pack_forget()
+                                    text2.pack_forget()
+                                    entry.pack(padx=5,pady=5,side='right')
+                                    entry.config(font=font_style)
+                                    text.pack(padx=5,pady=5,side='right')
+                                    w3.grid_remove()
+                                    w.grid()
+                                    break
+                                with open(file_path, 'a+',encoding='utf-8') as f:
+                                        t_rule_num = int(load12() or 1)
+                                        t_rule_num2 = int(load13() or 2)
+                                        if t_rule_num == 0:
+                                            match t_rule_num2:
+                                                case 1:
+                                                    f.write(XiaoLliuren.numgua2_1())
+                                                case 0:
+                                                    f.write(XiaoLliuren.numgua2_0())
+                                                case 2:
+                                                    f.write(XiaoLliuren.numgua2_2())
+                                        elif t_rule_num == 1:
+                                            f.write(XiaoLliuren.numgua())
+                                num = num + 1
                                 text_widget.delete(1.0, END)
-                                text_widget.insert(tk.END,"已完成循环")
-                                entry2.pack_forget()
-                                text2.pack_forget()
-                                entry.pack(padx=5,pady=5,side='right')
-                                entry.config(font=font_style)
-                                text.pack(padx=5,pady=5,side='right')
-                                w3.grid_remove()
-                                w.grid()
-                                break
-                            with open(file_path, 'a+',encoding='utf-8') as f:
-                                    t_rule_num = int(load12() or 1)
-                                    t_rule_num2 = int(load13() or 2)
-                                    if t_rule_num == 0:
-                                        match t_rule_num2:
-                                            case 1:
-                                                f.write(XiaoLliuren.numgua2_1())
-                                            case 0:
-                                                f.write(XiaoLliuren.numgua2_0())
-                                            case 2:
-                                                f.write(XiaoLliuren.numgua2_2())
-                                    elif t_rule_num == 1:
-                                        f.write(XiaoLliuren.numgua())
-                            num = num + 1
-                            text_widget.delete(1.0, END)
-                            text_widget.insert(tk.END,"已循环次数：{}".format(num))
+                                text_widget.insert(tk.END,"已循环次数：{}".format(num))
+                        except:
+                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                            entry2_2()
                     case _:
                         messagebox.showerror("错误", message="请只输入整数",parent=window)
                         entry2.pack_forget()
@@ -567,10 +571,6 @@ def x():
         if 下拉框.get() == "返回主页":
             window.destroy()
             root.deiconify()
-        if 下拉框.get() == "保存数据":
-            save_data()
-        if 下拉框.get() == "上传数据":
-            window.destroy()
             
 
     def 下拉框事件(event):
@@ -580,7 +580,7 @@ def x():
             前_下拉框事件()
 
 
-    下拉菜单组 = ["返回主页", "保存数据", "上传数据"]
+    下拉菜单组 = ["返回主页"]
     下拉框 = ttk.Combobox(window, values=下拉菜单组, state="readonly")
     下拉框.grid(row=0, column=0, padx=5, pady=5, sticky="e")
     下拉框.bind("<Button-3>", 下拉框事件)
@@ -1232,6 +1232,7 @@ def return_page():
              text_widget.insert(tk.END, a)
     else:
         messagebox.showerror("错误", message="仅限大文件操作",parent=root)
+
 def sever():
     w.grid_forget()
     window = tk.Toplevel(root)
