@@ -406,3 +406,56 @@ def numgua():
                     #非三宫定义，不计算吉值
                     pass
     return initial_text1
+
+def numgua2_3():
+    t,r,d = numqgua()
+    g = {1: "大安",2: "流连",3: "速喜",4: "赤口",5: "小吉",0: "空亡"}
+    num_t = num(t=t,r=r,d=d)
+    vc5 = v5 % 2
+    vc6 = v6 % 2
+
+    match vc5:
+        case 1:
+            match vc6:
+                case 0:
+                    initial_text1 = "天宫：{}\n".format(g.get(t, "空亡，"))
+                    initial_text1 += "人宫：{}\n".format(g.get(r, "空亡，"))
+                    initial_text1 += "地宫：{}\n".format(g.get(d, "空亡，"))
+                    initial_text1 += "未完成\n"
+                    #三宫定义，并计算吉值
+                case 1:
+                    #三宫定义，不计算吉值
+                    pass
+            pass
+        case 0:
+            match vc6:
+                case 0:
+                    t_rule_num2 = int(load13() or 2)
+                    match t_rule_num2:
+                        case 1:
+                            yes = num_t.judgment_f()
+                            if str(yes) == str(-0):
+                                yes = 0
+                                return yes
+                            initial_text1 = "{},{},{},{}\n".format(g.get(t, "空亡，"),g.get(r, "空亡，"),g.get(d, "空亡，"),yes)
+                        case 0:
+                            a = str(num_t.judgment_f())
+                            a_ = decimal.Decimal(a)
+                            a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                            if a__ == str(-0):
+                                a__ = 0
+                                return a__
+                            initial_text1 = "{},{},{},{}\n".format(g.get(t, "空亡，"),g.get(r, "空亡，"),g.get(d, "空亡，"),a__)
+                        case 2:
+                            a = str(num_t.judgment_f())
+                            a_ = decimal.Decimal(a)
+                            a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                            if a__ == str(-0):
+                                a__ = 0
+                                return a__
+                            initial_text1 = "{},{},{},{}\n".format(g.get(t, "空亡，"),g.get(r, "空亡，"),g.get(d, "空亡，"),a__)
+                    #非三宫定义，并计算吉值
+                case 1:
+                    #非三宫定义，不计算吉值
+                    pass
+    return initial_text1

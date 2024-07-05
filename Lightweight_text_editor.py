@@ -205,9 +205,9 @@ def x():
                         text_widget.insert(tk.END,"已循环次数：0")
                         while True:
                             if num == int(entry_):
-                                shutil.copy(o_path, file_path_csv)
-                                csv = pd.read_csv(file_path_csv, delimiter=', ', engine='python')
-                                csv.to_csv(file_path_csv, index=False)
+                                #shutil.copy(o_path, file_path_csv)
+                                #csv = pd.read_csv(file_path_csv, delimiter=', ', engine='python')
+                                #csv.to_csv(file_path_csv, index=False)
                                 text_widget.delete(1.0, END)
                                 text_widget.insert(tk.END,"已完成循环")
                                 entry2.pack_forget()
@@ -218,7 +218,7 @@ def x():
                                 w3.grid_remove()
                                 w.grid()
                                 break
-                            with open(o_path, 'a+',encoding='utf-8') as f:
+                            with open(file_path_csv, 'a+',encoding='utf-8') as f:
                                     t_rule_num = int(load12() or 1)
                                     t_rule_num2 = int(load13() or 2)
                                     if t_rule_num == 0:
@@ -230,7 +230,7 @@ def x():
                                             case 2:
                                                 f.write(XiaoLliuren.numgua2_2())
                                     elif t_rule_num == 1:
-                                        f.write(XiaoLliuren.numgua())
+                                        f.write(XiaoLliuren.numgua2_3())
                             num = num + 1
                             text_widget.delete(1.0, END)
                             text_widget.insert(tk.END,"已循环次数：{}".format(num))
@@ -248,14 +248,21 @@ def x():
                     window_x.destroy()
                     entry2_2()
                 def entry_row_name_():
-                    with open(o_path, 'w',encoding='utf-8') as f:
-                        f.write("{}\n".format(entry_row_name.get()))
-                    window_x.destroy()
-                    window.wm_attributes('-disabled', 0)
-                    window.wm_attributes('-topmost', 1)
-                    window.wm_attributes('-topmost', 0)
-                    thread = threading.Thread(target=LoopOutput_X)
-                    thread.start()
+                    if entry_row_name.get():
+                        try:
+                            with open(file_path_csv, 'w',encoding='utf-8') as f:
+                                f.write("{}\n".format(entry_row_name.get()))
+                            window_x.destroy()
+                            window.wm_attributes('-disabled', 0)
+                            window.wm_attributes('-topmost', 1)
+                            window.wm_attributes('-topmost', 0)
+                            thread = threading.Thread(target=LoopOutput_X)
+                            thread.start()
+                        except:
+                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                            entry2_2_1()
+                    else:
+                        icon.notify("必须有列名", "Lightweight text editor")
                 window_x = ttk.Toplevel(window)
                 window_x.title("小六壬")
                 window_x.iconbitmap(icon_path)
@@ -266,9 +273,77 @@ def x():
                 text.pack(padx=5,pady=5,side="left")
                 entry_row_name = ttk.Entry(window_x)
                 entry_row_name.pack(padx=5,pady=5,side="right")
+                entry_row_name.insert(tk.END,"吉值")
                 entry_row_name.bind('<Return>', lambda event: entry_row_name_())
                 entry_row_name.bind('<Shift_L>', lambda event: entry2_2_1())
-            x_x()
+            
+            def x_x_():
+
+                def entry2_2_1():
+                    window_x.destroy()
+                    entry2_2()
+
+                def entry_row_name_():
+                    if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
+                        try:
+                            with open(file_path_csv, 'w',encoding='utf-8') as f:
+                                f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                            window_x.destroy()
+                            window.wm_attributes('-disabled', 0)
+                            window.wm_attributes('-topmost', 1)
+                            window.wm_attributes('-topmost', 0)
+                            thread = threading.Thread(target=LoopOutput_X)
+                            thread.start()
+                        except:
+                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                            entry2_2_1()
+                    else:
+                        icon.notify("必须有列名", "Lightweight text editor")
+
+                window_x = ttk.Toplevel(window)
+                window_x.title("小六壬")
+                window_x.iconbitmap(icon_path)
+                window_x.protocol("WM_DELETE_WINDOW", entry2___)
+                window_x.wm_attributes('-topmost', 1)
+                window.wm_attributes('-disabled', 1)
+                text = ttk.Label(window_x,text="列名一")
+                text.grid(row=0,column=0,padx=5,pady=5)
+                text2 = ttk.Label(window_x,text="列名二")
+                text2.grid(row=0,column=1,padx=5,pady=5)
+                text3 = ttk.Label(window_x,text="列名三")
+                text3.grid(row=0,column=2,padx=5,pady=5)
+                text4 = ttk.Label(window_x,text="列名四")
+                text4.grid(row=0,column=3,padx=5,pady=5)
+                entry_row_name = ttk.Entry(window_x)
+                entry_row_name.grid(row=1,column=0,padx=5,pady=5)
+                entry_row_name2 = ttk.Entry(window_x)
+                entry_row_name2.grid(row=1,column=1,padx=5,pady=5)
+                entry_row_name3 = ttk.Entry(window_x)
+                entry_row_name3.grid(row=1,column=2,padx=5,pady=5)
+                entry_row_name4 = ttk.Entry(window_x)
+                entry_row_name4.grid(row=1,column=3,padx=5,pady=5)
+                entry_row_name.insert(tk.END,"天宫")
+                entry_row_name2.insert(tk.END,"地宫")
+                entry_row_name3.insert(tk.END,"人宫")
+                entry_row_name4.insert(tk.END,"吉值")
+                entry_row_name.bind('<Shift_R>', lambda event: entry_row_name_())
+                entry_row_name2.bind('<Shift_R>', lambda event: entry_row_name_())
+                entry_row_name3.bind('<Shift_R>', lambda event: entry_row_name_())
+                entry_row_name4.bind('<Shift_R>', lambda event: entry_row_name_())
+                entry_row_name.bind('<Return>', lambda event: entry_row_name2.focus_set())
+                entry_row_name2.bind('<Return>', lambda event: entry_row_name3.focus_set())
+                entry_row_name3.bind('<Return>', lambda event: entry_row_name4.focus_set())
+                entry_row_name4.bind('<Return>', lambda event: entry_row_name.focus_set())
+                entry_row_name.bind('<Shift_L>', lambda event: entry2_2_1())
+                entry_row_name2.bind('<Shift_L>', lambda event: entry2_2_1())
+                entry_row_name3.bind('<Shift_L>', lambda event: entry2_2_1())
+                entry_row_name4.bind('<Shift_L>', lambda event: entry2_2_1())
+            
+            check_up_num = int(load12() or 1)
+            if check_up_num == 0:
+                x_x()
+            elif check_up_num == 1:
+                x_x_()
             window.focus_set()
             entrynum = entry.get()
             entry.pack_forget()
@@ -345,11 +420,11 @@ def x():
                 match entry___:
                     case []:
                         text_widget.insert(tk.END,"已循环次数：0")
-                        with open(o_path, 'w',encoding='utf-8') as f:
+                        with open(file_path, 'w',encoding='utf-8') as f:
                             f.truncate()
                         while True:
                             if num == int(entry_):
-                                shutil.copy(o_path, file_path)
+                                #shutil.copy(o_path, file_path)
                                 text_widget.delete(1.0, END)
                                 text_widget.insert(tk.END,"已完成循环")
                                 entry2.pack_forget()
@@ -360,7 +435,7 @@ def x():
                                 w3.grid_remove()
                                 w.grid()
                                 break
-                            with open(o_path, 'a+',encoding='utf-8') as f:
+                            with open(file_path, 'a+',encoding='utf-8') as f:
                                     t_rule_num = int(load12() or 1)
                                     t_rule_num2 = int(load13() or 2)
                                     if t_rule_num == 0:
