@@ -1,4 +1,6 @@
+import datetime
 import io
+import time
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.messagebox
@@ -23,15 +25,6 @@ from PIL import Image
 import pandas as pd
 import msvcrt
 import wmi
-
-def get_pid_by_name(process_name):
-    pid = None
-    c = wmi.WMI()
-    for process in c.Win32_Process():
-        if process.Name == process_name:
-            pid = process.ProcessId
-            break
-    return pid
 
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
@@ -153,6 +146,12 @@ def load13():
             return f.read()
     except FileNotFoundError:
         pass
+def load_down_box():
+    try:
+        with open(r_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
 def s():
     global v
     v = v + 1
@@ -556,35 +555,20 @@ def x():
         if combo.get() == "算一卦":
             text_widget.insert(tk.END,XiaoLliuren.numgua())
 
-    def on_right_click(event):
-        x, y = event.x_root, event.y_root
-        if combo.winfo_rootx() < x < combo.winfo_rootx() + combo.winfo_width() and \
-                combo.winfo_rooty() < y < combo.winfo_rooty() + combo.winfo_height():
-            generate_and_display()
-    values = ["算一卦"]
-    combo = ttk.Combobox(window, values=values, state="readonly")
+    combo = ttk.Combobox(window, values=["算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-    combo.bind("<Button-3>", on_right_click)
+    combo.bind("<Button-3>", lambda event: generate_and_display())
     combo.set("算一卦")
 
-    def 前_下拉框事件():
-        if 下拉框.get() == "返回主页":
+    def event_t():
+        if down_box.get() == "返回主页":
             window.destroy()
             root.deiconify()
-            
 
-    def 下拉框事件(event):
-        x, y = event.x_root, event.y_root
-        if 下拉框.winfo_rootx() < x < 下拉框.winfo_rootx() + 下拉框.winfo_width() and \
-                下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
-            前_下拉框事件()
-
-
-    下拉菜单组 = ["返回主页"]
-    下拉框 = ttk.Combobox(window, values=下拉菜单组, state="readonly")
-    下拉框.grid(row=0, column=0, padx=5, pady=5, sticky="e")
-    下拉框.bind("<Button-3>", 下拉框事件)
-    下拉框.set("返回主页")
+    down_box = ttk.Combobox(window, values=["返回主页"], state="readonly")
+    down_box.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+    down_box.bind("<Button-3>", lambda event: event_t())
+    down_box.set("返回主页")
     scrollbar = ttk.Scrollbar(window, style="TScrollbar", bootstyle="round")
     scrollbar.grid(row=1, column=1, sticky="ns")
     text_widget = tk.Text(window, wrap="word",
@@ -627,20 +611,172 @@ def x():
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
 
-    def save_data():
-        file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt", filetypes=[
-            ("Text files", "*.txt"), ("All files", "*.*")])
-        if file_path:
-            shutil.copy(g_path, file_path)
-
     window.mainloop()
 
 def gadget():
         
     def z():
-        window = ttk.Toplevel()
-        window.title("轻量记事本-小工具-紫微斗数")
-        window.iconbitmap(icon_path)
+        t = str(load_down_box() or "横排样式")
+
+        def z_judge():
+            gain_entry1 = entry1.get()
+            gain_entry2 = entry2.get()
+            gain_entry3 = entry3.get()
+            gain_entry4 = entry4.get()
+            gain_combobox = combobox.get()
+            r = re.sub(r'[^公元前\d]+', '', gain_entry1)
+            r_ = re.sub(r'[^\d]+',"",gain_entry2)
+            r__ = re.sub(r'[^\d]+',"",gain_entry3)
+            r___ = re.sub(r'[^\d]+',"",gain_entry4)
+            r____ = re.sub(r'^(?!男$|女$|其它$).+$',"",gain_combobox)
+            if gain_entry1 and (r != gain_entry1):
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+            elif gain_entry2 and (r_ != gain_entry2):
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+            elif gain_entry3 and (r__ != gain_entry3):
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+            elif gain_entry4 and (r___ != gain_entry4):
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+            elif gain_combobox and (r____ != gain_combobox):
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+            elif not (r and r_ and r__ and r___ and r____):
+                messagebox.showerror("错误", message="并未输入值", parent=window)
+            else:
+                try:
+                    date = datetime.datetime(int(r), int(r_), int(r__)).date()
+                    if not (0 < int(r___) <= 24):
+                        messagebox.showerror("错误", message="错误的日期", parent=window)
+                    else:
+                        r_t = "{}\n{}\n{}\n{}\n{}".format(r,r_,r__,r___,r____)
+                        try:
+                            os.mkdir("ZiWeidoushu")
+                        except:
+                            pass
+                        '''
+                        ZiWei_time = time.time()
+                        ZiWei_time_path = os.path.join((p + "\\"+"ZiWeidoushu"), str(ZiWei_time))
+                        with open(ZiWei_time_path, 'w',encoding='utf-8') as f:
+                            f.write(r_t)
+                        '''
+                except ValueError:
+                    messagebox.showerror("错误", message="错误的日期", parent=window)
+
+
+        def z_t():
+            window = ttk.Toplevel()
+            window.title("轻量记事本-小工具-紫微斗数-中州派")
+            window.iconbitmap(icon_path)
+            w = ttk.Frame(window)
+            w.grid(row=0,column=0)
+            w2 = ttk.Frame(window)
+            w2.grid(row=0,column=1)
+            w3 = ttk.Frame(window)
+            w3.grid(row=0,column=2)
+            w4 = ttk.Frame(window)
+            w4.grid(row=0,column=3)
+            w5 = ttk.Frame(window)
+            w5.grid(row=1,column=0)
+            w6 = ttk.Frame(window)
+            w6.grid(row=2,column=0)
+            w7 = ttk.Frame(window)
+            w7.grid(row=3,column=0)
+            w8 = ttk.Frame(window)
+            w8.grid(row=3,column=1)
+            w9 = ttk.Frame(window)
+            w9.grid(row=3,column=2)
+            w10 = ttk.Frame(window)
+            w10.grid(row=3,column=3)
+            w11 = ttk.Frame(window)
+            w11.grid(row=2,column=3)
+            w12 = ttk.Frame(window)
+            w12.grid(row=1,column=3)
+            w13 = ttk.Frame(window)
+            w13.grid(row=1,column=1,rowspan=1,columnspan=1)
+            '''
+            [ w  ][ w2 ][ w3 ][ w4 ]
+            [ w5 ][ w13][     ][ w12]
+            [ w6 ][     ][     ][ w11]
+            [ w7 ][ w8 ][ w9  ][ w10]
+            '''
+            
+        match t:
+            case "横排样式":
+                window = ttk.Toplevel()
+                window.title("轻量记事本-小工具-紫微斗数")
+                window.iconbitmap(icon_path)
+                text1 = tk.Label(window,text="年:")
+                text1.grid(column=0,row=0,padx=5,pady=5)
+                text2 = tk.Label(window,text="月:")
+                text2.grid(column=2,row=0,padx=5,pady=5)
+                text3 = tk.Label(window,text="日:")
+                text3.grid(column=4,row=0,padx=5,pady=5)
+                text4 = tk.Label(window,text="时:")
+                text4.grid(column=6,row=0,padx=5,pady=5)
+                text5 = tk.Label(window,text="性别:")
+                text5.grid(column=8,row=0,padx=5,pady=5)
+                entry1 = tk.Entry(window)
+                entry1.grid(column=1,row=0,padx=5,pady=5)
+                entry2 = tk.Entry(window)
+                entry2.grid(column=3,row=0,padx=5,pady=5)
+                entry3 = tk.Entry(window)
+                entry3.grid(column=5,row=0,padx=5,pady=5)
+                entry4 = tk.Entry(window)
+                entry4.grid(column=7,row=0,padx=5,pady=5)
+                combobox = ttk.Combobox(master=window, values=["男","女","其它"])
+                combobox.grid(row=0, column=9,padx=10,pady=10)
+                entry1.focus_set()
+                entry1.bind("<Return>", lambda event: entry2.focus_set())
+                entry2.bind("<Return>", lambda event: entry3.focus_set())
+                entry3.bind("<Return>", lambda event: entry4.focus_set())
+                entry4.bind("<Return>", lambda event: entry1.focus_set())
+                entry1.bind('<Shift_R>', lambda event: z_judge())
+                entry2.bind('<Shift_R>', lambda event: z_judge())
+                entry3.bind('<Shift_R>', lambda event: z_judge())
+                entry4.bind('<Shift_R>', lambda event: z_judge())
+                '''
+                values = ["算一卦"]
+                combo = ttk.Combobox(window, values=values, state="readonly")
+                combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+                combo.bind("<Button-3>", ())
+                combo.set("算一卦")
+                '''
+            case "竖排样式":
+                window = ttk.Toplevel()
+                window.title("轻量记事本-界面示例")
+                window.iconbitmap(icon_path)
+                text1 = tk.Label(window,text="年:")
+                text1.grid(column=0,row=0,padx=5,pady=5)
+                text2 = tk.Label(window,text="月:")
+                text2.grid(column=0,row=1,padx=5,pady=5)
+                text3 = tk.Label(window,text="日:")
+                text3.grid(column=0,row=2,padx=5,pady=5)
+                text4 = tk.Label(window,text="时:")
+                text4.grid(column=0,row=3,padx=5,pady=5)
+                text5 = tk.Label(window,text="性别:")
+                text5.grid(column=0,row=4,padx=5,pady=5)
+                entry1 = tk.Entry(window)
+                entry1.grid(column=1,row=0,padx=5,pady=5)
+                entry2 = tk.Entry(window)
+                entry2.grid(column=1,row=1,padx=5,pady=5)
+                entry3 = tk.Entry(window)
+                entry3.grid(column=1,row=2,padx=5,pady=5)
+                entry4 = tk.Entry(window)
+                entry4.grid(column=1,row=3,padx=5,pady=5)
+                combobox = ttk.Combobox(master=window, values=["男","女","其它"])
+                combobox.grid(row=4, column=1,padx=10,pady=10)
+                entry1.focus_set()
+                entry1.bind("<Return>", lambda event: entry2.focus_set())
+                entry2.bind("<Return>", lambda event: entry3.focus_set())
+                entry3.bind("<Return>", lambda event: entry4.focus_set())
+                entry4.bind("<Return>", lambda event: combobox.focus_set())
+                combobox.bind("<Return>", lambda event: entry1.focus_set())
+                entry1.bind('<Shift_R>', lambda event: z_judge())
+                entry2.bind('<Shift_R>', lambda event: z_judge())
+                entry3.bind('<Shift_R>', lambda event: z_judge())
+                entry4.bind('<Shift_R>', lambda event: z_judge())
+                combobox.bind('<Shift_R>', lambda event: z_judge())
+                
+                
     window = ttk.Toplevel()
     window.title("轻量记事本-小工具")
     window.iconbitmap(icon_path)
@@ -655,12 +791,28 @@ def gadget():
 
 
 def root_window():
+    child_windows = []
     
     window = ttk.Toplevel()
     window.resizable(0,0)
     window.title("轻量记事本-设置")
     window.iconbitmap(icon_path)
+    
+    def window_close():
+        for win in child_windows:
+            try:
+                win.destroy()
+            except:
+                pass
+        window.destroy()
 
+    def window_close_():
+        for win in child_windows:
+            try:
+                win.destroy()
+            except:
+                pass
+    
     def w_root1():
 
         global theme_cbo
@@ -670,6 +822,7 @@ def root_window():
             p1=v2%2
             p2=v3%2
             p3=v4%2
+            window_close_()
             if p1+p2+p3==1:
                 save(theme_cbo.get())    
             else:
@@ -689,7 +842,7 @@ def root_window():
         lb2 = ttk.Label(w_, text="选择字体:")
         lb2.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
 
-        window_Button_two = ttk.Button(w_, text="返回", bootstyle="outline", command=window.destroy)
+        window_Button_two = ttk.Button(w_, text="返回", bootstyle="outline", command=window_close)
         window_Button_two.grid(column=4,row=0,padx=10,pady=10)
         window_Button = ttk.Button(w_, text="保存当前设置", bootstyle="outline", command=bao_chun)
         window_Button.grid(column=3,row=0,padx=10,pady=10)
@@ -730,11 +883,11 @@ def root_window():
         theme_cbo.grid(column=1,row=0,padx=10,pady=10)
         theme_cbo.current(theme_names.index(style.theme_use()))
         theme_cbo.bind('<<ComboboxSelected>>', change_theme)
-        
-    w_root1()
     
-    sep = Separator(window)
-    sep.grid(column=0, row=1,pady=30,ipadx=300)
+    w_root1()
+
+    sep = Separator(window, orient='horizontal')
+    sep.grid(column=0, row=1,pady=30,sticky='ew',columnspan=1)
 
     def w_root2():
         w_2 = ttk.Frame(window)
@@ -753,8 +906,8 @@ def root_window():
 
     w_root2()
     
-    sep2 = Separator(window)
-    sep2.grid(column=0, row=3,pady=30,ipadx=300)
+    sep2 = Separator(window, orient='horizontal')
+    sep2.grid(column=0, row=3,pady=30,sticky='ew',columnspan=1)
     
     def w_root3():
         w_3 = ttk.Frame(window)
@@ -852,21 +1005,28 @@ def root_window():
 
     w_root3()
     
-    sep3 = Separator(window)
-    sep3.grid(column=0, row=5,pady=30,ipadx=300)
+    sep3 = Separator(window, orient='horizontal')
+    sep3.grid(column=0, row=5,pady=30,sticky='ew',columnspan=1)
     
     def w_root4():
+
         w_4 = ttk.Frame(window)
         w_4.grid(row=6,column=0,sticky=W)
 
         w_4_1 = ttk.Frame(w_4)
         w_4_1.grid(column=1,row=1,sticky=W)
 
+        w_4_2 = ttk.Frame(w_4)
+        w_4_2.grid(column=1,row=2,sticky=W)
+
         lb5 = ttk.Label(w_4, text="小工具设置:")
         lb5.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
 
         lb6 = ttk.Label(w_4, text="小六壬:")
         lb6.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
+
+        lb7 = ttk.Label(w_4, text="紫微斗数:")
+        lb7.grid(column=0,row=2,padx=10,pady=10,ipadx=5)
 
         consider_var = ttk.IntVar()
         if v5 % 2 == 1:
@@ -883,9 +1043,98 @@ def root_window():
             consider_var2.set(0)
         consider_checkbutton2 = ttk.Checkbutton(w_4_1, text="不计算吉值", variable=consider_var2, command=s6, bootstyle="round-toggle")
         consider_checkbutton2.grid(column=0,row=1,padx=10,pady=10,sticky=W)
+
+        w_4_2_lb1 = ttk.Label(w_4_2,text="输入界面样式：")
+        w_4_2_lb1.grid(column=0,row=0,padx=5,pady=5)
+
+        
+        
+        def event_t():
+            with open(r_path, 'w',encoding='utf-8') as file:
+                file.write(str(down_box.get()))
+            w_root5()
+
+        down_box = ttk.Combobox(w_4_2, values=["横排样式","竖排样式","自定义样式【未完成】"], state="readonly")
+        down_box.grid(row=0, column=1, padx=5, pady=5)
+        down_box.bind("<<ComboboxSelected>>", lambda event: event_t())
+        t = str(load_down_box() or "横排样式")
+        match t:
+            case "横排样式":
+                down_box.set("横排样式")
+            case "竖排样式":
+                down_box.set("竖排样式")
     
     w_root4()
 
+    def w_root5():
+        
+        t = str(load_down_box() or "横排样式")
+        
+        def w_root5_window1_():
+                w_root5_window1 = ttk.Toplevel(window)
+                child_windows.append(w_root5_window1)
+                w_root5_window1.resizable(0,0)
+                w_root5_window1.title("轻量记事本-界面示例")
+                w_root5_window1.iconbitmap(icon_path)
+                text = tk.Label(w_root5_window1,text="年:")
+                text.grid(column=0,row=0,padx=5,pady=5)
+                text = tk.Label(w_root5_window1,text="月:")
+                text.grid(column=2,row=0,padx=5,pady=5)
+                text = tk.Label(w_root5_window1,text="日:")
+                text.grid(column=4,row=0,padx=5,pady=5)
+                text = tk.Label(w_root5_window1,text="时:")
+                text.grid(column=6,row=0,padx=5,pady=5)
+                text5 = tk.Label(w_root5_window1,text="性别:")
+                text5.grid(column=8,row=0,padx=5,pady=5)
+                entry = tk.Entry(w_root5_window1)
+                entry.grid(column=1,row=0,padx=5,pady=5)
+                entry2 = tk.Entry(w_root5_window1)
+                entry2.grid(column=3,row=0,padx=5,pady=5)
+                entry3 = tk.Entry(w_root5_window1)
+                entry3.grid(column=5,row=0,padx=5,pady=5)
+                entry4 = tk.Entry(w_root5_window1)
+                entry4.grid(column=7,row=0,padx=5,pady=5)
+                combobox = ttk.Combobox(master=w_root5_window1, values=["男","女","其它"])
+                combobox.grid(row=0, column=9,padx=10,pady=10)
+
+        def w_root5_window2_():
+                w_root5_window2 = ttk.Toplevel(window)
+                child_windows.append(w_root5_window2)
+                w_root5_window2.resizable(0,0)
+                w_root5_window2.title("轻量记事本-界面示例")
+                w_root5_window2.iconbitmap(icon_path)
+                text2_2 = tk.Label(w_root5_window2,text="年:")
+                text2_2.grid(column=0,row=0,padx=5,pady=5)
+                text3_2 = tk.Label(w_root5_window2,text="月:")
+                text3_2.grid(column=0,row=1,padx=5,pady=5)
+                text4_2 = tk.Label(w_root5_window2,text="日:")
+                text4_2.grid(column=0,row=2,padx=5,pady=5)
+                text5_2 = tk.Label(w_root5_window2,text="时:")
+                text5_2.grid(column=0,row=3,padx=5,pady=5)
+                text5 = tk.Label(w_root5_window2,text="性别:")
+                text5.grid(column=0,row=4,padx=5,pady=5)
+                entry1_2 = tk.Entry(w_root5_window2)
+                entry1_2.grid(column=1,row=0,padx=5,pady=5)
+                entry2_2 = tk.Entry(w_root5_window2)
+                entry2_2.grid(column=1,row=1,padx=5,pady=5)
+                entry3_2 = tk.Entry(w_root5_window2)
+                entry3_2.grid(column=1,row=2,padx=5,pady=5)
+                entry4_2 = tk.Entry(w_root5_window2)
+                entry4_2.grid(column=1,row=3,padx=5,pady=5)
+                combobox = ttk.Combobox(master=w_root5_window2, values=["男","女","其它"])
+                combobox.grid(row=4, column=1,padx=10,pady=10)
+
+        match t:
+            case "横排样式":
+                w_root5_window1_()
+            case "竖排样式":
+                w_root5_window2_()
+        
+                
+    
+    w_root5()
+
+    window.protocol("WM_DELETE_WINDOW", window_close)
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
     
@@ -1271,6 +1520,7 @@ if __name__ == '__main__':
     o_path = os.path.join(p, "o")
     p_path = os.path.join(p, "p")
     q_path = os.path.join(p, "q")
+    r_path = os.path.join(p, "r")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
