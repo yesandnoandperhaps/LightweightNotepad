@@ -26,6 +26,8 @@ import pandas as pd
 import msvcrt
 import wmi
 
+import ZiWeidoushu
+
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
         file.write(theme)
@@ -149,6 +151,18 @@ def load13():
 def load_down_box():
     try:
         with open(r_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
+def load_down_box2():
+    try:
+        with open(s_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
+def load_down_box3():
+    try:
+        with open(t_path, 'r',encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
             pass
@@ -630,7 +644,7 @@ def gadget():
             r___ = re.sub(r'[^\d]+',"",gain_entry4)
             r____ = re.sub(r'^(?!男$|女$|其它$).+$',"",gain_combobox)
             if gain_entry1 and (r != gain_entry1):
-                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif gain_entry2 and (r_ != gain_entry2):
                 messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
             elif gain_entry3 and (r__ != gain_entry3):
@@ -643,61 +657,91 @@ def gadget():
                 messagebox.showerror("错误", message="并未输入值", parent=window)
             else:
                 try:
+                    r = re.sub(r'[^\d]+',"",r)
                     date = datetime.datetime(int(r), int(r_), int(r__)).date()
                     if not (0 < int(r___) <= 24):
                         messagebox.showerror("错误", message="错误的日期", parent=window)
                     else:
-                        r_t = "{}\n{}\n{}\n{}\n{}".format(r,r_,r__,r___,r____)
-                        try:
-                            os.mkdir("ZiWeidoushu")
-                        except:
-                            pass
+                        ziwei = ZiWeidoushu.ZiWeidoushu(r, r_, r__, r___)
+                        nianGan,nianGanwuXing,nianGanyinYang\
+                            ,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao\
+                                ,yueGan,yueZhi\
+                                    ,shiChen =ziwei.ZiWeisoushu()
+                        nianGanZhi = nianGan+nianZhi
+                        nianGanZhiwuXing = nianGanwuXing + nianZhiwuXing
+                        nianGanZhiyinYang = nianGanyinYang + nianZhiyinYang
+                        group_w13\
+                             = "年干支：{}\n年干支五行所属：{}\n年干支阴阳所属：{}\n"\
+                            .format(nianGanZhi,nianGanZhiwuXing,nianGanZhiyinYang)
+                        print(ziwei.ZiWeisoushu())
+                        def z_t():
+                            window_z = ttk.Toplevel()
+                            window_z.title("轻量记事本-小工具-紫微斗数-中州派")
+                            window_z.iconbitmap(icon_path)
+                            w = ttk.Frame(window_z)
+                            w.grid(row=0,column=0,padx=10,pady=10)
+                            w2 = ttk.Frame(window_z)
+                            w2.grid(row=0,column=1,padx=10,pady=10)
+                            w3 = ttk.Frame(window_z)
+                            w3.grid(row=0,column=2,padx=10,pady=10)
+                            w4 = ttk.Frame(window_z)
+                            w4.grid(row=0,column=3,padx=10,pady=10)
+                            w5 = ttk.Frame(window_z)
+                            w5.grid(row=1,column=0,padx=10,pady=10)
+                            w6 = ttk.Frame(window_z)
+                            w6.grid(row=2,column=0,padx=10,pady=10)
+                            w7 = ttk.Frame(window_z)
+                            w7.grid(row=3,column=0,padx=10,pady=10)
+                            w8 = ttk.Frame(window_z)
+                            w8.grid(row=3,column=1,padx=10,pady=10)
+                            w9 = ttk.Frame(window_z)
+                            w9.grid(row=3,column=2,padx=10,pady=10)
+                            w10 = ttk.Frame(window_z)
+                            w10.grid(row=3,column=3,padx=10,pady=10)
+                            w11 = ttk.Frame(window_z)
+                            w11.grid(row=2,column=3,padx=10,pady=10)
+                            w12 = ttk.Frame(window_z)
+                            w12.grid(row=1,column=3,padx=10,pady=10)
+                            w13 = ttk.Frame(window_z)
+                            w13.grid(row=1,column=1,rowspan=1,columnspan=1,padx=10,pady=10)
+                            def Heavenly_disk():
+                                w_l = ttk.Label(w,text="巳",font=font_style)
+                                w2_l = ttk.Label(w2,text="午",font=font_style)
+                                w3_l = ttk.Label(w3,text="未",font=font_style)
+                                w4_l = ttk.Label(w4,text="申",font=font_style)
+                                w5_l = ttk.Label(w5,text="辰",font=font_style)
+                                w6_l = ttk.Label(w6,text="卯",font=font_style)
+                                w7_l = ttk.Label(w7,text="寅",font=font_style)
+                                w8_l = ttk.Label(w8,text="丑",font=font_style)
+                                w9_l = ttk.Label(w9,text="子",font=font_style)
+                                w10_l = ttk.Label(w10,text="亥",font=font_style)
+                                w11_l = ttk.Label(w11,text="戌",font=font_style)
+                                w12_l = ttk.Label(w12,text="酉",font=font_style)
+                                w13_l = ttk.Label(w13,text=group_w13,font=font_style)
+                                w_l.grid(row=0,column=0,sticky=SE)
+                                w2_l.grid(row=0,column=0,sticky=SE)
+                                w3_l.grid(row=0,column=0,sticky=SE)
+                                w4_l.grid(row=0,column=0,sticky=SE)
+                                w5_l.grid(row=0,column=0,sticky=SE)
+                                w6_l.grid(row=0,column=0,sticky=SE)
+                                w7_l.grid(row=0,column=0,sticky=SE)
+                                w8_l.grid(row=0,column=0,sticky=SE)
+                                w9_l.grid(row=0,column=0,sticky=SE)
+                                w10_l.grid(row=0,column=0,sticky=SE)
+                                w11_l.grid(row=0,column=0,sticky=SE)
+                                w12_l.grid(row=0,column=0,sticky=SE)
+                                w13_l.grid(row=0,column=0,sticky=SE)
+                            Heavenly_disk()
                         '''
-                        ZiWei_time = time.time()
-                        ZiWei_time_path = os.path.join((p + "\\"+"ZiWeidoushu"), str(ZiWei_time))
-                        with open(ZiWei_time_path, 'w',encoding='utf-8') as f:
-                            f.write(r_t)
+                            [ w  ][ w2 ][ w3 ][ w4 ]
+                            [ w5 ][ w13][     ][ w12]
+                            [ w6 ][     ][     ][ w11]
+                            [ w7 ][ w8 ][ w9  ][ w10]
                         '''
+                        z_t()
                 except ValueError:
                     messagebox.showerror("错误", message="错误的日期", parent=window)
 
-
-        def z_t():
-            window = ttk.Toplevel()
-            window.title("轻量记事本-小工具-紫微斗数-中州派")
-            window.iconbitmap(icon_path)
-            w = ttk.Frame(window)
-            w.grid(row=0,column=0)
-            w2 = ttk.Frame(window)
-            w2.grid(row=0,column=1)
-            w3 = ttk.Frame(window)
-            w3.grid(row=0,column=2)
-            w4 = ttk.Frame(window)
-            w4.grid(row=0,column=3)
-            w5 = ttk.Frame(window)
-            w5.grid(row=1,column=0)
-            w6 = ttk.Frame(window)
-            w6.grid(row=2,column=0)
-            w7 = ttk.Frame(window)
-            w7.grid(row=3,column=0)
-            w8 = ttk.Frame(window)
-            w8.grid(row=3,column=1)
-            w9 = ttk.Frame(window)
-            w9.grid(row=3,column=2)
-            w10 = ttk.Frame(window)
-            w10.grid(row=3,column=3)
-            w11 = ttk.Frame(window)
-            w11.grid(row=2,column=3)
-            w12 = ttk.Frame(window)
-            w12.grid(row=1,column=3)
-            w13 = ttk.Frame(window)
-            w13.grid(row=1,column=1,rowspan=1,columnspan=1)
-            '''
-            [ w  ][ w2 ][ w3 ][ w4 ]
-            [ w5 ][ w13][     ][ w12]
-            [ w6 ][     ][     ][ w11]
-            [ w7 ][ w8 ][ w9  ][ w10]
-            '''
             
         match t:
             case "横排样式":
@@ -1047,12 +1091,27 @@ def root_window():
         w_4_2_lb1 = ttk.Label(w_4_2,text="输入界面样式：")
         w_4_2_lb1.grid(column=0,row=0,padx=5,pady=5)
 
+        W_4_2_lb2 = ttk.Label(w_4_2,text="闰月问题：")
+        W_4_2_lb2.grid(column=0,row=1,padx=5,pady=5)
+
+        
+        W_4_2_lb3 = ttk.Label(w_4_2,text="时辰问题：")
+        W_4_2_lb3.grid(column=0,row=2,padx=5,pady=5)
+
         
         
         def event_t():
             with open(r_path, 'w',encoding='utf-8') as file:
                 file.write(str(down_box.get()))
             w_root5()
+
+        def down_box2_save():
+            with open(s_path, 'w',encoding='utf-8') as file:
+                file.write(str(down_box2.get()))
+        
+        def down_box3_save():
+            with open(s_path, 'w',encoding='utf-8') as file:
+                file.write(str(down_box3.get()))
 
         down_box = ttk.Combobox(w_4_2, values=["横排样式","竖排样式","自定义样式【未完成】"], state="readonly")
         down_box.grid(row=0, column=1, padx=5, pady=5)
@@ -1063,6 +1122,30 @@ def root_window():
                 down_box.set("横排样式")
             case "竖排样式":
                 down_box.set("竖排样式")
+
+        down_box2 = ttk.Combobox(w_4_2, values=["作本月","作下月","月中为界"], state="readonly")
+        down_box2.grid(row=1, column=1, padx=5, pady=5)
+        down_box2.bind("<<ComboboxSelected>>", lambda event: down_box2_save())
+        t2 = str(load_down_box2() or "作下月")
+        match t2:
+            case "作下月":
+                down_box2.set("作下月")
+            case "作本月":
+                down_box2.set("作本月")
+            case "月中为界":
+                down_box2.set("月中为界")
+
+        down_box3 = ttk.Combobox(w_4_2, values=["子时视明日","子时视本日","子时中而分界"], state="readonly")
+        down_box3.grid(row=2, column=1, padx=5, pady=5)
+        down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
+        t3 = str(load_down_box3() or "子时视明日")
+        match t3:
+            case "子时视明日":
+                down_box3.set("子时视明日")
+            case "子时视本日":
+                down_box3.set("子时视本日")
+            case "子时中而分界":
+                down_box3.set("子时中而分界")
     
     w_root4()
 
@@ -1521,6 +1604,8 @@ if __name__ == '__main__':
     p_path = os.path.join(p, "p")
     q_path = os.path.join(p, "q")
     r_path = os.path.join(p, "r")
+    s_path = os.path.join(p,"s")
+    t_path = os.path.join(p,"t")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)

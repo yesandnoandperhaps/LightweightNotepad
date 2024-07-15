@@ -357,9 +357,6 @@ def numgua():
     initial_text1 += "人宫：{}\n".format(g.get(r, "空亡，"))
     initial_text1 += "地宫：{}\n".format(g.get(d, "空亡，"))
     num_t = num(t=t,r=r,d=d)
-    
-    with open(g_path, 'w',encoding='utf-8') as f:
-        f.write(initial_text1)
 
     vc5 = v5 % 2
     vc6 = v6 % 2
