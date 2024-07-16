@@ -64,20 +64,20 @@ class ZiWeidoushu(object):
             6: "卯",
             7: "辰",
             8: "辰", 
-            9: "巳时", 
-            10: "巳时", 
-            11: "午时", 
-            12: "午时",
-            13: "未时", 
-            14: "未时",
-            15: "申时", 
-            16: "申时", 
-            17: "酉时", 
-            18: "酉时", 
-            19: "戌时", 
-            20: "戌时", 
-            21: "亥时", 
-            22: "亥时",
+            9: "巳", 
+            10: "巳", 
+            11: "午", 
+            12: "午",
+            13: "未", 
+            14: "未",
+            15: "申", 
+            16: "申", 
+            17: "酉", 
+            18: "酉", 
+            19: "戌", 
+            20: "戌", 
+            21: "亥", 
+            22: "亥",
             23: "子",
             24: "子"
             }
@@ -451,8 +451,164 @@ class ZiWeidoushu(object):
                 Shen = Shen11[Shen_x.index(birth_month)]
             case 11:
                 Shen = Shen12[Shen_x.index(birth_month)]
+        '''
+        五行局
+        '''
+        match nianGan:
+            case "甲"|"乙":
+                wuXingju_nianGan = "甲乙"
+            case "乙"|"庚":
+                wuXingju_nianGan = "乙庚" 
+            case "丙"|"辛":
+                wuXingju_nianGan = "丙辛"
+            case "丁"|"壬":
+                wuXingju_nianGan = "丁壬"
+            case "戊"|"癸":
+                wuXingju_nianGan = "戊癸"
+        
+        match Ming:
+            case "子"|"丑":
+                wuXingju_Ming = "子丑"
+            case "寅"|"卯":
+                wuXingju_Ming = "寅卯"
+            case "辰"|"巳":
+                wuXingju_Ming = "辰巳"
+            case "午"|"未":
+                wuXingju_Ming = "午未"
+            case "申"|"酉":
+                wuXingju_Ming = "申酉"
+            case "戌"|"亥":
+                wuXingju_Ming = "戌亥"
+                
+        wuXingju_nianGan_x = ["戊癸","丁壬","丙辛","乙庚","甲己"]
+        wuXingju_Ming_y = ["子丑", "寅卯", "辰巳", "午未", "申酉", "戌亥"]
+        
+        
+        wuXingju1 = ["金四局", "木三局", "土五局", "火六局", "水二局"]
+        wuXingju2 = ["水二局", "金四局", "木三局", "土五局", "火六局"]
+        wuXingju3 = ["土五局", "火六局", "水二局", "金四局", "木三局"]
+        wuXingju4 = ["火六局", "水二局", "金四局", "木三局", "土五局"]
+        wuXingju5 = ["木三局", "土五局", "火六局", "水二局", "金四局"]
+        wuXingju6 = ["水二局", "金四局", "木三局", "土五局", "火六局"]
+        wuXingju_Ming_ty = wuXingju_Ming_y.index(wuXingju_Ming)
 
-        return nianGan,nianGanwuXing,nianGanyinYang,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao,yueGan,yueZhi,shiChen,Ming
+        match wuXingju_Ming_ty:
+            case 0:
+                wuXingju = wuXingju1[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+            case 1:
+                wuXingju = wuXingju2[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+            case 2:
+                wuXingju = wuXingju3[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+            case 3:
+                wuXingju = wuXingju4[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+            case 4:
+                wuXingju = wuXingju5[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+            case 5:
+                wuXingju = wuXingju6[wuXingju_nianGan_x.index(wuXingju_nianGan)]
+
+        '''
+        定紫微
+        '''
+        ziWei_wuXingju_x = ["火六局", "土五局", "金四局", "木三局", "水二局"]
+        shenRi_y = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+
+        ziWei1 = ["酉", "午", "亥", "辰", "丑"]
+        ziWei2 = ["午", "亥", "辰", "丑", "寅"]
+        ziWei3 = ["亥", "辰", "丑", "寅", "寅"]
+        ziWei4 = ["辰", "丑", "寅", "巳", "卯"]
+        ziWei5 = ["丑", "寅", "子", "寅", "卯"]
+        ziWei6 = ["寅", "未", "巳", "卯", "辰"]
+        ziWei7 = ["戌", "子", "寅", "午", "辰"]
+        ziWei8 = ["未", "巳", "卯", "卯", "巳"]
+        ziWei9 = ["子", "寅", "丑", "辰", "巳"]
+        ziWei10 = ["巳", "卯", "午", "未", "午"]
+        ziWei11 = ["寅", "申", "卯", "辰", "午"]
+        ziWei12 = ["乙", "癸", "辛", "己", "丁"]
+        ziWei13 = ["亥", "午", "寅", "申", "未"]
+        ziWei14 = ["申", "卯", "未", "巳", "申"]
+        ziWei15 = ["丑", "辰", "辰", "午", "申"]
+        ziWei16 = ["午", "酉", "巳", "酉", "酉"]
+        ziWei17 = ["卯", "寅", "卯", "午", "酉"]
+        ziWei18 = ["辰", "未", "申", "未", "戌"]
+        ziWei19 = ["子", "辰", "巳", "戌", "戌"]
+        ziWei20 = ["酉", "巳", "午", "未", "亥"]
+        ziWei21 = ["寅", "戌", "辰", "申", "亥"]
+        ziWei22 = ["未", "卯", "酉", "亥", "子"]
+        ziWei23 = ["辰", "申", "午", "申", "子"]
+        ziWei24 = ["巳", "巳", "未", "酉", "丑"]
+        ziWei25 = ["丑", "午", "巳", "子", "丑"]
+        ziWei26 = ["戌", "亥", "戌", "酉", "寅"]
+        ziWei27 = ["卯", "辰", "未", "戌", "寅"]
+        ziWei28 = ["申", "酉", "申", "丑", "卯"]
+        ziWei29 = ["巳", "午", "午", "戌", "卯"]
+        ziWei30 = ["午", "未", "亥", "亥", "辰"]
+        shenRi_ty = shenRi_y.index(birth_month)
+
+        match shenRi_ty:
+            case 0:
+                ziWei = ziWei1[ziWei_wuXingju_x.index(wuXingju)]
+            case 1:
+                ziWei = ziWei2[ziWei_wuXingju_x.index(wuXingju)]
+            case 2:
+                ziWei = ziWei3[ziWei_wuXingju_x.index(wuXingju)]
+            case 3:
+                ziWei = ziWei4[ziWei_wuXingju_x.index(wuXingju)]
+            case 4:
+                ziWei = ziWei5[ziWei_wuXingju_x.index(wuXingju)]
+            case 5:
+                ziWei = ziWei6[ziWei_wuXingju_x.index(wuXingju)]
+            case 6:
+                ziWei = ziWei7[ziWei_wuXingju_x.index(wuXingju)]
+            case 7:
+                ziWei = ziWei8[ziWei_wuXingju_x.index(wuXingju)]
+            case 8:
+                ziWei = ziWei9[ziWei_wuXingju_x.index(wuXingju)]
+            case 9:
+                ziWei = ziWei10[ziWei_wuXingju_x.index(wuXingju)]
+            case 10:
+                ziWei = ziWei11[ziWei_wuXingju_x.index(wuXingju)]
+            case 11:
+                ziWei = ziWei12[ziWei_wuXingju_x.index(wuXingju)]
+            case 12:
+                ziWei = ziWei13[ziWei_wuXingju_x.index(wuXingju)]
+            case 13: 
+                ziWei = ziWei14[ziWei_wuXingju_x.index(wuXingju)]
+            case 14:    
+                ziWei = ziWei15[ziWei_wuXingju_x.index(wuXingju)]
+            case 15:    
+                ziWei = ziWei16[ziWei_wuXingju_x.index(wuXingju)]
+            case 16:  
+                ziWei = ziWei17[ziWei_wuXingju_x.index(wuXingju)]
+            case 17:      
+                ziWei = ziWei18[ziWei_wuXingju_x.index(wuXingju)]
+            case 18:  
+                ziWei = ziWei19[ziWei_wuXingju_x.index(wuXingju)]
+            case 19:  
+                ziWei = ziWei20[ziWei_wuXingju_x.index(wuXingju)]
+            case 20:  
+                ziWei = ziWei21[ziWei_wuXingju_x.index(wuXingju)]
+            case 21:  
+                ziWei = ziWei22[ziWei_wuXingju_x.index(wuXingju)]
+            case 22:  
+                ziWei = ziWei23[ziWei_wuXingju_x.index(wuXingju)]
+            case 23:
+                ziWei = ziWei24[ziWei_wuXingju_x.index(wuXingju)]
+            case 24:  
+                ziWei = ziWei25[ziWei_wuXingju_x.index(wuXingju)]
+            case 25:  
+                ziWei = ziWei26[ziWei_wuXingju_x.index(wuXingju)]
+            case 26:  
+                ziWei = ziWei27[ziWei_wuXingju_x.index(wuXingju)]
+            case 27:  
+                ziWei = ziWei28[ziWei_wuXingju_x.index(wuXingju)]
+            case 28:  
+                ziWei = ziWei29[ziWei_wuXingju_x.index(wuXingju)]
+            case 29:  
+                ziWei = ziWei30[ziWei_wuXingju_x.index(wuXingju)]
+
+
+
+        return nianGan,nianGanwuXing,nianGanyinYang,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao,yueGan,yueZhi,shiChen,Ming,Shen,wuXingju,ziWei
             
 
 '''
