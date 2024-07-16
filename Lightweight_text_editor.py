@@ -667,13 +667,14 @@ def gadget():
                             ,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao\
                                 ,yueGan,yueZhi\
                                     ,shiChen\
-                            ,Ming,Shen =ziwei.ZiWeisoushu()
+                            ,Ming,Shen,wuXingju\
+                                 ,ziWei =ziwei.ZiWeisoushu()
                         nianGanZhi = nianGan+nianZhi
                         nianGanZhiwuXing = nianGanwuXing + nianZhiwuXing
                         nianGanZhiyinYang = nianGanyinYang + nianZhiyinYang
                         group_w13\
-                             = "年干支：{}\n年干支五行所属：{}\n年干支阴阳所属：{}\n"\
-                            .format(nianGanZhi,nianGanZhiwuXing,nianGanZhiyinYang)
+                             = "年干支：{}\n年干支五行所属：{}\n年干支阴阳所属：{}\n{}\n"\
+                            .format(nianGanZhi,nianGanZhiwuXing,nianGanZhiyinYang,wuXingju)
                         print(ziwei.ZiWeisoushu())
                         def z_t():
                             window_z = ttk.Toplevel()
@@ -732,6 +733,7 @@ def gadget():
                                 w11_l.grid(row=10,column=0)
                                 w12_l.grid(row=10,column=0)
                                 w13_l.grid(row=10,column=0)
+                            
                             def twelve_god():
                                 match Ming:
                                     case "子":
@@ -1034,6 +1036,44 @@ def gadget():
                                         tianZhai.grid(row=10,column=1)
                                         fuDe.grid(row=10,column=1)
                                         fuMu.grid(row=10,column=1)
+                                match Shen:
+                                    case "子":
+                                        Shen_ = ttk.Label(w9,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "丑":
+                                        Shen_ = ttk.Label(w8,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "寅":
+                                        Shen_ = ttk.Label(w7,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "卯":
+                                        Shen_ = ttk.Label(w6,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "辰":
+                                        Shen_ = ttk.Label(w5,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "巳":
+                                        Shen_ = ttk.Label(w,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "午":
+                                        Shen_ = ttk.Label(w2,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "未":
+                                        Shen_ = ttk.Label(w3,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "申":
+                                        Shen_ = ttk.Label(w4,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "酉":
+                                        Shen_ = ttk.Label(w12,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "戌":
+                                        Shen_ = ttk.Label(w11,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                                    case "亥":
+                                        Shen_ = ttk.Label(w10,text="身",font=font_style)
+                                        Shen_.grid(row=9,column=1)
+                            
                             def person():
                                 match nianGan:
                                     case "甲"|"己":
@@ -1161,7 +1201,47 @@ def gadget():
                                         __________.grid(row=9,column=0)
                                         ___________.grid(row=9,column=0)
                                         ____________.grid(row=9,column=0)
-                                
+
+                            def confirm_ziWei():
+                                match ziWei:
+                                    case "子":
+                                        ziWei_ = ttk.Label(w9,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "丑":
+                                        ziWei_ = ttk.Label(w8,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "寅":
+                                        ziWei_ = ttk.Label(w7,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "卯":
+                                        ziWei_ = ttk.Label(w6,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "辰":
+                                        ziWei_ = ttk.Label(w5,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "巳":
+                                        ziWei_ = ttk.Label(w,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "午":
+                                        ziWei_ = ttk.Label(w2,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "未":
+                                        ziWei_ = ttk.Label(w3,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "申":
+                                        ziWei_ = ttk.Label(w4,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "酉":
+                                        ziWei_ = ttk.Label(w12,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "戌":
+                                        ziWei_ = ttk.Label(w11,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                                    case "亥":
+                                        ziWei_ = ttk.Label(w10,text="紫微",font=font_style)
+                                        ziWei_.grid(row=8,column=0)
+                            
+                            confirm_ziWei()
                             Heavenly()
                             twelve_god()
                             person()
