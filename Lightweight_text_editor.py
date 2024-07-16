@@ -1,9 +1,6 @@
 import datetime
-import io
-import time
 import tkinter as tk
 import tkinter.font as tkFont
-import tkinter.messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from tkinter import filedialog
@@ -17,15 +14,10 @@ import threading
 import windnd
 from tkinter.ttk import Separator
 from tkinter import messagebox
-from XiaoLliuren import g_path
 import XiaoLliuren
 import tkinter.ttk
 import re
 from PIL import Image
-import pandas as pd
-import msvcrt
-import wmi
-
 import ZiWeidoushu
 
 def save(theme):
@@ -675,7 +667,7 @@ def gadget():
                         group_w13\
                              = "年干支：{}\n年干支五行所属：{}\n年干支阴阳所属：{}\n{}\n"\
                             .format(nianGanZhi,nianGanZhiwuXing,nianGanZhiyinYang,wuXingju)
-                        print(ziwei.ZiWeisoushu())
+                        
                         def z_t():
                             window_z = ttk.Toplevel()
                             window_z.title("轻量记事本-小工具-紫微斗数-中州派")
@@ -1253,8 +1245,8 @@ def gadget():
                             [ w6 ][     ][     ][ w11]
                             [ w7 ][ w8 ][ w9  ][ w10]
                         '''
-                except ValueError:
-                    messagebox.showerror("错误", message="错误的日期", parent=window)
+                except Exception as e:
+                    print("Error: ", e)
 
             
         match t:

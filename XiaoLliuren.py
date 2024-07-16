@@ -1,13 +1,8 @@
 import decimal
-import multiprocessing
 import random
 import os
 import math
-import numpy as np
 from sympy import *
-import time
-import warnings
-import sys
 
 p = os.path.dirname(__file__)
 g_path = os.path.join(p,"g")

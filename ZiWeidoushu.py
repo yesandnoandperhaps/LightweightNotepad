@@ -2,8 +2,7 @@ import os
 import re
 from lunardate import LunarDate
 from datetime import datetime
-from lunar_python import LunarMonth,Lunar,LunarYear
-import numpy as np
+from lunar_python import LunarMonth
 
 p = os.path.dirname(__file__)
 
@@ -455,8 +454,8 @@ class ZiWeidoushu(object):
         五行局
         '''
         match nianGan:
-            case "甲"|"乙":
-                wuXingju_nianGan = "甲乙"
+            case "甲"|"己":
+                wuXingju_nianGan = "甲己"
             case "乙"|"庚":
                 wuXingju_nianGan = "乙庚" 
             case "丙"|"辛":
@@ -512,18 +511,18 @@ class ZiWeidoushu(object):
         ziWei_wuXingju_x = ["火六局", "土五局", "金四局", "木三局", "水二局"]
         shenRi_y = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 
-        ziWei1 = ["酉", "午", "亥", "辰", "丑"]
-        ziWei2 = ["午", "亥", "辰", "丑", "寅"]
-        ziWei3 = ["亥", "辰", "丑", "寅", "寅"]
-        ziWei4 = ["辰", "丑", "寅", "巳", "卯"]
-        ziWei5 = ["丑", "寅", "子", "寅", "卯"]
-        ziWei6 = ["寅", "未", "巳", "卯", "辰"]
-        ziWei7 = ["戌", "子", "寅", "午", "辰"]
-        ziWei8 = ["未", "巳", "卯", "卯", "巳"]
-        ziWei9 = ["子", "寅", "丑", "辰", "巳"]
+        ziWei1  = ["酉", "午", "亥", "辰", "丑"]
+        ziWei2  = ["午", "亥", "辰", "丑", "寅"]
+        ziWei3  = ["亥", "辰", "丑", "寅", "寅"]
+        ziWei4  = ["辰", "丑", "寅", "巳", "卯"]
+        ziWei5  = ["丑", "寅", "子", "寅", "卯"]
+        ziWei6  = ["寅", "未", "巳", "卯", "辰"]
+        ziWei7  = ["戌", "子", "寅", "午", "辰"]
+        ziWei8  = ["未", "巳", "卯", "卯", "巳"]
+        ziWei9  = ["子", "寅", "丑", "辰", "巳"]
         ziWei10 = ["巳", "卯", "午", "未", "午"]
         ziWei11 = ["寅", "申", "卯", "辰", "午"]
-        ziWei12 = ["乙", "癸", "辛", "己", "丁"]
+        ziWei12 = ["卯", "丑", "辰", "巳", "未"]
         ziWei13 = ["亥", "午", "寅", "申", "未"]
         ziWei14 = ["申", "卯", "未", "巳", "申"]
         ziWei15 = ["丑", "辰", "辰", "午", "申"]
@@ -627,7 +626,7 @@ class ZiWeidoushu(object):
 月天干=年份天干对应数字×2+农历月份，
 得出的数字如果是偶数，就减十，直到减为单数为止;月地支不用算，农历月份对应的地支就是月地支。
 '''
-ziwei = ZiWeidoushu('2023', '2', '28', '1')
-result = ziwei.ZiWeisoushu()
-print(result)
+#ziwei = ZiWeidoushu('2023', '2', '28', '1')
+#result = ziwei.ZiWeisoushu()
+#print(result)
 
