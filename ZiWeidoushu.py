@@ -1,3 +1,4 @@
+import math
 import os
 import re
 from lunardate import LunarDate
@@ -40,45 +41,58 @@ class ZiWeidoushu(object):
             11: ("戌", "阳", "土", "狗"),
             12: ("亥", "阴", "水", "猪")
             }
+        yueGan_dict = {
+            "甲":("甲","木","阳"),
+            "乙":("乙","木","阴"),
+            "丙":("丙","火","阳"),
+            "丁":("丁","火","阴"),
+            "戊":("戊","土","阳"),
+            "己":("己","土","阴"),
+            "庚":("庚","金","阳"),
+            "辛":("辛","金","阴"),
+            "壬":("壬","水","阳"),
+            "癸":("癸","水","阴")
+
+        }
         yueZhi_dict = {
-            1:"寅",
-            2:"卯",
-            3:"辰",
-            4:"巳",
-            5:"午",
-            6:"未",
-            7:"申",
-            8:"酉",
-            9:"戌",
-            10:"亥",
-            11:"子",
-            12:"丑"
+            1:("寅", "阳", "木", "虎"),
+            2:("卯", "阴", "木", "兔"),
+            3:("辰", "阳", "土", "龙"),
+            4:("巳", "阴", "火", "蛇"),
+            5:("午", "阳", "火", "马"),
+            6:("未", "阴", "土", "羊"),
+            7:("申", "阳", "金", "猴"),
+            8:("酉", "阴", "金", "鸡"),
+            9:("戌", "阳", "土", "狗"),
+            10:("亥", "阴", "水", "猪"),
+            11:("子", "阳", "水", "鼠"),
+            12:("丑", "阴", "土", "牛")
             }
         shiChen_dict = {
-            1: "丑", 
-            2: "丑",
-            3: "寅", 
-            4: "寅", 
-            5: "卯",
-            6: "卯",
-            7: "辰",
-            8: "辰", 
-            9: "巳", 
-            10: "巳", 
-            11: "午", 
-            12: "午",
-            13: "未", 
-            14: "未",
-            15: "申", 
-            16: "申", 
-            17: "酉", 
-            18: "酉", 
-            19: "戌", 
-            20: "戌", 
-            21: "亥", 
-            22: "亥",
-            23: "子",
-            24: "子"
+            1: ("丑", "阴", "土", "牛"),
+            2: ("丑", "阴", "土", "牛"),
+            3: ("寅", "阳", "木", "虎"),
+            4: ("寅", "阳", "木", "虎"),
+            5: ("卯", "阴", "木", "兔"),
+            6: ("卯", "阴", "木", "兔"),
+            7: ("辰", "阳", "土", "龙"),
+            8: ("辰", "阳", "土", "龙"), 
+            9: ("巳", "阴", "火", "蛇"),
+            10: ("巳", "阴", "火", "蛇"),
+            11: ("午", "阳", "火", "马"),
+            12: ("午", "阳", "火", "马"),
+            13: ("未", "阴", "土", "羊"),
+            14: ("未", "阴", "土", "羊"),
+            15: ("申", "阳", "金", "猴"),
+            16: ("申", "阳", "金", "猴"),
+            17: ("酉", "阴", "金", "鸡"), 
+            18: ("酉", "阴", "金", "鸡"),
+            19: ("戌", "阳", "土", "狗"),
+            20: ("戌", "阳", "土", "狗"),
+            21: ("亥", "阴", "水", "猪"),
+            22: ("亥", "阴", "水", "猪"),
+            23: ("子", "阳", "水", "鼠"),
+            24: ("子", "阳", "水", "鼠"),
             }
         Zhi_dict = {
             "子":1,
@@ -117,7 +131,7 @@ class ZiWeidoushu(object):
         年干年支计算
         '''
         
-        if self.n == str(int(self.n)):#公元后
+        if self.n == re.sub(r'[^\d]+',"",self.n):#公元后
             if nianGan_num > 3:
                 t_nianGan_num = nianGan_num - 3
                 nianGan,nianGanwuXing,nianGanyinYang = tianGan_dict[t_nianGan_num]
@@ -151,7 +165,7 @@ class ZiWeidoushu(object):
         月干月支
         ''' 
 
-        yueZhi =  yueZhi_dict[solar_month]
+        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[solar_month]
 
         yueGan = ""
 
@@ -287,14 +301,56 @@ class ZiWeidoushu(object):
                     case "丑":
                         yueGan = "乙"
 
+        yueGan,yueGanwuXing,yueGanyinYang = yueGan_dict[yueGan]
+
+        '''
+        儒略日和日干支
+        '''
+
+        def ce2jd(Year,Month,D):
+            if Month in [1,2]:
+                M = Month + 12
+                Y = Year - 1
+            else:
+                Y = Year
+                M = Month
+            B = 0
+            if Y>1582 or (Y==1582 and M>10) or (Y==1582 and M==10 and D>=15):
+                B = 2 - int(Y/100) + int(Y/400)  #公元1582年10月15日以后每400年减少3闰
+            JD = math.floor(365.25*(Y+4716))+int(30.6*(M+1))+D+B-1524.5
+            MJD = "无"
+            #JD = math.floor(365.25*(Y+4712))+int(30.6*(M+1))+D+B-63.5
+            if Y>1858 or (Y==1858 and M>11) or (Y==1858 and M==11 and D>=17):
+                MJD = int(JD - 2400000.5)
+                return JD,MJD
+            return JD,MJD
+        
+        if self.n == re.sub(r'[^\d]+',"",self.n):
+            JD,MJD = ce2jd(int(self.n),int(self.y),int(self.r))
+        else:
+            n_new = -int(re.sub(r'[^\d]+',"",self.n))
+            JD,MJD = ce2jd(n_new,int(self.y),int(self.r))
+        
+        NOONJD = math.ceil(JD)
+
+        riGan_num = 1+(NOONJD-1)%10
+        riZhi_num = 1+(NOONJD+1)%12
+
+        riGan,riGanwuXing,ruGanyinYang = tianGan_dict[riGan_num]
+        riZhi,riZhiyinYang,riZhiwuXing,ruZhishengXiao = diZhi_dict[riZhi_num]
+        
+        
+
+        '''
+        时干支
+        '''
+
+        shiChen,shiChenyinYang,shiChenwuXing,shiChenshengXiao = shiChen_dict[int(self.s)]
+
+        shiGan,shiGanwuXing,shiGanyinYang = tianGan_dict[((riGan_num*12 + Zhi_dict[shiChen])-1)%10]
 
 
         
-        
-        '''
-        生时转换
-        '''
-        shiChen = shiChen_dict[int(self.s)]
 
         '''
         紫微斗数闰月作下月
@@ -606,7 +662,16 @@ class ZiWeidoushu(object):
                 ziWei = ziWei30[ziWei_wuXingju_x.index(wuXingju)]
 
 
-        return nianGan,nianGanwuXing,nianGanyinYang,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao,yueGan,yueZhi,shiChen,Ming,Shen,wuXingju,ziWei
+        return nianGan,nianGanwuXing,nianGanyinYang\
+            ,nianZhi,nianZhiwuXing,nianZhiyinYang,nianZhishengXiao\
+                ,yueGan,yueGanwuXing,yueGanyinYang\
+                    ,yueZhi,yueZhiwuXing,yueZhiyinYang,yueZhishengXiao\
+                    ,shiChen,shiChenwuXing,shiChenyinYang,shiChenshengXiao\
+                        ,Ming,Shen,wuXingju,ziWei\
+                            ,JD,NOONJD,MJD\
+                                ,riGan,riGanwuXing,ruGanyinYang\
+                                    ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
+                                    ,shiGan,shiGanwuXing,shiGanyinYang
             
 
 '''
@@ -625,7 +690,7 @@ class ZiWeidoushu(object):
 月天干=年份天干对应数字×2+农历月份，
 得出的数字如果是偶数，就减十，直到减为单数为止;月地支不用算，农历月份对应的地支就是月地支。
 '''
-#ziwei = ZiWeidoushu('2023', '2', '28', '1')
+#ziwei = ZiWeidoushu('公元前300', '7', '17', '12')
 #result = ziwei.ZiWeisoushu()
 #print(result)
 

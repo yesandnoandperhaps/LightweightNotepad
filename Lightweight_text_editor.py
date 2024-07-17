@@ -1,4 +1,5 @@
 import datetime
+import math
 import tkinter as tk
 import tkinter.font as tkFont
 import ttkbootstrap as ttk
@@ -181,6 +182,7 @@ def wv_1():
     num_wv1 = num_wv1 + 1
     x_save()
 
+#关于小六壬###分割线
 def x():
     window = ttk.Toplevel(root)
     window.title("小六壬")
@@ -618,6 +620,9 @@ def x():
     window.grid_columnconfigure(0, weight=1)
 
     window.mainloop()
+###分割线
+#关于紫微斗数###分割线
+
 
 def gadget():
         
@@ -638,39 +643,44 @@ def gadget():
             if gain_entry1 and (r != gain_entry1):
                 messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif gain_entry2 and (r_ != gain_entry2):
-                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif gain_entry3 and (r__ != gain_entry3):
-                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif gain_entry4 and (r___ != gain_entry4):
-                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif gain_combobox and (r____ != gain_combobox):
-                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它", parent=window)
+                messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
             elif not (r and r_ and r__ and r___ and r____):
                 messagebox.showerror("错误", message="并未输入值", parent=window)
             else:
-                try:
-                    r = re.sub(r'[^\d]+',"",r)
-                    date = datetime.datetime(int(r), int(r_), int(r__)).date()
+                    date = datetime.datetime(int(re.sub(r'[^\d]+',"",r)), int(r_), int(r__)).date()
                     if not (0 < int(r___) <= 24):
                         messagebox.showerror("错误", message="错误的日期", parent=window)
                     else:
                         ziwei = ZiWeidoushu.ZiWeidoushu(r, r_, r__, r___)
                         nianGan,nianGanwuXing,nianGanyinYang\
-                            ,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao\
-                                ,yueGan,yueZhi\
-                                    ,shiChen\
-                            ,Ming,Shen,wuXingju\
-                                 ,ziWei =ziwei.ZiWeisoushu()
-                        nianGanZhi = nianGan+nianZhi
-                        nianGanZhiwuXing = nianGanwuXing + nianZhiwuXing
-                        nianGanZhiyinYang = nianGanyinYang + nianZhiyinYang
+            ,nianZhi,nianZhiwuXing,nianZhiyinYang,nianZhishengXiao\
+                ,yueGan,yueGanwuXing,yueGanyinYang\
+                    ,yueZhi,yueZhiwuXing,yueZhiyinYang,yueZhishengXiao\
+                    ,shiChen,shiChenwuXing,shiChenyinYang,shiChenshengXiao\
+                        ,Ming,Shen,wuXingju,ziWei\
+                            ,JD,NOONJD,MJD\
+                                ,riGan,riGanwuXing,ruGanyinYang\
+                                    ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
+                                    ,shiGan,shiGanwuXing,shiGanyinYang\
+                                                              = ziwei.ZiWeisoushu()
+                        ganZhi = nianGan+nianZhi+yueGan+yueZhi+riGan+riZhi+shiGan+shiChen
+                        wuXing = nianGanwuXing+nianZhiwuXing+yueGanwuXing+yueZhiwuXing+riGanwuXing+riZhiwuXing+shiGanwuXing+shiChenwuXing
+                        yinYang = nianGanyinYang+nianZhiyinYang+yueGanyinYang+yueZhiyinYang+ruGanyinYang+riZhiyinYang+shiGanyinYang+shiChenyinYang
+                        shengXiao = "无"+nianZhishengXiao+"无"+yueZhishengXiao+"无"+ruZhishengXiao+"无"+shiChenshengXiao
+                        
                         group_w13\
-                             = "年干支：{}\n年干支五行所属：{}\n年干支阴阳所属：{}\n{}\n"\
-                            .format(nianGanZhi,nianGanZhiwuXing,nianGanZhiyinYang,wuXingju)
+                             = "天干地支：{}\n干支五行：{}\n干支阴阳：{}\n干支生肖：{}\n儒略日【傍晚】：{}\n儒略日【正午】：{}\n简化儒略日：{}\n五行局：{}\n"\
+                            .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,wuXingju)
                         
                         def z_t():
                             window_z = ttk.Toplevel()
-                            window_z.title("轻量记事本-小工具-紫微斗数-中州派")
+                            window_z.title("轻量记事本-小工具-紫微斗数-三合派")
                             window_z.iconbitmap(icon_path)
                             w = ttk.Frame(window_z)
                             w.grid(row=0,column=0,padx=10,pady=10)
@@ -955,17 +965,17 @@ def gadget():
                                         fuMu.grid(row=10,column=1)
                                     case "酉":
                                         Ming_ = ttk.Label(w12,text="命",font=font_style)
-                                        xiongDi = ttk.Label(w11,text="兄弟",font=font_style)
-                                        fuQi = ttk.Label(w10,text="夫妻",font=font_style)
-                                        ziNu = ttk.Label(w9,text="子女",font=font_style)
-                                        caiBo = ttk.Label(w8,text="财帛",font=font_style)
-                                        jiE = ttk.Label(w7,text="疾厄",font=font_style)
+                                        xiongDi = ttk.Label(w4,text="兄弟",font=font_style)
+                                        fuQi = ttk.Label(w3,text="夫妻",font=font_style)
+                                        ziNu = ttk.Label(w2,text="子女",font=font_style)
+                                        caiBo = ttk.Label(w,text="财帛",font=font_style)
+                                        jiE = ttk.Label(w5,text="疾厄",font=font_style)
                                         qianYi = ttk.Label(w6,text="迁移",font=font_style)
-                                        puYi = ttk.Label(w5,text="仆役",font=font_style)
-                                        guanLu = ttk.Label(w,text="官禄",font=font_style)
-                                        tianZhai = ttk.Label(w2,text="田宅",font=font_style)
-                                        fuDe = ttk.Label(w3,text="福德",font=font_style)
-                                        fuMu = ttk.Label(w4,text="父母",font=font_style)
+                                        puYi = ttk.Label(w7,text="仆役",font=font_style)
+                                        guanLu = ttk.Label(w8,text="官禄",font=font_style)
+                                        tianZhai = ttk.Label(w9,text="田宅",font=font_style)
+                                        fuDe = ttk.Label(w10,text="福德",font=font_style)
+                                        fuMu = ttk.Label(w11,text="父母",font=font_style)
                                         Ming_.grid(row=10,column=1)
                                         xiongDi.grid(row=10,column=1)
                                         fuQi.grid(row=10,column=1)
@@ -980,17 +990,17 @@ def gadget():
                                         fuMu.grid(row=10,column=1)
                                     case "戌":
                                         Ming_ = ttk.Label(w11,text="命",font=font_style)
-                                        xiongDi = ttk.Label(w10,text="兄弟",font=font_style)
-                                        fuQi = ttk.Label(w9,text="夫妻",font=font_style)
-                                        ziNu = ttk.Label(w8,text="子女",font=font_style)
-                                        caiBo = ttk.Label(w7,text="财帛",font=font_style)
-                                        jiE = ttk.Label(w6,text="疾厄",font=font_style)
+                                        xiongDi = ttk.Label(w12,text="兄弟",font=font_style)
+                                        fuQi = ttk.Label(w4,text="夫妻",font=font_style)
+                                        ziNu = ttk.Label(w3,text="子女",font=font_style)
+                                        caiBo = ttk.Label(w2,text="财帛",font=font_style)
+                                        jiE = ttk.Label(w,text="疾厄",font=font_style)
                                         qianYi = ttk.Label(w5,text="迁移",font=font_style)
-                                        puYi = ttk.Label(w,text="仆役",font=font_style)
-                                        guanLu = ttk.Label(w2,text="官禄",font=font_style)
-                                        tianZhai = ttk.Label(w3,text="田宅",font=font_style)
-                                        fuDe = ttk.Label(w4,text="福德",font=font_style)
-                                        fuMu = ttk.Label(w12,text="父母",font=font_style)
+                                        puYi = ttk.Label(w6,text="仆役",font=font_style)
+                                        guanLu = ttk.Label(w7,text="官禄",font=font_style)
+                                        tianZhai = ttk.Label(w8,text="田宅",font=font_style)
+                                        fuDe = ttk.Label(w9,text="福德",font=font_style)
+                                        fuMu = ttk.Label(w10,text="父母",font=font_style)
                                         Ming_.grid(row=10,column=1)
                                         xiongDi.grid(row=10,column=1)
                                         fuQi.grid(row=10,column=1)
@@ -1005,17 +1015,17 @@ def gadget():
                                         fuMu.grid(row=10,column=1)
                                     case "亥":
                                         Ming_ = ttk.Label(w10,text="命",font=font_style)
-                                        xiongDi = ttk.Label(w9,text="兄弟",font=font_style)
-                                        fuQi = ttk.Label(w8,text="夫妻",font=font_style)
-                                        ziNu = ttk.Label(w7,text="子女",font=font_style)
-                                        caiBo = ttk.Label(w6,text="财帛",font=font_style)
-                                        jiE = ttk.Label(w5,text="疾厄",font=font_style)
+                                        xiongDi = ttk.Label(w11,text="兄弟",font=font_style)
+                                        fuQi = ttk.Label(w12,text="夫妻",font=font_style)
+                                        ziNu = ttk.Label(w4,text="子女",font=font_style)
+                                        caiBo = ttk.Label(w3,text="财帛",font=font_style)
+                                        jiE = ttk.Label(w2,text="疾厄",font=font_style)
                                         qianYi = ttk.Label(w,text="迁移",font=font_style)
-                                        puYi = ttk.Label(w2,text="仆役",font=font_style)
-                                        guanLu = ttk.Label(w3,text="官禄",font=font_style)
-                                        tianZhai = ttk.Label(w4,text="田宅",font=font_style)
-                                        fuDe = ttk.Label(w12,text="福德",font=font_style)
-                                        fuMu = ttk.Label(w11,text="父母",font=font_style)
+                                        puYi = ttk.Label(w5,text="仆役",font=font_style)
+                                        guanLu = ttk.Label(w6,text="官禄",font=font_style)
+                                        tianZhai = ttk.Label(w7,text="田宅",font=font_style)
+                                        fuDe = ttk.Label(w8,text="福德",font=font_style)
+                                        fuMu = ttk.Label(w9,text="父母",font=font_style)
                                         Ming_.grid(row=10,column=1)
                                         xiongDi.grid(row=10,column=1)
                                         fuQi.grid(row=10,column=1)
@@ -1236,7 +1246,7 @@ def gadget():
                                         tianFu = ttk.Label(w7,text="天府",font=font_style)
                                         taiYin = ttk.Label(w6,text="太阴",font=font_style)
                                         tanLang = ttk.Label(w5,text="贪狼",font=font_style)
-                                        juMen = ttk.Label(w,text="巨门")
+                                        juMen = ttk.Label(w,text="巨门",font=font_style)
                                         taiXiang = ttk.Label(w2,text="天相",font=font_style)
                                         tianLiang = ttk.Label(w3,text="天梁",font=font_style)
                                         qiSha = ttk.Label(w4,text="七杀",font=font_style)
@@ -1394,6 +1404,460 @@ def gadget():
                                     poJun.grid(row=8,column=1)
                                 grid_deploy()
                             
+                            def confirm_ziWei_month_group():
+                                match nianZhi:
+                                    case "戌"|"午"|"寅":
+                                        match shiChen:
+                                            case "子":
+                                                wenChang = ttk.Label(w11,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w5,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w8,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w6,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w10,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w10,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w2,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w7,text="封诰",font=font_style)
+                                            case "丑":
+                                                wenChang = ttk.Label(w12,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w7,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w5,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w9,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w11,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w3,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w6,text="封诰",font=font_style)
+                                            case "寅":
+                                                wenChang = ttk.Label(w4,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w2,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w6,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w8,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w12,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w4,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w5,text="封诰",font=font_style)
+                                            case "卯":
+                                                wenChang = ttk.Label(w3,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w3,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w5,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w2,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w7,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w4,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w12,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w,text="封诰",font=font_style)
+                                            case "辰":
+                                                wenChang = ttk.Label(w2,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w4,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w3,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w6,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w3,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w11,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w2,text="封诰",font=font_style)
+                                            case "巳":
+                                                wenChang = ttk.Label(w,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w12,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w2,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w4,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w5,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w2,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w10,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w3,text="封诰",font=font_style)
+                                            case "午":
+                                                wenChang = ttk.Label(w5,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w11,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w3,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w12,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w9,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w4,text="封诰",font=font_style)
+                                            case "未":
+                                                wenChang = ttk.Label(w6,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w10,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w4,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w11,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w2,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w5,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w8,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w12,text="封诰",font=font_style)
+                                            case "申":
+                                                wenChang = ttk.Label(w7,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w9,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w12,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w10,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w3,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w6,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w7,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w11,text="封诰",font=font_style)
+                                            case "酉":
+                                                wenChang = ttk.Label(w8,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w8,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w11,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w9,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w4,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w7,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w6,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w10,text="封诰",font=font_style)
+                                            case "戌":
+                                                wenChang = ttk.Label(w9,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w7,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w10,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w8,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w12,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w8,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w5,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w9,text="封诰",font=font_style)
+                                            case "亥":
+                                                wenChang = ttk.Label(w10,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w6,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w9,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w7,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w11,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w9,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w8,text="封诰",font=font_style)
+                                    case "辰"|"子"|"申":
+                                        match shiChen:
+                                            case "子":
+                                                wenChang = ttk.Label(w11,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w5,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w7,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w11,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w10,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w10,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w2,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w7,text="封诰",font=font_style)
+                                            case "丑":
+                                                wenChang = ttk.Label(w12,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w6,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w10,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w9,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w11,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w3,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w6,text="封诰",font=font_style)
+                                            case "寅":
+                                                wenChang = ttk.Label(w4,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w2,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w5,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w9,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w8,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w12,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w4,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w5,text="封诰",font=font_style)
+                                            case "卯":
+                                                wenChang = ttk.Label(w3,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w3,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w8,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w7,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w4,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w12,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w,text="封诰",font=font_style)
+                                            case "辰":
+                                                wenChang = ttk.Label(w2,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w4,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w2,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w7,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w6,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w3,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w11,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w2,text="封诰",font=font_style)
+                                            case "巳":
+                                                wenChang = ttk.Label(w,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w12,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w3,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w6,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w5,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w2,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w10,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w3,text="封诰",font=font_style)
+                                            case "午":
+                                                wenChang = ttk.Label(w5,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w11,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w4,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w5,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w9,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w4,text="封诰",font=font_style)
+                                            case "未":
+                                                wenChang = ttk.Label(w6,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w10,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w12,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w2,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w5,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w8,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w12,text="封诰",font=font_style)
+                                            case "申":
+                                                wenChang = ttk.Label(w7,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w9,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w11,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w2,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w3,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w6,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w7,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w11,text="封诰",font=font_style)
+                                            case "酉":
+                                                wenChang = ttk.Label(w8,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w8,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w10,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w3,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w4,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w7,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w6,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w10,text="封诰",font=font_style)
+                                            case "戌":
+                                                wenChang = ttk.Label(w9,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w7,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w9,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w4,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w12,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w8,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w5,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w9,text="封诰",font=font_style)
+                                            case "亥":
+                                                wenChang = ttk.Label(w10,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w6,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w8,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w12,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w11,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w9,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w8,text="封诰",font=font_style)
+                                    case "丑"|"酉"|"巳":
+                                        match shiChen:
+                                            case "子":
+                                                wenChang = ttk.Label(w11,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w5,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w6,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w11,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w10,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w10,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w2,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w7,text="封诰",font=font_style)
+                                            case "丑":
+                                                wenChang = ttk.Label(w12,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w5,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w10,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w9,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w11,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w3,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w6,text="封诰",font=font_style)
+                                            case "寅":
+                                                wenChang = ttk.Label(w4,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w2,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w9,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w8,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w12,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w4,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w5,text="封诰",font=font_style)
+                                            case "卯":
+                                                wenChang = ttk.Label(w3,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w3,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w2,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w8,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w7,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w4,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w12,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w,text="封诰",font=font_style)
+                                            case "辰":
+                                                wenChang = ttk.Label(w2,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w4,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w3,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w7,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w6,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w3,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w11,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w2,text="封诰",font=font_style)
+                                            case "巳":
+                                                wenChang = ttk.Label(w,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w12,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w4,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w6,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w5,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w2,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w10,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w3,text="封诰",font=font_style)
+                                            case "午":
+                                                wenChang = ttk.Label(w5,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w11,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w12,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w5,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w9,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w4,text="封诰",font=font_style)
+                                            case "未":
+                                                wenChang = ttk.Label(w6,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w10,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w11,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w2,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w5,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w8,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w12,text="封诰",font=font_style)
+                                            case "申":
+                                                wenChang = ttk.Label(w7,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w9,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w10,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w2,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w3,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w6,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w7,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w11,text="封诰",font=font_style)
+                                            case "酉":
+                                                wenChang = ttk.Label(w8,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w8,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w9,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w3,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w4,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w7,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w6,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w10,text="封诰",font=font_style)
+                                            case "戌":
+                                                wenChang = ttk.Label(w9,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w7,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w8,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w4,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w12,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w8,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w5,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w9,text="封诰",font=font_style)
+                                            case "亥":
+                                                wenChang = ttk.Label(w10,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w6,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w7,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w12,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w11,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w9,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w8,text="封诰",font=font_style)
+                                    case "未"|"卯"|"亥":
+                                        match shiChen:
+                                            case "子":
+                                                wenChang = ttk.Label(w11,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w5,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w12,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w11,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w10,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w10,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w2,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w7,text="封诰",font=font_style)
+                                            case "丑":
+                                                wenChang = ttk.Label(w12,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w11,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w10,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w9,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w11,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w3,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w6,text="封诰",font=font_style)
+                                            case "寅":
+                                                wenChang = ttk.Label(w4,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w2,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w10,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w9,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w8,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w12,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w4,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w5,text="封诰",font=font_style)
+                                            case "卯":
+                                                wenChang = ttk.Label(w3,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w3,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w9,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w8,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w7,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w4,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w12,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w,text="封诰",font=font_style)
+                                            case "辰":
+                                                wenChang = ttk.Label(w2,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w4,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w8,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w7,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w6,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w3,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w11,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w2,text="封诰",font=font_style)
+                                            case "巳":
+                                                wenChang = ttk.Label(w,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w12,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w7,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w6,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w5,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w2,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w10,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w3,text="封诰",font=font_style)
+                                            case "午":
+                                                wenChang = ttk.Label(w5,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w11,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w6,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w5,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w9,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w4,text="封诰",font=font_style)
+                                            case "未":
+                                                wenChang = ttk.Label(w6,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w10,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w5,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w2,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w5,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w8,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w12,text="封诰",font=font_style)
+                                            case "申":
+                                                wenChang = ttk.Label(w7,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w9,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w2,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w3,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w6,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w7,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w11,text="封诰",font=font_style)
+                                            case "酉":
+                                                wenChang = ttk.Label(w8,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w8,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w2,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w3,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w4,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w7,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w6,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w10,text="封诰",font=font_style)
+                                            case "戌":
+                                                wenChang = ttk.Label(w9,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w7,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w3,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w4,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w12,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w8,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w5,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w9,text="封诰",font=font_style)
+                                            case "亥":
+                                                wenChang = ttk.Label(w10,text="文昌",font=font_style)
+                                                wenQu = ttk.Label(w6,text="文曲",font=font_style)
+                                                huoXing = ttk.Label(w4,text="火星",font=font_style)
+                                                lingXing = ttk.Label(w12,text="铃星",font=font_style)
+                                                diJie = ttk.Label(w11,text="地劫",font=font_style)
+                                                dikong = ttk.Label(w9,text="地空",font=font_style)
+                                                taiFu = ttk.Label(w,text="台辅",font=font_style)
+                                                fengGao = ttk.Label(w8,text="封诰",font=font_style)
+                                def grid_deploy():
+                                    wenChang.grid(row=8,column=2)
+                                    wenQu.grid(row=8,column=3)
+                                    huoXing.grid(row=8,column=4)
+                                    lingXing.grid(row=8,column=5)
+                                    diJie.grid(row=7,column=0)
+                                    dikong.grid(row=7,column=1)
+                                    taiFu.grid(row=7,column=2)
+                                    fengGao.grid(row=7,column=3)
+                                grid_deploy()
+                            
+                            confirm_ziWei_month_group()
                             confirm_ziWei_and_ziWei_five()
                             Heavenly()
                             twelve_god()
@@ -1406,8 +1870,6 @@ def gadget():
                             [ w6 ][     ][     ][ w11]
                             [ w7 ][ w8 ][ w9  ][ w10]
                         '''
-                except Exception as e:
-                    print("Error: ", e)
 
             
         match t:
@@ -1497,12 +1959,12 @@ def gadget():
     b1.grid(column=0,row=0,padx=10,pady=10)
     b2 = ttk.Button(window, text="紫微斗数", bootstyle="outline", command=z)
     b2.grid(column=1,row=0,padx=10,pady=10)
+###分割线
 
 
 
 
-
-
+#关于设置界面###分割线
 def root_window():
     child_windows = []
     
@@ -1891,7 +2353,9 @@ def root_window():
     window.grid_columnconfigure(0, weight=1)
     
     window.mainloop()
+###分割线
 
+#关于主界面###分割线
 def quit_window(icon: pystray.Icon):
     icon.stop()
     icon.visible = False
