@@ -606,7 +606,6 @@ class ZiWeidoushu(object):
                 ziWei = ziWei30[ziWei_wuXingju_x.index(wuXingju)]
 
 
-
         return nianGan,nianGanwuXing,nianGanyinYang,nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao,yueGan,yueZhi,shiChen,Ming,Shen,wuXingju,ziWei
             
 
