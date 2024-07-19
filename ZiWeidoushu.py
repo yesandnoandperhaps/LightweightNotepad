@@ -16,6 +16,7 @@ class ZiWeidoushu(object):
     def ZiWeisoushu(self):
         
         tianGan_dict = {
+            0:("甲","木","阳"),
             1:("甲","木","阳"),
             2:("乙","木","阴"),
             3:("丙","火","阳"),
@@ -165,7 +166,7 @@ class ZiWeidoushu(object):
         月干月支
         ''' 
 
-        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[solar_month]
+        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[lunar_date.month]
 
         yueGan = ""
 
@@ -344,6 +345,8 @@ class ZiWeidoushu(object):
         '''
         时干支
         '''
+        
+        print(JD,NOONJD)
 
         shiChen,shiChenyinYang,shiChenwuXing,shiChenshengXiao = shiChen_dict[int(self.s)]
 
@@ -690,7 +693,7 @@ class ZiWeidoushu(object):
 月天干=年份天干对应数字×2+农历月份，
 得出的数字如果是偶数，就减十，直到减为单数为止;月地支不用算，农历月份对应的地支就是月地支。
 '''
-#ziwei = ZiWeidoushu('公元前300', '7', '17', '12')
-#result = ziwei.ZiWeisoushu()
-#print(result)
+ziwei = ZiWeidoushu('2024', '7', '18', '24')
+result = ziwei.ZiWeisoushu()
+print(result)
 

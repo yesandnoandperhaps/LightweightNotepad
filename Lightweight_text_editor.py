@@ -705,7 +705,6 @@ def x():
                                     break
                                 with open(file_path, 'a+',encoding='utf-8') as f:
                                         t_rule_num = int(load12() or 1)
-                                        print(t_rule_num)
                                         t_rule_num2 = int(load13() or 2)
                                         match t_rule_num:
                                             case 0:
