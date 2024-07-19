@@ -536,7 +536,7 @@ def x():
                             entry2_2()
                         def entry_row_name__():
                             with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
+                                        f.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
                                                                                          entry_row_name2_.get(),
                                                                                          entry_row_name3_.get(),
                                                                                          entry_row_name4_.get(),
@@ -545,7 +545,13 @@ def x():
                                                                                          entry_row_name7_.get(),
                                                                                          entry_row_name8_.get(),
                                                                                          entry_row_name9_.get(),
-                                                                                         entry_row_name10_.get()
+                                                                                         entry_row_name10_.get(),
+                                                                                         entry_row_name11_.get(),
+                                                                                         entry_row_name12_.get(),
+                                                                                         entry_row_name13_.get(),
+                                                                                         entry_row_name14_.get(),
+                                                                                         entry_row_name15_.get(),
+                                                                                         entry_row_name16_.get()
                                                                                          ))
                             window_x_.destroy()
                             window.wm_attributes('-disabled', 0)
@@ -628,15 +634,24 @@ def x():
                         entry_row_name15_.grid(row=9,column=2,padx=5,pady=5)
                         entry_row_name16_.grid(row=11,column=0,padx=5,pady=5)
 
-                        entry_row_name_.insert(tk.END,entry_row_name.get()+"(1)")
-                        entry_row_name2_.insert(tk.END,entry_row_name.get()+"(2)")
-                        entry_row_name3_.insert(tk.END,entry_row_name.get()+"(3)")
-                        entry_row_name4_.insert(tk.END,entry_row_name2.get()+"(1)")
-                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"(2)")
-                        entry_row_name6_.insert(tk.END,entry_row_name2.get()+"(3)")
-                        entry_row_name7_.insert(tk.END,entry_row_name3.get()+"(1)")
-                        entry_row_name8_.insert(tk.END,entry_row_name3.get()+"(2)")
-                        entry_row_name9_.insert(tk.END,entry_row_name3.get()+"(3)")
+                        entry_row_name_.insert(tk.END,entry_row_name.get()+"【顺序数据】")
+                        entry_row_name2_.insert(tk.END,entry_row_name2.get()+"【顺序数据】")
+                        entry_row_name3_.insert(tk.END,entry_row_name3.get()+"【顺序数据】")
+
+                        entry_row_name4_.insert(tk.END,entry_row_name.get()+"【值数据】")
+                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"【值数据】")
+                        entry_row_name6_.insert(tk.END,entry_row_name3.get()+"【值数据】")
+
+                        entry_row_name7_.insert(tk.END,entry_row_name.get()+"(1)【详细值数据】")
+                        entry_row_name8_.insert(tk.END,entry_row_name.get()+"(2)【详细值数据】")
+                        entry_row_name9_.insert(tk.END,entry_row_name.get()+"(3)【详细值数据】")
+                        entry_row_name10_.insert(tk.END,entry_row_name2.get()+"(1)【详细值数据】")
+                        entry_row_name11_.insert(tk.END,entry_row_name2.get()+"(2)【详细值数据】")
+                        entry_row_name12_.insert(tk.END,entry_row_name2.get()+"(3)【详细值数据】")
+                        entry_row_name13_.insert(tk.END,entry_row_name3.get()+"(1)【详细值数据】")
+                        entry_row_name14_.insert(tk.END,entry_row_name3.get()+"(2)【详细值数据】")
+                        entry_row_name15_.insert(tk.END,entry_row_name3.get()+"(3)【详细值数据】")
+
                         entry_row_name16_.insert(tk.END,entry_row_name4.get())
 
                         entry_row_name_.bind('<Return>', lambda event: entry_row_name2_.focus_set())
@@ -648,7 +663,13 @@ def x():
                         entry_row_name7_.bind('<Return>', lambda event: entry_row_name8_.focus_set())
                         entry_row_name8_.bind('<Return>', lambda event: entry_row_name9_.focus_set())
                         entry_row_name9_.bind('<Return>', lambda event: entry_row_name10_.focus_set())
-                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name_.focus_set())
+                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name11_.focus_set())
+                        entry_row_name11_.bind('<Return>', lambda event: entry_row_name12_.focus_set())
+                        entry_row_name12_.bind('<Return>', lambda event: entry_row_name13_.focus_set())
+                        entry_row_name13_.bind('<Return>', lambda event: entry_row_name14_.focus_set())
+                        entry_row_name14_.bind('<Return>', lambda event: entry_row_name15_.focus_set())
+                        entry_row_name15_.bind('<Return>', lambda event: entry_row_name16_.focus_set())
+                        entry_row_name16_.bind('<Return>', lambda event: entry_row_name_.focus_set())
                         entry_row_name_.bind('<Shift_L>', lambda event: entry2_2_2())
                         entry_row_name2_.bind('<Shift_L>', lambda event: entry2_2_2())
                         entry_row_name3_.bind('<Shift_L>', lambda event: entry2_2_2())
@@ -659,6 +680,12 @@ def x():
                         entry_row_name8_.bind('<Shift_L>', lambda event: entry2_2_2())
                         entry_row_name9_.bind('<Shift_L>', lambda event: entry2_2_2())
                         entry_row_name10_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name11_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name12_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name13_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name14_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name15_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name16_.bind('<Shift_L>', lambda event: entry2_2_2())
                         entry_row_name_.bind('<Shift_R>', lambda event: entry_row_name__())
                         entry_row_name2_.bind('<Shift_R>', lambda event: entry_row_name__())
                         entry_row_name3_.bind('<Shift_R>', lambda event: entry_row_name__())
@@ -669,6 +696,12 @@ def x():
                         entry_row_name8_.bind('<Shift_R>', lambda event: entry_row_name__())
                         entry_row_name9_.bind('<Shift_R>', lambda event: entry_row_name__())
                         entry_row_name10_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name11_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name12_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name13_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name14_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name15_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name16_.bind('<Shift_R>', lambda event: entry_row_name__())
                         
 
                     if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
@@ -713,8 +746,9 @@ def x():
                                 case "详细值数据【十列式】":#十列
                                     x_x__x()
                                     window_x.destroy()
-                                case "全部【空亡定为6】":#十六列
+                                case "全部【空亡定为6】【十六列】":#十六列
                                     x_x__x_()
+                                    window_x.destroy()
                         except:
                             icon.notify("未设置文件，已退出循环", "Lightweight text editor")
                             entry2_2_1()
@@ -746,10 +780,11 @@ def x():
                 entry_row_name3.grid(row=1,column=2,padx=5,pady=5)
                 entry_row_name4 = ttk.Entry(window_x)
                 entry_row_name4.grid(row=1,column=3,padx=5,pady=5)
+                
                 combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】","顺序数据【空亡定为0】",
                                                                  "值数据","详细值数据【四列式】","详细值数据【十列式】",
-                                                                 "全部【空亡定为6】【十六列】","全部【空亡定为6】【四列】"
-                                                                 "全部【空亡定为0】【十六列】","全部【空亡定为0】【四列】"
+                                                                 "全部【空亡定为6】【十六列】","全部【空亡定为6】【四列】",
+                                                                 "全部【空亡定为0】【十六列】","全部【空亡定为0】【四列】",
                                                                  "真全部"
                                                                  ], state="readonly")
                 combobox.grid(row=1,column=4,padx=5,pady=5)
