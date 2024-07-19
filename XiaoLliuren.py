@@ -657,7 +657,7 @@ def numgua():
 
 def numgua2_3():
     t,r,d = numqgua()
-    print(r)
+    print(t)
     g = {1: "大安",2: "流连",3: "速喜",4: "赤口",5: "小吉",0: "空亡"}
     num_t = num(t=t,r=r,d=d)
     vc5 = v5 % 2
@@ -736,8 +736,8 @@ def numgua2_4():
             match vc6:
                 case 0:
                     t_rule_num2 = int(load13() or 2)
-                    t = str(combobox_load() or "顺序数据【空亡定为6】")
-                    match t:
+                    t_ = str(combobox_load() or "顺序数据【空亡定为6】")
+                    match t_:
                         case "顺序数据【空亡定为6】":
                             match t_rule_num2:
                                 case 1:
@@ -907,8 +907,8 @@ def numgua2_5():
             match vc6:
                 case 0:
                     t_rule_num2 = int(load13() or 2)
-                    t = str(combobox_load2() or "顺序数据【空亡定为6】")
-                    match t:
+                    t_ = str(combobox_load2() or "顺序数据【空亡定为6】")
+                    match t_:
                         case "顺序数据【空亡定为6】":
                             match t_rule_num2:
                                 case 1:
