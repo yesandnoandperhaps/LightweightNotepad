@@ -749,6 +749,18 @@ def x():
                                 case "全部【空亡定为6】【十六列】":#十六列
                                     x_x__x_()
                                     window_x.destroy()
+                                case "全部【空亡定为6】【四列】":
+                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
+                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    window_x.destroy()
+                                    window.wm_attributes('-disabled', 0)
+                                    window.wm_attributes('-topmost', 1)
+                                    window.wm_attributes('-topmost', 0)
+                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread.start()
+                                case "全部【空亡定为0】【十六列】":
+                                    x_x__x_()
+                                    window_x.destroy()
                         except:
                             icon.notify("未设置文件，已退出循环", "Lightweight text editor")
                             entry2_2_1()
@@ -787,7 +799,7 @@ def x():
                                                                  "全部【空亡定为0】【十六列】","全部【空亡定为0】【四列】",
                                                                  "真全部"
                                                                  ], state="readonly")
-                combobox.grid(row=1,column=4,padx=5,pady=5)
+                combobox.grid(row=1,column=4,padx=5,pady=5,ipadx=10)
                 match t:
                     case "顺序数据【空亡定为6】":
                         combobox.set("顺序数据【空亡定为6】")
@@ -799,6 +811,16 @@ def x():
                         combobox.set("详细值数据【四列式】")
                     case "详细值数据【十列式】":
                         combobox.set("详细值数据【十列式】")
+                    case "全部【空亡定为6】【十六列】":
+                        combobox.set("全部【空亡定为6】【十六列】")
+                    case "全部【空亡定为6】【四列】":
+                        combobox.set("全部【空亡定为6】【四列】")
+                    case "全部【空亡定为0】【十六列】":
+                        combobox.set("全部【空亡定为0】【十六列】")
+                    case "全部【空亡定为0】【四列】":
+                        combobox.set("全部【空亡定为0】【四列】")
+                    case "真全部":
+                        combobox.set("真全部")
                 entry_row_name.insert(tk.END,"天宫")
                 entry_row_name2.insert(tk.END,"地宫")
                 entry_row_name3.insert(tk.END,"人宫")
