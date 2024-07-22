@@ -2,17 +2,23 @@
 
 未来，在保证轻量化的同时，还将在软件中增加更多功能
 
-目前，软件开发的重点是自动算命，小六壬自动算命已经完成了50%
+软件开发将侧重自动算命，目前开发重点为搭建自动算命框架
 
-我们目前还在搭建框架，还未涉及到AI
+小六壬框架完成50%
 
-In the future, more functions will be added to the software while ensuring light weight
+紫微斗数框架搭建完成10%
 
-At present, the focus of software development is on automatic fortune telling
+目前我们还未涉及到AI，预计今年八月份可以涉及到AI
 
-At present, 80% of Xiao Liuren's automatic fortune telling has been completed
+In the future, more functions will be added to the software while ensuring weight reduction
 
-The next feature after Xiao Liuren will be related to AI
+Software development will focus on automatic fortune telling, and the current development focus is on building an automated fortune-telling framework
+
+50% completion of the small six-piece frame
+
+The construction of the Ziwei Doushu frame is 10% complete
+
+At present, we have not yet touched on AI, and we expect to do so in August this year
 
 ## Current Usage & Support使用方法与支持
 
