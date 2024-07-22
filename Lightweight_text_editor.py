@@ -703,11 +703,210 @@ def x():
                         entry_row_name15_.bind('<Shift_R>', lambda event: entry_row_name__())
                         entry_row_name16_.bind('<Shift_R>', lambda event: entry_row_name__())
                         
+                    def x_x__x__():
+                        def entry2_2_2():
+                            window_x_.destroy()
+                            entry2_2()
+                        def entry_row_name__():
+                            with open(file_path_csv, 'w',encoding='utf-8') as f:
+                                        f.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
+                                                                                         entry_row_name2_.get(),
+                                                                                         entry_row_name3_.get(),
+                                                                                         entry_row_name4_.get(),
+                                                                                         entry_row_name5_.get(),
+                                                                                         entry_row_name6_.get(),
+                                                                                         entry_row_name7_.get(),
+                                                                                         entry_row_name8_.get(),
+                                                                                         entry_row_name9_.get(),
+                                                                                         entry_row_name10_.get(),
+                                                                                         entry_row_name11_.get(),
+                                                                                         entry_row_name12_.get(),
+                                                                                         entry_row_name13_.get(),
+                                                                                         entry_row_name14_.get(),
+                                                                                         entry_row_name15_.get(),
+                                                                                         entry_row_name16_.get()
+                                                                                         ))
+                            window_x_.destroy()
+                            window.wm_attributes('-disabled', 0)
+                            window.wm_attributes('-topmost', 1)
+                            window.wm_attributes('-topmost', 0)
+                            thread = threading.Thread(target=LoopOutput_X)
+                            thread.start()
+                        window_x_ = ttk.Toplevel(window)
+                        window_x_.title("小六壬")
+                        window_x_.iconbitmap(icon_path)
+                        window_x_.protocol("WM_DELETE_WINDOW", entry2___)
+                        window_x_.wm_attributes('-topmost', 1)
+                        window.wm_attributes('-disabled', 1)
+                        text_  = ttk.Label(window_x_,text="列名一【顺序数据】【空亡定为6】")
+                        text2_ = ttk.Label(window_x_,text="列名二【顺序数据】【空亡定为6】")
+                        text3_ = ttk.Label(window_x_,text="列名三【顺序数据】【空亡定为6】")
+                        text4_ = ttk.Label(window_x_,text="列名四【顺序数据】【空亡定为0】")
+                        text5_ = ttk.Label(window_x_,text="列名五【顺序数据】【空亡定为0】")
+                        text6_ = ttk.Label(window_x_,text="列名六【顺序数据】【空亡定为0】")
+                        text7_ = ttk.Label(window_x_,text="列名七【值数据】")
+                        text8_ = ttk.Label(window_x_,text="列名八【值数据】")
+                        text9_ = ttk.Label(window_x_,text="列名九【值数据】")
+                        text10_ = ttk.Label(window_x_,text="列名十【详细值数据】")
+                        text11_ = ttk.Label(window_x_,text="列名十一【详细值数据】")
+                        text12_ = ttk.Label(window_x_,text="列名十二【详细值数据】")
+                        text13_ = ttk.Label(window_x_,text="列名十三【详细值数据】")
+                        text14_ = ttk.Label(window_x_,text="列名十四【详细值数据】")
+                        text15_ = ttk.Label(window_x_,text="列名十五【详细值数据】")
+                        text16_ = ttk.Label(window_x_,text="列名十六【详细值数据】")
+                        text17_ = ttk.Label(window_x_,text="列名十七【详细值数据】")
+                        text18_ = ttk.Label(window_x_,text="列名十八【详细值数据】")
+                        text19_ = ttk.Label(window_x_,text="列名十九【吉值】")
+                        
+                        entry_row_name_ = ttk.Entry(window_x_)
+                        entry_row_name2_ = ttk.Entry(window_x_)
+                        entry_row_name3_ = ttk.Entry(window_x_)
+                        entry_row_name4_ = ttk.Entry(window_x_)
+                        entry_row_name5_ = ttk.Entry(window_x_)
+                        entry_row_name6_ = ttk.Entry(window_x_)
+                        entry_row_name7_ = ttk.Entry(window_x_)
+                        entry_row_name8_ = ttk.Entry(window_x_)
+                        entry_row_name9_ = ttk.Entry(window_x_)
+                        entry_row_name10_ = ttk.Entry(window_x_)
+                        entry_row_name11_ = ttk.Entry(window_x_)
+                        entry_row_name12_ = ttk.Entry(window_x_)
+                        entry_row_name13_ = ttk.Entry(window_x_)
+                        entry_row_name14_ = ttk.Entry(window_x_)
+                        entry_row_name15_ = ttk.Entry(window_x_)
+                        entry_row_name16_ = ttk.Entry(window_x_)
+                        entry_row_name17_ = ttk.Entry(window_x_)
+                        entry_row_name18_ = ttk.Entry(window_x_)
+                        entry_row_name19_ = ttk.Entry(window_x_)
+
+
+                        text_.grid(row=0,column=0,padx=5,pady=5)
+                        text2_.grid(row=0,column=1,padx=5,pady=5)
+                        text3_.grid(row=0,column=2,padx=5,pady=5)
+                        text4_.grid(row=2,column=0,padx=5,pady=5)
+                        text5_.grid(row=2,column=1,padx=5,pady=5)
+                        text6_.grid(row=2,column=2,padx=5,pady=5)
+                        text7_.grid(row=4,column=0,padx=5,pady=5)
+                        text8_.grid(row=4,column=1,padx=5,pady=5)
+                        text9_.grid(row=4,column=2,padx=5,pady=5)
+                        text10_.grid(row=6,column=0,padx=5,pady=5)
+                        text11_.grid(row=6,column=1,padx=5,pady=5)
+                        text12_.grid(row=6,column=2,padx=5,pady=5)
+                        text13_.grid(row=8,column=0,padx=5,pady=5)
+                        text14_.grid(row=8,column=1,padx=5,pady=5)
+                        text15_.grid(row=8,column=2,padx=5,pady=5)
+                        text16_.grid(row=10,column=0,padx=5,pady=5)
+                        text17_.grid(row=10,column=1,padx=5,pady=5)
+                        text18_.grid(row=10,column=2,padx=5,pady=5)
+                        text19_.grid(row=12,column=0,padx=5,pady=5)
+
+                        entry_row_name_.grid(row=1,column=0,padx=5,pady=5)
+                        entry_row_name2_.grid(row=1,column=1,padx=5,pady=5)
+                        entry_row_name3_.grid(row=1,column=2,padx=5,pady=5)
+                        entry_row_name4_.grid(row=3,column=0,padx=5,pady=5)
+                        entry_row_name5_.grid(row=3,column=1,padx=5,pady=5)
+                        entry_row_name6_.grid(row=3,column=2,padx=5,pady=5)
+                        entry_row_name7_.grid(row=5,column=0,padx=5,pady=5)
+                        entry_row_name8_.grid(row=5,column=1,padx=5,pady=5)
+                        entry_row_name9_.grid(row=5,column=2,padx=5,pady=5)
+                        entry_row_name10_.grid(row=7,column=0,padx=5,pady=5)
+                        entry_row_name11_.grid(row=7,column=1,padx=5,pady=5)
+                        entry_row_name12_.grid(row=7,column=2,padx=5,pady=5)
+                        entry_row_name13_.grid(row=9,column=0,padx=5,pady=5)
+                        entry_row_name14_.grid(row=9,column=1,padx=5,pady=5)
+                        entry_row_name15_.grid(row=9,column=2,padx=5,pady=5)
+                        entry_row_name16_.grid(row=11,column=0,padx=5,pady=5)
+                        entry_row_name17_.grid(row=11,column=1,padx=5,pady=5)
+                        entry_row_name18_.grid(row=11,column=2,padx=5,pady=5)
+                        entry_row_name19_.grid(row=13,column=0,padx=5,pady=5)
+
+                        entry_row_name_.insert(tk.END,entry_row_name.get()+"【顺序数据】【空亡定为6】")
+                        entry_row_name2_.insert(tk.END,entry_row_name2.get()+"【顺序数据】【空亡定为6】")
+                        entry_row_name3_.insert(tk.END,entry_row_name3.get()+"【顺序数据】【空亡定为6】")
+
+                        entry_row_name4_.insert(tk.END,entry_row_name.get()+"【顺序数据】【空亡定为0】")
+                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"【顺序数据】【空亡定为0】")
+                        entry_row_name6_.insert(tk.END,entry_row_name3.get()+"【顺序数据】【空亡定为0】")
+
+                        entry_row_name7_.insert(tk.END,entry_row_name.get()+"【值数据】")
+                        entry_row_name8_.insert(tk.END,entry_row_name2.get()+"【值数据】")
+                        entry_row_name9_.insert(tk.END,entry_row_name3.get()+"【值数据】")
+
+                        entry_row_name10_.insert(tk.END,entry_row_name.get()+"(1)【详细值数据】")
+                        entry_row_name11_.insert(tk.END,entry_row_name.get()+"(2)【详细值数据】")
+                        entry_row_name12_.insert(tk.END,entry_row_name.get()+"(3)【详细值数据】")
+                        entry_row_name13_.insert(tk.END,entry_row_name2.get()+"(1)【详细值数据】")
+                        entry_row_name14_.insert(tk.END,entry_row_name2.get()+"(2)【详细值数据】")
+                        entry_row_name15_.insert(tk.END,entry_row_name2.get()+"(3)【详细值数据】")
+                        entry_row_name16_.insert(tk.END,entry_row_name3.get()+"(1)【详细值数据】")
+                        entry_row_name17_.insert(tk.END,entry_row_name3.get()+"(2)【详细值数据】")
+                        entry_row_name18_.insert(tk.END,entry_row_name3.get()+"(3)【详细值数据】")
+                        entry_row_name19_.insert(tk.END,entry_row_name4.get())
+
+                        
+
+                        entry_row_name_.bind('<Return>', lambda event: entry_row_name2_.focus_set())
+                        entry_row_name2_.bind('<Return>', lambda event: entry_row_name3_.focus_set())
+                        entry_row_name3_.bind('<Return>', lambda event: entry_row_name4_.focus_set())
+                        entry_row_name4_.bind('<Return>', lambda event: entry_row_name5_.focus_set())
+                        entry_row_name5_.bind('<Return>', lambda event: entry_row_name6_.focus_set())
+                        entry_row_name6_.bind('<Return>', lambda event: entry_row_name7_.focus_set())
+                        entry_row_name7_.bind('<Return>', lambda event: entry_row_name8_.focus_set())
+                        entry_row_name8_.bind('<Return>', lambda event: entry_row_name9_.focus_set())
+                        entry_row_name9_.bind('<Return>', lambda event: entry_row_name10_.focus_set())
+                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name11_.focus_set())
+                        entry_row_name11_.bind('<Return>', lambda event: entry_row_name12_.focus_set())
+                        entry_row_name12_.bind('<Return>', lambda event: entry_row_name13_.focus_set())
+                        entry_row_name13_.bind('<Return>', lambda event: entry_row_name14_.focus_set())
+                        entry_row_name14_.bind('<Return>', lambda event: entry_row_name15_.focus_set())
+                        entry_row_name15_.bind('<Return>', lambda event: entry_row_name16_.focus_set())
+                        entry_row_name16_.bind('<Return>', lambda event: entry_row_name17_.focus_set())
+                        entry_row_name17_.bind('<Return>', lambda event: entry_row_name18_.focus_set())
+                        entry_row_name18_.bind('<Return>', lambda event: entry_row_name19_.focus_set())
+                        entry_row_name19_.bind('<Return>', lambda event: entry_row_name_.focus_set())
+                        entry_row_name_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name2_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name3_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name4_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name5_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name6_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name7_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name8_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name9_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name10_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name11_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name12_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name13_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name14_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name15_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name16_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name17_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name18_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name19_.bind('<Shift_L>', lambda event: entry2_2_2())
+                        entry_row_name_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name2_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name3_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name4_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name5_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name6_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name7_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name8_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name9_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name10_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name11_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name12_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name13_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name14_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name15_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name16_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name17_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name18_.bind('<Shift_R>', lambda event: entry_row_name__())
+                        entry_row_name19_.bind('<Shift_R>', lambda event: entry_row_name__())
+
 
                     if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
                         try:
                             match t:
-                                case "顺序数据【空亡定为6】":#四列
+                                case "顺序数据【空亡定为6】":
                                     with open(file_path_csv, 'w',encoding='utf-8') as f:
                                         f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
@@ -716,7 +915,7 @@ def x():
                                     window.wm_attributes('-topmost', 0)
                                     thread = threading.Thread(target=LoopOutput_X)
                                     thread.start()
-                                case "顺序数据【空亡定为0】":#四列
+                                case "顺序数据【空亡定为0】":
                                     with open(file_path_csv, 'w',encoding='utf-8') as f:
                                         f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
@@ -725,7 +924,7 @@ def x():
                                     window.wm_attributes('-topmost', 0)
                                     thread = threading.Thread(target=LoopOutput_X)
                                     thread.start()
-                                case "值数据":#四列
+                                case "值数据":
                                     with open(file_path_csv, 'w',encoding='utf-8') as f:
                                         f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
@@ -734,7 +933,7 @@ def x():
                                     window.wm_attributes('-topmost', 0)
                                     thread = threading.Thread(target=LoopOutput_X)
                                     thread.start()
-                                case "详细值数据【四列式】":
+                                case "详细值数据【四列】":
                                     with open(file_path_csv, 'w',encoding='utf-8') as f:
                                         f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
@@ -743,10 +942,10 @@ def x():
                                     window.wm_attributes('-topmost', 0)
                                     thread = threading.Thread(target=LoopOutput_X)
                                     thread.start()
-                                case "详细值数据【十列式】":#十列
+                                case "详细值数据【十列】":
                                     x_x__x()
                                     window_x.destroy()
-                                case "全部【空亡定为6】【十六列】":#十六列
+                                case "全部【空亡定为6】【十六列】":
                                     x_x__x_()
                                     window_x.destroy()
                                 case "全部【空亡定为6】【四列】":
@@ -760,6 +959,18 @@ def x():
                                     thread.start()
                                 case "全部【空亡定为0】【十六列】":
                                     x_x__x_()
+                                    window_x.destroy()
+                                case "全部【空亡定为0】【四列】":
+                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
+                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    window_x.destroy()
+                                    window.wm_attributes('-disabled', 0)
+                                    window.wm_attributes('-topmost', 1)
+                                    window.wm_attributes('-topmost', 0)
+                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread.start()
+                                case "真全部【十九列】":
+                                    x_x__x__()
                                     window_x.destroy()
                         except:
                             icon.notify("未设置文件，已退出循环", "Lightweight text editor")
@@ -794,10 +1005,10 @@ def x():
                 entry_row_name4.grid(row=1,column=3,padx=5,pady=5)
                 
                 combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】","顺序数据【空亡定为0】",
-                                                                 "值数据","详细值数据【四列式】","详细值数据【十列式】",
+                                                                 "值数据","详细值数据【四列】","详细值数据【十列】",
                                                                  "全部【空亡定为6】【十六列】","全部【空亡定为6】【四列】",
                                                                  "全部【空亡定为0】【十六列】","全部【空亡定为0】【四列】",
-                                                                 "真全部"
+                                                                 "真全部【十九列】"
                                                                  ], state="readonly")
                 combobox.grid(row=1,column=4,padx=5,pady=5,ipadx=10)
                 match t:
@@ -807,10 +1018,10 @@ def x():
                         combobox.set("顺序数据【空亡定为0】")
                     case "值数据":
                         combobox.set("值数据")
-                    case "详细值数据【四列式】":
-                        combobox.set("详细值数据【四列式】")
-                    case "详细值数据【十列式】":
-                        combobox.set("详细值数据【十列式】")
+                    case "详细值数据【四列】":
+                        combobox.set("详细值数据【四列】")
+                    case "详细值数据【十列】":
+                        combobox.set("详细值数据【十列】")
                     case "全部【空亡定为6】【十六列】":
                         combobox.set("全部【空亡定为6】【十六列】")
                     case "全部【空亡定为6】【四列】":
@@ -819,8 +1030,8 @@ def x():
                         combobox.set("全部【空亡定为0】【十六列】")
                     case "全部【空亡定为0】【四列】":
                         combobox.set("全部【空亡定为0】【四列】")
-                    case "真全部":
-                        combobox.set("真全部")
+                    case "真全部【十九列】":
+                        combobox.set("真全部【十九列】")
                 entry_row_name.insert(tk.END,"天宫")
                 entry_row_name2.insert(tk.END,"地宫")
                 entry_row_name3.insert(tk.END,"人宫")
@@ -1077,7 +1288,7 @@ def x():
                 window.wm_attributes('-disabled', 1)
                 text_ = ttk.Label(window_x,text="输出细节")
                 text_.grid(row=0,column=0,padx=5,pady=5)
-                combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】","顺序数据【空亡定为0】","值数据","详细值数据【四列式】","详细值数据【十列式】"], state="readonly")
+                combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】","顺序数据【空亡定为0】","值数据","详细值数据【四列】","详细值数据【十列】"], state="readonly")
                 combobox.grid(row=1,column=0,padx=5,pady=5)
                 t = str(combobox_load() or "顺序数据【空亡定为6】")
                 match t:
@@ -1087,10 +1298,10 @@ def x():
                         combobox.set("顺序数据【空亡定为0】")
                     case "值数据":
                         combobox.set("值数据")
-                    case "详细值数据【四列式】":
-                        combobox.set("详细值数据【四列式】")
-                    case "详细值数据【十列式】":
-                        combobox.set("详细值数据【十列式】")
+                    case "详细值数据【四列】":
+                        combobox.set("详细值数据【四列】")
+                    case "详细值数据【十列】":
+                        combobox.set("详细值数据【十列】")
                 combobox.bind('<Shift_R>', lambda event: combobox_())
                 window_x.bind('<Shift_R>', lambda event: combobox_())
                 combobox.bind('<Shift_L>', lambda event: entry2_2_1())
