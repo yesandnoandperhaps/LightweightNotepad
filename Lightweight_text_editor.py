@@ -2271,7 +2271,7 @@ def gadget():
                                     poJun.grid(row=8,column=1)
                                 grid_deploy()
 
-                            def confirm_ziWei_month_group():
+                            def confirm_ziWei_time_group():
                                 match nianZhi:
                                     case "戌"|"午"|"寅":
                                         match shiChen:
@@ -2724,7 +2724,116 @@ def gadget():
                                     fengGao.grid(row=7,column=3)
                                 grid_deploy()
 
+                            def confirm_ziWei_month_group():
+                                match yueZhi:
+                                    case "寅":
+                                        zuofu = ttk.Label(w5,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w11,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w12,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w8,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w11,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w7,text="天煞",font=font_style)
+                                    case "卯":
+                                        zuofu = ttk.Label(w,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w12,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w11,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w7,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w4,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w11,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w9,text="天煞",font=font_style)
+                                    case "辰":
+                                        zuofu = ttk.Label(w2,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w4,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w10,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w6,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w7,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w5,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w11,text="天煞",font=font_style)
+                                    case "巳":
+                                        zuofu = ttk.Label(w3,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w3,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w9,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w5,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w10,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w7,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w4,text="天煞",font=font_style)
+                                    case "午":
+                                        zuofu = ttk.Label(w4,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w2,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w8,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w3,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w2,text="天煞",font=font_style)
+                                    case "未":
+                                        zuofu = ttk.Label(w12,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w7,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w2,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w4,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w6,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w5,text="天煞",font=font_style)
+                                    case "申":
+                                        zuofu = ttk.Label(w11,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w5,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w6,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w3,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w7,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w10,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w7,text="天煞",font=font_style)
+                                    case "酉":
+                                        zuofu = ttk.Label(w10,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w6,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w5,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w4,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w10,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w3,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w9,text="天煞",font=font_style)
+                                    case "戌":
+                                        zuofu = ttk.Label(w9,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w7,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w12,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w7,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w11,text="天煞",font=font_style)
+                                    case "亥":
+                                        zuofu = ttk.Label(w8,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w8,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w2,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w11,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w4,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w2,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w4,text="天煞",font=font_style)
+                                    case "子":
+                                        zuofu = ttk.Label(w7,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w9,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w3,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w10,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w7,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w11,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w2,text="天煞",font=font_style)
+                                    case "丑":
+                                        zuofu = ttk.Label(w6,text="左辅",font=font_style)
+                                        youbi = ttk.Label(w10,text="右弼",font=font_style)
+                                        tianxing = ttk.Label(w4,text="天刑",font=font_style)
+                                        tianyao = ttk.Label(w9,text="天姚",font=font_style)
+                                        tianwu = ttk.Label(w10,text="天巫",font=font_style)
+                                        tianyue = ttk.Label(w7,text="天月",font=font_style)
+                                        yinsha = ttk.Label(w5,text="天煞",font=font_style)
+                                def grid_deploy():
+                                    zuofu.grid(row=8,column=5)
+                                    youbi.grid(row=8,column=6)
+                                    tianxing.grid(row=8,column=7)
+                                    tianyao.grid(row=8,column=8)
+                                    tianwu.grid(row=7,column=4)
+                                    tianyue.grid(row=7,column=5)
+                                    yinsha.grid(row=7,column=6)
+                                grid_deploy()
+
                             confirm_ziWei_month_group()
+                            confirm_ziWei_time_group()
                             confirm_ziWei_and_ziWei_five()
                             Heavenly()
                             twelve_god()
@@ -2732,10 +2841,10 @@ def gadget():
 
                         z_t()
                         '''
-                            [ w  ][ w2 ][ w3 ][ w4 ]
-                            [ w5 ][ w13][     ][ w12]
-                            [ w6 ][     ][     ][ w11]
-                            [ w7 ][ w8 ][ w9  ][ w10]
+                            [ w  巳 ][ w2 午 ][ w3 未 ][ w4 申 ]
+                            [ w5 辰 ][ w13][     ][ w12  酉 ]
+                            [ w6 卯 ][     ][     ][ w11 戌]
+                            [ w7 寅 ][ w8 丑 ][ w9 子 ][ w10  亥]
                         '''
 
 
