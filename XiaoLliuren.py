@@ -997,9 +997,86 @@ def numgua2_4():
                                         a__
                                         )
                         case "全部【空亡定为0】【四列】":
-                            pass
-                        case "真全部":
-                            pass
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,yes)
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
+                        case "真全部【十九列】":
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        yes
+                                        )
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
                     #非三宫定义，并计算吉值
                 case 1:
                     #非三宫定义，不计算吉值
@@ -1106,7 +1183,7 @@ def numgua2_5():
                                         a__ = 0
                                         return a__
                                     initial_text1 = "{},{},{},{}\n".format(g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),a__)
-                        case "详细值数据【四列式】":
+                        case "详细值数据【四列】":
                             match t_rule_num2:
                                 case 1:
                                     yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
@@ -1139,7 +1216,7 @@ def numgua2_5():
                                         a__ = 0
                                         return a__
                                     initial_text1 = "{},{},{},{}\n".format(pa,pb,pc,a__)
-                        case "详细值数据【十列式】":
+                        case "详细值数据【十列】":
                             match t_rule_num2:
                                 case 1:
                                     yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
@@ -1215,13 +1292,164 @@ def numgua2_5():
                                         a__
                                         )
                         case "全部【空亡定为6】【四列】":
-                            pass
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    t_g_ = g_.get(t, "6") + "，" + g_.get(r, "6") + "，" + g_.get(d, "6")
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = pax+ "，" +pay+ "，" +paz+ "，" +pbx+ "，" +pby+ "，" +pbz+ "，" +pcx+ "，" +pcy+ "，" +pcz
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,yes)
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = g_.get(t, "6") + "，" + g_.get(r, "6") + "，" + g_.get(d, "6")
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = pax+ "，" +pay+ "，" +paz+ "，" +pbx+ "，" +pby+ "，" +pbz+ "，" +pcx+ "，" +pcy+ "，" +pcz
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = g_.get(t, "6") + "，" + g_.get(r, "6") + "，" + g_.get(d, "6")
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = pax+ "，" +pay+ "，" +paz+ "，" +pbx+ "，" +pby+ "，" +pbz+ "，" +pcx+ "，" +pcy+ "，" +pcz
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
                         case "全部【空亡定为0】【十六列】":
-                            pass
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        yes
+                                        )
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
                         case "全部【空亡定为0】【四列】":
-                            pass
-                        case "真全部":
-                            pass
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,yes)
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    t_g_ = str(t) + "，" + str(r) + "，" + str(d)
+                                    t_g__ = g__.get(t, "-3") + "，" + g__.get(r, "-3") + "，" + g__.get(d, "-3")
+                                    pabc = str(pax)+ "，" +str(pay)+ "，" +str(paz)+ "，" +str(pbx)+ "，" +str(pby)+ "，" +str(pbz)+ "，" +str(pcx)+ "，" +str(pcy)+ "，" +str(pcz)
+                                    initial_text1 = "{},{},{},{}\n".format(t_g_,t_g__,pabc,a__)
+                        case "真全部【十九列】":
+                            match t_rule_num2:
+                                case 1:
+                                    yes,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    if str(yes) == str(-0):
+                                        yes = 0
+                                        return yes
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        yes
+                                        )
+                                case 0:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
+                                case 2:
+                                    a,pax,pay,paz,pbx,pby,pbz,pcx,pcy,pcz = return_num_t.judgment_f()
+                                    a_ = decimal.Decimal(str(a))
+                                    a__ = a_.quantize(decimal.Decimal("0.00"),decimal.ROUND_HALF_EVEN)
+                                    if a__ == str(-0):
+                                        a__ = 0
+                                        return a__
+                                    initial_text1 = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                                        g_.get(t, "6"),g_.get(r, "6"),g_.get(d, "6"),
+                                        t,r,d,
+                                        g__.get(t, "-3"),g__.get(r, "-3"),g__.get(d, "-3"),
+                                        pax,pay,paz,
+                                        pbx,pby,pbz,
+                                        pcx,pcy,pcz,
+                                        a__
+                                        )
                             
                     #非三宫定义，并计算吉值
                 case 1:
