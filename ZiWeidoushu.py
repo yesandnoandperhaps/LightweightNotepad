@@ -600,7 +600,7 @@ class ZiWeidoushu(object):
         ziWei28 = ["申", "酉", "申", "丑", "卯"]
         ziWei29 = ["巳", "午", "午", "戌", "卯"]
         ziWei30 = ["午", "未", "亥", "亥", "辰"]
-        shenRi_ty = shenRi_y.index(birth_month)
+        shenRi_ty = shenRi_y.index(lunar_date.day)
 
         match shenRi_ty:
             case 0:
@@ -663,6 +663,8 @@ class ZiWeidoushu(object):
                 ziWei = ziWei29[ziWei_wuXingju_x.index(wuXingju)]
             case 29:  
                 ziWei = ziWei30[ziWei_wuXingju_x.index(wuXingju)]
+        
+
 
 
         return nianGan,nianGanwuXing,nianGanyinYang\
@@ -674,7 +676,8 @@ class ZiWeidoushu(object):
                             ,JD,NOONJD,MJD\
                                 ,riGan,riGanwuXing,ruGanyinYang\
                                     ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
-                                    ,shiGan,shiGanwuXing,shiGanyinYang
+                                    ,shiGan,shiGanwuXing,shiGanyinYang\
+                                    ,lunar_date.day
             
 
 '''
