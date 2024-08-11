@@ -1,6 +1,7 @@
 import datetime
 import tkinter as tk
 import tkinter.font as tkFont
+import numpy as np
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from tkinter import filedialog
@@ -17,7 +18,7 @@ from tkinter import messagebox
 import XiaoLliuren
 import tkinter.ttk
 import re
-from PIL import Image
+from tkinter import colorchooser
 import ZiWeidoushu
 
 def save(theme):
@@ -4944,7 +4945,7 @@ def gadget():
                             confirm_ziWei_time_and_month_and_day_group()
                             
                             window_z.grid_rowconfigure(1, weight=1)
-                            window_z.grid_columnconfigure(0, weight=1)
+                            window_z.grid_columnconfigure(1, weight=1)
                         z_t()
                         '''
                             [ w  巳 ][ w2 午 ][ w3 未 ][ w4 申 ]
@@ -4956,8 +4957,8 @@ def gadget():
 
         match t:
             case "横排样式":
-                window = ttk.Toplevel()
-                window.title("轻量记事本-小工具-紫微斗数")
+                window = ttk.Toplevel(root)
+                window.title("紫微斗数")
                 window.iconbitmap(icon_path)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
@@ -4998,8 +4999,8 @@ def gadget():
                 combo.set("算一卦")
                 '''
             case "竖排样式":
-                window = ttk.Toplevel()
-                window.title("轻量记事本-界面示例")
+                window = ttk.Toplevel(root)
+                window.title("紫微斗数")
                 window.iconbitmap(icon_path)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
@@ -5035,9 +5036,168 @@ def gadget():
 
 
     def regression():
+        window_ = ttk.Toplevel(window)
+        window_.title("小六壬")
+        window_.iconbitmap(icon_path)
+        wb1 = ttk.Button(window_, text="数据导入", bootstyle="outline", command=x)
+        wb1.grid(column=0,row=0,padx=10,pady=10)
+        data_path = filedialog.asksaveasfilename(parent=window_, defaultextension="d",
+                                                 filetypes=[("csv-utf-8", "*.csv")])
+        print(data_path)
+    
+    def Triangle():
         pass
+    
+    def Sprites():
+        def color():
 
-    window = ttk.Toplevel()
+            rgb = None
+            rgb_ = None
+            
+            def root_w_4_3_load():
+                try:
+                    with open(w_path, 'r',encoding='utf-8') as f:
+                        return f.read()
+                except FileNotFoundError:
+                    pass
+            
+            def root_w_4_3_load_2():
+                try:
+                    with open(x_path, 'r',encoding='utf-8') as f:
+                        return f.read()
+                except FileNotFoundError:
+                    pass
+            
+            def choose_color():
+                nonlocal rgb
+                color = colorchooser.askcolor(parent=window__)
+                rgb = color[0]
+
+            def choose_color_():
+                nonlocal rgb_
+                color = colorchooser.askcolor(parent=window__)
+                rgb_ = color[0]
+            
+            def color_RGB():
+                if rgb is None or rgb_ is None:
+                    messagebox.showerror("错误", message="没有值", parent=window__)
+                if not PNG_path:
+                    messagebox.showerror("错误", message="没有路径", parent=window__)
+                else:
+                    try:
+                        icon.notify("已开始", "Lightweight text editor")
+                        for path in PNG_path:
+                            img = Image.open(path).convert("RGB")
+                            datas = np.array(img)
+
+                            # 创建掩码，确定需要转换的颜色
+                            mask = np.all(datas == rgb, axis=-1)
+
+                            # 执行颜色转换
+                            datas[mask] = rgb_
+
+                            # 保存处理后的图像
+                            img = Image.fromarray(datas, 'RGB')
+                            img.save(path, "PNG")
+                        icon.notify("已完成", "Lightweight text editor")
+                    except Exception as e:
+                        messagebox.showerror("错误", message=f"处理图像时出错: {e}", parent=window__)
+
+
+            def color_RGBA():
+                if re.sub(r"保留原本|(?<!\d)(?:[1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(?!\d)", "", entry1.get()) != "":
+                    messagebox.showerror("错误", message="请输入0~255的值，或输入保留原本", parent=window__)
+                else:
+                    if re.sub(r"(?<!\d)(?:[1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(?!\d)", "", entry2.get()) != "":
+                        messagebox.showerror("错误", message="请输入0~255的值", parent=window__)
+                    else:
+                        if rgb is None or rgb_ is None:
+                            messagebox.showerror("错误", message="没有值", parent=window__)
+                        if not PNG_path:
+                            messagebox.showerror("错误", message="没有路径", parent=window__)
+                        else:
+                            if entry1.get() == "保留原本" and entry2.get() == "255":
+                                pass
+                            for _ in PNG_path:#获取路径
+                                img = Image.open(_).convert("RGBA")
+                                datas = img.getdata()
+                                new_data = []
+                                for item in datas:
+                                    # 颜色转换
+                                    if item[0] == rgb[0] and item[1] == rgb[1] and item[2] == rgb[2]:
+                                        new_data.append((rgb_[0], rgb_[1], rgb_[2], item[3]))
+                                    else:
+                                        new_data.append(item)
+                                img.putdata(new_data)
+                                img.save(PNG_path, "PNG")
+    
+
+            PNG_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片',filetypes=[("PNG", "*.PNG")])
+
+            window__ = ttk.Toplevel(window_)
+            window__.title("图片操作")
+            window__.iconbitmap(icon_path)
+
+            t = str(root_w_4_3_load() or "颜色选择器")
+            t_ = str(root_w_4_3_load_2() or "RBGA")
+
+            match t:
+                case "颜色选择器":
+                    wb1_ = ttk.Button(window__, text="颜色选择器", bootstyle="outline", command=choose_color)
+                    wb1_.grid(column=1,row=0,padx=10,pady=10)
+                    wb2_ = ttk.Button(window__, text="颜色选择器", bootstyle="outline", command=choose_color_)
+                    wb2_.grid(column=1,row=1,padx=10,pady=10)
+                    match t_:
+                        case "RGBA":
+                            text3 = ttk.Label(window__,text="整张透明度：")
+                            text3.grid(column=0,row=2,padx=10,pady=10)
+                            entry1 = tk.Entry(window__)
+                            entry1.grid(column=1,row=2,padx=5,pady=5)
+                            entry1.insert(tk.END,"保留原本")
+                            text4 = ttk.Label(window__,text="转换颜色透明度：")
+                            text4.grid(column=0,row=3,padx=10,pady=10)
+                            entry2 = tk.Entry(window__)
+                            entry2.grid(column=1,row=3,padx=5,pady=5)
+                            entry2.insert(tk.END,"255")
+                            entry1.bind("<Return>", lambda event: entry2.focus_set())
+                            entry2.bind("<Return>", lambda event: entry1.focus_set())
+                            entry1.bind('<Shift_L>', lambda event: ())
+                            entry2.bind('<Shift_L>', lambda event: ())
+                        case "RGB":
+                            wb1_.bind("<Button-3>", lambda event: color_RGB())
+                            wb2_.bind("<Button-3>", lambda event: color_RGB())
+                
+                case "十六进制":
+                    entry1_1 = tk.Entry(window__)
+                    entry1_1.grid(column=1,row=0,padx=5,pady=5)
+                    entry2_1 = tk.Entry(window__)
+                    entry2_1.grid(column=1,row=1,padx=5,pady=5)
+                    entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
+                    entry2_1.bind("<Return>", lambda event: entry1_1.focus_set())
+                case "RGB值":
+                    entry1_2 = tk.Entry(window__)
+                    entry1_2.grid(column=1,row=0,padx=5,pady=5)
+                    entry2_2 = tk.Entry(window__)
+                    entry2_2.grid(column=1,row=1,padx=5,pady=5)
+                    entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
+                    entry2_2.bind("<Return>", lambda event: entry1_2.focus_set())
+
+            text = ttk.Label(window__,text="需要转换的颜色：")
+            text.grid(column=0,row=0,padx=10,pady=10)
+
+            text2 = ttk.Label(window__,text="转换成的颜色：")
+            text2.grid(column=0,row=1,padx=10,pady=10)
+            
+
+            
+        window_ = ttk.Toplevel(window)
+        window_.title("图片操作")
+        window_.iconbitmap(icon_path)
+        wb1 = ttk.Button(window_, text="颜色转换", bootstyle="outline", command=color)
+        wb1.grid(column=0,row=0,padx=10,pady=10)
+
+
+    window = ttk.Toplevel(root)
     window.title("轻量记事本-小工具")
     window.iconbitmap(icon_path)
     b1 = ttk.Button(window, text="小六壬", bootstyle="outline", command=x)
@@ -5046,6 +5206,10 @@ def gadget():
     b2.grid(column=1,row=0,padx=10,pady=10)
     b3 = ttk.Button(window, text="机器学习-回归问题", bootstyle="outline", command=regression)
     b3.grid(column=2,row=0,padx=10,pady=10)
+    b4 = ttk.Button(window,text="三角形计算", bootstyle="outline", command=Triangle)
+    b4.grid(column=3,row=0,padx=10,pady=10)
+    b5 = ttk.Button(window,text="图片操作", bootstyle="outline", command=Sprites)
+    b5.grid(column=4,row=0,padx=10,pady=10)
 ###分割线
 
 
@@ -5281,6 +5445,9 @@ def root_window():
         w_4_2 = ttk.Frame(w_4)
         w_4_2.grid(column=1,row=2,sticky=W)
 
+        w_4_3 = ttk.Frame(w_4)
+        w_4_3.grid(column=1,row=3,sticky=W)
+
         lb5 = ttk.Label(w_4, text="小工具设置:")
         lb5.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
 
@@ -5289,6 +5456,9 @@ def root_window():
 
         lb7 = ttk.Label(w_4, text="紫微斗数:")
         lb7.grid(column=0,row=2,padx=10,pady=10,ipadx=5)
+
+        lb8 = ttk.Label(w_4,text="图片操作:")
+        lb8.grid(column=0,row=3,padx=10,pady=10,ipadx=5)
 
         consider_var = ttk.IntVar()
         if v5 % 2 == 1:
@@ -5306,64 +5476,122 @@ def root_window():
         consider_checkbutton2 = ttk.Checkbutton(w_4_1, text="不计算吉值", variable=consider_var2, command=s6, bootstyle="round-toggle")
         consider_checkbutton2.grid(column=0,row=1,padx=10,pady=10,sticky=W)
 
-        w_4_2_lb1 = ttk.Label(w_4_2,text="输入界面样式：")
+        w_4_2_lb1 = ttk.Label(w_4_2,text="界面样式：")
         w_4_2_lb1.grid(column=0,row=0,padx=5,pady=5)
 
         W_4_2_lb2 = ttk.Label(w_4_2,text="闰月问题：")
         W_4_2_lb2.grid(column=0,row=1,padx=5,pady=5)
 
-
         W_4_2_lb3 = ttk.Label(w_4_2,text="时辰问题：")
         W_4_2_lb3.grid(column=0,row=2,padx=5,pady=5)
 
+        w_4_3_lb1 = ttk.Label(w_4_3,text="颜色输入：")
+        w_4_3_lb1.grid(column=0,row=0,padx=5,pady=5)
+
+        w_4_3_lb2 = ttk.Label(w_4_3,text="色彩空间：")
+        w_4_3_lb2.grid(column=0,row=1,padx=5,pady=5)
 
 
-        def event_t():
-            with open(r_path, 'w',encoding='utf-8') as file:
-                file.write(str(down_box.get()))
-            w_root5()
+        def w_4_3_():
 
-        def down_box2_save():
-            with open(s_path, 'w',encoding='utf-8') as file:
-                file.write(str(down_box2.get()))
+            def down_box_save_1():
+                with open(w_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box.get()))
 
-        def down_box3_save():
-            with open(s_path, 'w',encoding='utf-8') as file:
-                file.write(str(down_box3.get()))
+            def down_box_save_2():
+                with open(x_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box2.get()))
+            
+            def w_4_3_load():
+                try:
+                    with open(w_path, 'r',encoding='utf-8') as f:
+                        return f.read()
+                except FileNotFoundError:
+                    pass
 
-        down_box = ttk.Combobox(w_4_2, values=["横排样式","竖排样式","自定义样式【未完成】"], state="readonly")
-        down_box.grid(row=0, column=1, padx=5, pady=5)
-        down_box.bind("<<ComboboxSelected>>", lambda event: event_t())
-        t = str(load_down_box() or "横排样式")
-        match t:
-            case "横排样式":
-                down_box.set("横排样式")
-            case "竖排样式":
-                down_box.set("竖排样式")
+            def w_4_3_load_2():
+                try:
+                    with open(x_path, 'r',encoding='utf-8') as f:
+                        return f.read()
+                except FileNotFoundError:
+                    pass
 
-        down_box2 = ttk.Combobox(w_4_2, values=["作本月","作下月","月中为界"], state="readonly")
-        down_box2.grid(row=1, column=1, padx=5, pady=5)
-        down_box2.bind("<<ComboboxSelected>>", lambda event: down_box2_save())
-        t2 = str(load_down_box2() or "作下月")
-        match t2:
-            case "作下月":
-                down_box2.set("作下月")
-            case "作本月":
-                down_box2.set("作本月")
-            case "月中为界":
-                down_box2.set("月中为界")
 
-        down_box3 = ttk.Combobox(w_4_2, values=["子时视明日","子时视本日","子时中而分界"], state="readonly")
-        down_box3.grid(row=2, column=1, padx=5, pady=5)
-        down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
-        t3 = str(load_down_box3() or "子时视明日")
-        match t3:
-            case "子时视明日":
-                down_box3.set("子时视明日")
-            case "子时视本日":
-                down_box3.set("子时视本日")
-            case "子时中而分界":
-                down_box3.set("子时中而分界")
+
+            down_box = ttk.Combobox(w_4_3, values=["颜色选择器","十六进制","RGB值"], state="readonly")
+            down_box.grid(row=0, column=1, padx=5, pady=5)
+            down_box.bind("<<ComboboxSelected>>", lambda event: down_box_save_1())
+            t = str(w_4_3_load() or "颜色选择器")
+            match t:
+                case "颜色选择器":
+                    down_box.set("颜色选择器")
+                case "十六进制":
+                    down_box.set("十六进制")
+                case "RGB值":
+                    down_box.set("RGB值")
+
+            down_box2 = ttk.Combobox(w_4_3, values=["RGBA","RGB"], state="readonly")
+            down_box2.grid(row=1, column=1, padx=5, pady=5)
+            down_box2.bind("<<ComboboxSelected>>", lambda event: down_box_save_2())
+            t_ = str(w_4_3_load_2() or "RGBA")
+            match t_:
+                case "RGBA":
+                    down_box2.set("RBGA")
+                case "RGB":
+                    down_box2.set("RGB")
+
+        def w_4_2_():
+
+            def event_t():
+                with open(r_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box.get()))
+                w_root5()
+
+            def down_box2_save():
+                with open(s_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box2.get()))
+
+            def down_box3_save():
+                with open(t_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box3.get()))
+
+            down_box = ttk.Combobox(w_4_2, values=["横排样式","竖排样式","自定义样式【未完成】"], state="readonly")
+            down_box.grid(row=0, column=1, padx=5, pady=5)
+            down_box.bind("<<ComboboxSelected>>", lambda event: event_t())
+            t = str(load_down_box() or "横排样式")
+            match t:
+                case "横排样式":
+                    down_box.set("横排样式")
+                case "竖排样式":
+                    down_box.set("竖排样式")
+
+            down_box2 = ttk.Combobox(w_4_2, values=["作本月","作下月","月中为界"], state="readonly")
+            down_box2.grid(row=1, column=1, padx=5, pady=5)
+            down_box2.bind("<<ComboboxSelected>>", lambda event: down_box2_save())
+            t2 = str(load_down_box2() or "作下月")
+            match t2:
+                case "作下月":
+                    down_box2.set("作下月")
+                case "作本月":
+                    down_box2.set("作本月")
+                case "月中为界":
+                    down_box2.set("月中为界")
+
+            down_box3 = ttk.Combobox(w_4_2, values=["子时视明日","子时视本日","子时中而分界"], state="readonly")
+            down_box3.grid(row=2, column=1, padx=5, pady=5)
+            down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
+            t3 = str(load_down_box3() or "子时视明日")
+            match t3:
+                case "子时视明日":
+                    down_box3.set("子时视明日")
+                case "子时视本日":
+                    down_box3.set("子时视本日")
+                case "子时中而分界":
+                    down_box3.set("子时中而分界")
+        
+        w_4_3_()
+
+        w_4_2_()
 
     w_root4()
 
@@ -5431,8 +5659,6 @@ def root_window():
             case "竖排样式":
                 w_root5_window2_()
 
-
-
     w_root5()
 
     window.protocol("WM_DELETE_WINDOW", window_close)
@@ -5443,9 +5669,7 @@ def root_window():
 ###分割线
 
 #关于主界面###分割线
-def quit_window(icon: pystray.Icon):
-    icon.stop()
-    icon.visible = False
+def quit_window():
     root.destroy()
 
 def show_window():
@@ -5828,6 +6052,8 @@ if __name__ == '__main__':
     t_path = os.path.join(p,"t")
     u_path = os.path.join(p,"u")
     v_path = os.path.join(p,"v")
+    w_path = os.path.join(p,"w")
+    x_path = os.path.join(p,"x")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
