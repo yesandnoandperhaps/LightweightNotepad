@@ -1492,6 +1492,8 @@ class SpriteSheetMaker(tk.Toplevel):
     def __init__(self):
         super().__init__()
 
+        self.title("精灵图制作")
+        self.iconbitmap(icon_path)
         self.images = []
         self.image_labels = []
         self.sprite_sheet = None
@@ -1529,8 +1531,8 @@ class SpriteSheetMaker(tk.Toplevel):
 
     
     def add_images(self):
-        
-        file_paths = filedialog.askopenfilenames(title="选择图片文件", filetypes=[("PNG文件", "*.png")])
+        file_paths = filedialog.askopenfilenames(title="选择图片文件", filetypes=[("PNG文件", "*.png")], parent=self)
+        messagebox.showinfo("开始", "已开始", parent=self)
         if file_paths:
             for file_path in file_paths:
                 image = Image.open(file_path)
@@ -1540,7 +1542,7 @@ class SpriteSheetMaker(tk.Toplevel):
                 label.image = thumbnail
                 label.pack(side=tk.TOP, padx=5, pady=5)
                 self.image_labels.append(label)
-                
+        messagebox.showinfo("完成", "导入完成", parent=self)
         self.update_scrollregion()
     
     def t_add_images(self):
@@ -1558,7 +1560,7 @@ class SpriteSheetMaker(tk.Toplevel):
         thread_PNG.start()
 
     def create_spritesheet(self):
-
+        messagebox.showinfo("开始", "已开始", parent=self)
         if not self.images:
             messagebox.showerror("错误", "没有图片")
             return
@@ -1580,6 +1582,7 @@ class SpriteSheetMaker(tk.Toplevel):
         sprite_image = ImageTk.PhotoImage(self.sprite_sheet)
         self.canvas.create_image(0, 0, anchor="nw", image=sprite_image)
         self.canvas.image = sprite_image
+        messagebox.showinfo("完成", "已生成精灵图", parent=self)
         
     def save_spritesheet(self):
         if self.sprite_sheet:
@@ -5695,6 +5698,7 @@ def gadget():
         
         def sprites():
             SpriteSheetMaker()
+        
         window_ = ttkp.Toplevel(window)
         window_.title("图片操作")
         window_.iconbitmap(icon_path)
