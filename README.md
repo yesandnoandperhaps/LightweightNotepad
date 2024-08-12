@@ -8,7 +8,9 @@
 
 紫微斗数框架搭建完成10%
 
-目前我们还未涉及到AI，预计今年八月份可以涉及到AI
+目前我们还未涉及到AI，预计今年九月份可以涉及到AI
+
+目前我们支持基本的图片操作
 
 In the future, more functions will be added to the software while ensuring weight reduction
 
@@ -18,7 +20,9 @@ Software development will focus on automatic fortune telling, and the current de
 
 The construction of the Ziwei Doushu frame is 10% complete
 
-At present, we have not yet touched on AI, and we expect to do so in August this year
+At the moment, we have not yet touched on AI, and we expect to do so in September this year
+
+Currently, we support basic image operations
 
 ## Current Usage & Support使用方法与支持
 
