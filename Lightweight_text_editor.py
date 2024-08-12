@@ -3,7 +3,6 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import filedialog,ttk,messagebox,colorchooser
 from tkinter.ttk import Separator
-
 import numpy as np
 import ttkbootstrap as ttkp
 from ttkbootstrap.constants import *
@@ -11,7 +10,7 @@ import ctypes
 import os
 import shutil
 import pystray
-from PIL import Image
+from PIL import Image, ImageTk
 from pystray import MenuItem, Menu
 import threading
 import windnd
@@ -1489,6 +1488,166 @@ def x():
 ###分割线
 #关于紫微斗数###分割线
 
+class SpriteSheetMaker(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+
+        self.images = []
+        self.image_labels = []
+        self.sprite_sheet = None
+
+        main_frame = tk.Frame(self)
+        main_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+        
+        self.canvas = tk.Canvas(main_frame)
+        self.scrollbar = ttkp.Scrollbar(main_frame, orient=tk.VERTICAL, bootstyle="round", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        
+        self.image_frame = tk.Frame(self.canvas)
+
+        self.canvas.create_window((0, 0), window=self.image_frame, anchor="nw")
+        self.image_frame.bind("<Configure>", self.update_scrollregion)
+        
+        control_frame = tk.Frame(main_frame)
+        control_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.Y)
+        
+        add_button = ttkp.Button(control_frame, text="添加图片", bootstyle="outline", command=self.t_add_images)
+        add_button.pack(pady=5)
+        
+        clear_button = ttkp.Button(control_frame, text="清除图片", bootstyle="outline", command=self.clear_images)
+        clear_button.pack(pady=5)
+        
+        create_button = ttkp.Button(control_frame, text="生成精灵图", bootstyle="outline", command=self.t_create_spritesheet)
+        create_button.pack(pady=5)
+        
+        save_button = ttkp.Button(control_frame, text="保存精灵图", bootstyle="outline", command=self.save_spritesheet)
+        save_button.pack(pady=5)
+
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.image_frame.pack(side=tk.RIGHT, fill=tk.Y)
+
+    
+    def add_images(self):
+        
+        file_paths = filedialog.askopenfilenames(title="选择图片文件", filetypes=[("PNG文件", "*.png")])
+        if file_paths:
+            for file_path in file_paths:
+                image = Image.open(file_path)
+                self.images.append(image)
+                thumbnail = ImageTk.PhotoImage(image.resize((50, 50)))
+                label = tk.Label(self.image_frame, image=thumbnail)
+                label.image = thumbnail
+                label.pack(side=tk.TOP, padx=5, pady=5)
+                self.image_labels.append(label)
+                
+        self.update_scrollregion()
+    
+    def t_add_images(self):
+        thread_PNG = threading.Thread(target=self.add_images)
+        thread_PNG.start()
+
+    def clear_images(self):
+        self.images.clear()
+        for label in self.image_labels:
+            label.destroy()
+        self.image_labels.clear()
+    
+    def t_create_spritesheet(self):
+        thread_PNG = threading.Thread(target=self.create_spritesheet)
+        thread_PNG.start()
+
+    def create_spritesheet(self):
+
+        if not self.images:
+            messagebox.showerror("错误", "没有图片")
+            return
+        
+        widths, heights = zip(*(i.size for i in self.images))
+
+        total_width = sum(widths)
+        max_height = max(heights)
+        
+        self.sprite_sheet = Image.new('RGBA', (total_width, max_height))
+        
+        x_offset = 0
+        for img in self.images:
+            self.sprite_sheet.paste(img, (x_offset, 0))
+            x_offset += img.width
+        
+        self.clear_images()
+        self.sprite_sheet.thumbnail((400, 400))
+        sprite_image = ImageTk.PhotoImage(self.sprite_sheet)
+        self.canvas.create_image(0, 0, anchor="nw", image=sprite_image)
+        self.canvas.image = sprite_image
+        
+    def save_spritesheet(self):
+        if self.sprite_sheet:
+            file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG文件", "*.png")])
+            if file_path:
+
+                self.sprite_sheet.save(file_path)
+                messagebox.showinfo("保存成功", f"精灵图已保存到: {file_path}")
+                
+                self.generate_html_css(file_path)
+        else:
+            messagebox.showerror("错误", "没有精灵图")
+    
+    def generate_html_css(self, sprite_path):
+        sprite_name = os.path.basename(sprite_path)
+        sprite_folder = os.path.dirname(sprite_path)
+        
+        # HTML 文件内容
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <title>精灵图展示</title>
+            <link rel="stylesheet" href="{sprite_name.replace('.png', '.css')}">
+        </head>
+        <body>
+            <div class="sprite-container">
+        """
+        
+        # CSS 文件内容
+        css_content = f""".sprite-container {{
+            background: url('{sprite_name}') no-repeat;
+            width: {self.sprite_sheet.width}px;
+            height: {self.sprite_sheet.height}px;
+        }}\n"""
+        
+        x_offset = 0
+        for index, img in enumerate(self.images):
+            width, height = img.size
+            html_content += f'<div class="sprite sprite-{index + 1}"></div>\n'
+            css_content += f""".sprite-{index + 1} {{
+                width: {width}px;
+                height: {height}px;
+                background-position: -{x_offset}px 0;
+            }}\n"""
+            x_offset += width
+        
+        html_content += """
+            </div>
+        </body>
+        </html>
+        """
+        
+        # 保存 HTML 文件
+        html_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.html'))
+        with open(html_file_path, 'w', encoding='utf-8') as html_file:
+            html_file.write(html_content)
+        
+        # 保存 CSS 文件
+        css_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.css'))
+        with open(css_file_path, 'w', encoding='utf-8') as css_file:
+            css_file.write(css_content)
+        
+        messagebox.showinfo("HTML和CSS保存成功", f"HTML 和 CSS 文件已保存到: {sprite_folder}")
+        
+    def update_scrollregion(self, event=None):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 def gadget():
 
@@ -5046,7 +5205,7 @@ def gadget():
     def Triangle():
         pass
     
-    def Sprites():
+    def picture():
 
         def color():
             rgb = None
@@ -5098,7 +5257,7 @@ def gadget():
                         # 保存处理后的图像
                         img = Image.fromarray(datas, 'RGB')
                         img.save(path, "PNG")
-                    messagebox.showinfo("完成", "颜色转换完成")
+                    messagebox.showinfo("完成", "颜色转换完成", parent=window__)
                 except Exception as e:
                     messagebox.showerror("错误", message=f"处理图像时出错: {e}", parent=window__)
 
@@ -5107,13 +5266,14 @@ def gadget():
                     entry1_value = entry1.get()
                     entry2_value = entry2.get()
 
-                    if not entry1_value.isdigit() and entry1_value != "保留原本":
+                    if (not entry1_value.isdigit() or 0 > int(entry1_value) or int(entry1_value) > 225) and entry1_value != "保留原本":
                         messagebox.showerror("错误", message="请输入0~255的值，或输入保留原本", parent=window__)
                         return
 
-                    if not entry2_value.isdigit():
+                    if not entry2_value.isdigit() or int(entry2_value) < 0 or int(entry2_value) > 255:
                         messagebox.showerror("错误", message="请输入0~255的值", parent=window__)
                         return
+
 
                     entry1_value_int = int(entry1_value) if entry1_value.isdigit() else None
                     entry2_value_int = int(entry2_value) if entry2_value.isdigit() else None
@@ -5144,10 +5304,81 @@ def gadget():
 
                         img = Image.fromarray(datas, 'RGBA')
                         img.save(path, "PNG")
-                    messagebox.showinfo("完成", "颜色转换完成")
+                    messagebox.showinfo("完成", "颜色转换完成", parent=window__)
                 except Exception as e:
                     messagebox.showerror("错误", message=f"发生错误: {str(e)}", parent=window__)
+            
+            def is_valid_hex_color(color):
+                pattern = re.compile(r'^#[0-9A-Fa-f]{6}$', re.IGNORECASE)
+                return bool(pattern.match(color))
+            
+            def hex_to_rgb(hex_value):
 
+                hex_value = hex_value.lower()
+                if hex_value.startswith('#'):
+                    hex_value = hex_value[1:]
+
+                r = int(hex_value[0:2], 16)
+                g = int(hex_value[2:4], 16)
+                b = int(hex_value[4:6], 16)
+    
+                return (r, g, b)
+            
+            def color_RGBA_16():
+                nonlocal rgb,rgb_
+                if is_valid_hex_color(entry1_1.get()) and is_valid_hex_color(entry2_1.get()):
+                    if not PNG_path:
+                        messagebox.showerror("错误", message="没有路径", parent=window__)
+                        return
+                    rgb = hex_to_rgb(entry1_1.get())
+                    rgb_ = hex_to_rgb(entry2_1.get())
+                    color_RGBA()
+                else:
+                    messagebox.showerror("错误", message="十六进制错误", parent=window__)
+            
+            def color_RGB_16():
+                nonlocal rgb,rgb_
+                if is_valid_hex_color(entry1_1.get()) and is_valid_hex_color(entry2_1.get()):
+                    if not PNG_path:
+                        messagebox.showerror("错误", message="没有路径", parent=window__)
+                        return
+                    rgb = hex_to_rgb(entry1_1.get())
+                    rgb_ = hex_to_rgb(entry2_1.get())
+                    color_RGB()
+                else:
+                    messagebox.showerror("错误", message="十六进制错误", parent=window__)
+            
+            def is_valid_rgb(rgb):
+                return all(0 <= value <= 255 for value in rgb)
+
+            def color_RGBA_RGB():
+                nonlocal rgb,rgb_
+                entry1_2_t = entry1_2.get()
+                entry2_2_t = entry2_2.get()
+
+                rgb = tuple(map(int, entry1_2_t.split(',')))
+                rgb_ = tuple(map(int, entry2_2_t.split(',')))
+                if is_valid_rgb(rgb) and is_valid_rgb(rgb_):
+                    if not PNG_path:
+                        messagebox.showerror("错误", message="没有路径", parent=window__)
+                    color_RGBA()
+                else:
+                    messagebox.showerror("错误", message="RGB值错误", parent=window__)
+            
+            def color_RGB_RGB():
+                nonlocal rgb,rgb_
+                entry1_2_t = entry1_2.get()
+                entry2_2_t = entry2_2.get()
+
+                rgb = tuple(map(int, entry1_2_t.split(',')))
+                rgb_ = tuple(map(int, entry2_2_t.split(',')))
+                if all(0 <= x <= 225 for x in rgb) and all(0 <= x <= 225 for x in rgb_):
+                    if not PNG_path:
+                        messagebox.showerror("错误", message="没有路径", parent=window__)
+                    color_RGB()
+                else:
+                    messagebox.showerror("错误", message="RGB值错误", parent=window__)
+            
             def get_image_colors(image_path):
                 with Image.open(image_path) as img:
                     img = img.convert('RGBA')
@@ -5194,7 +5425,7 @@ def gadget():
                         y += color_size + padding
                 canvas.config(scrollregion=canvas.bbox("all"))
                 window__.wm_attributes('-disabled', 0)
-                icon.notify("导入成功", "Lightweight text editor")
+                messagebox.showinfo("导入", "导入成功", parent=window__)
 
             def rgba_to_hex(rgba):
                 return '#{:02x}{:02x}{:02x}'.format(rgba[0], rgba[1], rgba[2])
@@ -5206,16 +5437,37 @@ def gadget():
                 menu.add_command(label="复制颜色十进制", command=lambda: copy_color_decimal(color))
                 menu.add_command(label="复制颜色十六进制", command=lambda: copy_color_hex(color))
                 menu.post(event.x_root, event.y_root)
+            
             def set_choose_color(color):
                 nonlocal rgb
-                rgb = (color[0],color[1],color[2])
+                if t == "颜色选择器":
+                    rgb = (color[0],color[1],color[2])
+                elif t == "十六进制":
+                    hex_color = rgba_to_hex(color)
+                    entry1_1.delete(0, tk.END)
+                    entry1_1.insert(tk.END, str(hex_color))
+                elif t == "RGB值":
+                    entry1_2.delete(0, tk.END)
+                    entry1_2.insert(tk.END, f"{color[0]}, {color[1]}, {color[2]}")
 
             def set_choose_color_(color):
                 nonlocal rgb_
-                rgb_ = (color[0],color[1],color[2])
-                if t_ == "RGBA":
-                    entry2.delete(0, tk.END)
-                    entry2.insert(tk.END, str(color[3]))
+                if t == "颜色选择器":
+                    rgb_ = (color[0],color[1],color[2])
+                    if t_ == "RGBA":
+                        entry2.delete(0, tk.END)
+                        entry2.insert(tk.END, str(color[3]))
+                elif t == "十六进制":
+                    hex_color = rgba_to_hex(color)
+                    entry2_1.delete(0, tk.END)
+                    entry2_1.insert(tk.END, str(hex_color))
+                elif t == "RGB值":
+                    if t_ == "RGBA":
+                        entry2.delete(0, tk.END)
+                        entry2.insert(tk.END, str(color[3]))
+                    entry2_2.delete(0, tk.END)
+                    entry2_2.insert(tk.END, f"{color[0]}, {color[1]}, {color[2]}")
+
                 
             def copy_color_decimal(color):
                 decimal_color = f"({color[0]}, {color[1]}, {color[2]})"
@@ -5235,7 +5487,7 @@ def gadget():
             PNG_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片', filetypes=[("PNG", "*.PNG")])
 
             window__ = ttkp.Toplevel(window_)
-            window__.title("图片操作")
+            window__.title("颜色转换")
             window__.iconbitmap(icon_path)
             window__.bind("<Shift_R>", lambda event: exit_win())
 
@@ -5275,15 +5527,62 @@ def gadget():
                 entry1_1.grid(column=1, row=0, padx=5, pady=5)
                 entry2_1 = tk.Entry(f)
                 entry2_1.grid(column=1, row=1, padx=5, pady=5)
-                entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
-                entry2_1.bind("<Return>", lambda event: entry1_1.focus_set())
+                if t_ == "RGBA":
+                    text3 = ttkp.Label(f, text="整张透明度：")
+                    text3.grid(column=0, row=2, padx=10, pady=10)
+                    entry1 = tk.Entry(f)
+                    entry1.grid(column=1, row=2, padx=5, pady=5)
+                    entry1.insert(tk.END, "保留原本")
+                    text4 = ttkp.Label(f, text="转换颜色透明度：")
+                    text4.grid(column=0, row=3, padx=10, pady=10)
+                    entry2 = tk.Entry(f)
+                    entry2.grid(column=1, row=3, padx=5, pady=5)
+                    entry2.insert(tk.END, "255")
+                    entry1.bind("<Return>", lambda event: entry2.focus_set())
+                    entry2.bind("<Return>", lambda event: entry1_1.focus_set())
+                    entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
+                    entry2_1.bind("<Return>", lambda event: entry1.focus_set())
+                    entry1.bind('<Shift_L>', lambda event: color_RGBA_16())
+                    entry2.bind('<Shift_L>', lambda event: color_RGBA_16())
+                    entry1_1.bind('<Shift_L>', lambda event: color_RGBA_16())
+                    entry2_1.bind('<Shift_L>', lambda event: color_RGBA_16())
+                elif t_ == "RGB":
+                    entry1_1.bind('<Shift_L>', lambda event: color_RGB_16())
+                    entry2_1.bind('<Shift_L>', lambda event: color_RGB_16())
+                    entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
+                    entry2_1.bind("<Return>", lambda event: entry1_1.focus_set())
             elif t == "RGB值":
                 entry1_2 = tk.Entry(f)
                 entry1_2.grid(column=1, row=0, padx=5, pady=5)
                 entry2_2 = tk.Entry(f)
                 entry2_2.grid(column=1, row=1, padx=5, pady=5)
-                entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
-                entry2_2.bind("<Return>", lambda event: entry1_2.focus_set())
+                if t_ == "RGBA":
+                    text3 = ttkp.Label(f, text="整张透明度：")
+                    text3.grid(column=0, row=2, padx=10, pady=10)
+                    entry1 = tk.Entry(f)
+                    entry1.grid(column=1, row=2, padx=5, pady=5)
+                    entry1.insert(tk.END, "保留原本")
+                    text4 = ttkp.Label(f, text="转换颜色透明度：")
+                    text4.grid(column=0, row=3, padx=10, pady=10)
+                    entry2 = tk.Entry(f)
+                    entry2.grid(column=1, row=3, padx=5, pady=5)
+                    entry2.insert(tk.END, "255")
+                    
+                    entry1.bind("<Return>", lambda event: entry2.focus_set())
+                    entry2.bind("<Return>", lambda event: entry1_2.focus_set())
+                    entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
+                    entry2_2.bind("<Return>", lambda event: entry1.focus_set())
+                    
+                    entry1.bind('<Shift_L>', lambda event: color_RGBA_RGB())
+                    entry2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
+                    entry1_2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
+                    entry2_2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
+                elif t_ == "RGB":
+                    entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
+                    entry2_2.bind("<Return>", lambda event: entry1_2.focus_set())
+                    entry1_2.bind('<Shift_L>', lambda event: color_RGB_RGB())
+                    entry2_2.bind('<Shift_L>', lambda event: color_RGB_RGB())
+                
 
             text = ttkp.Label(f, text="需要转换的颜色：")
             text.grid(column=0, row=0, padx=10, pady=10)
@@ -5291,7 +5590,6 @@ def gadget():
             text2 = ttkp.Label(f, text="转换成的颜色：")
             text2.grid(column=0, row=1, padx=10, pady=10)
 
-            # 创建画布和滚动条
             canvas_frame = ttkp.Frame(window__)
             canvas_frame.grid(column=0, row=1, padx=10, pady=10, sticky="nsew")
 
@@ -5303,7 +5601,6 @@ def gadget():
     
             canvas.config(yscrollcommand=scrollbar.set)
 
-            # 使 Canvas_frame 自适应窗口大小
             canvas_frame.columnconfigure(0, weight=1)
             canvas_frame.rowconfigure(0, weight=1)
             
@@ -5325,11 +5622,88 @@ def gadget():
             thread_PNG = threading.Thread(target=PNG)
             thread_PNG.start()
 
+        def format():
+            ALL_path = filedialog.askopenfilenames(title='请选择需要格式转换的图片', filetypes=[("All Images", "*.png *.jpg *.jpeg *.bmp *.gif *.tiff")])
+            def exit_win():
+                window__.destroy()
+                window_.wm_attributes('-topmost', 1)
+                window_.wm_attributes('-topmost', 0)
+
+            window__ = ttkp.Toplevel(window_)
+            window__.title("格式转换")
+            window__.iconbitmap(icon_path)
+            window__.bind("<Shift_R>", lambda event: exit_win())
+            
+
+            def f_Image():
+                output_format = down_box.get()
+                messagebox.showinfo("开始", "已开始", parent=window__)
+                if output_format == "二进制":
+                    for file_path in ALL_path:
+                        try:
+                            with Image.open(file_path) as img:
+                                if img.mode == 'RGBA':
+                                    img = img.convert('RGB')
+                                
+                                base, _ = os.path.splitext(file_path)
+                                new_file_path = f"{base}.bin"
+                                with open(new_file_path, 'wb') as f:
+                                    img.save(f, format='BMP')
+                            
+                        except Exception as e:
+                            print(f"Error converting {file_path}: {e}")
+                    messagebox.showinfo("完成", "转换完成", parent=window__)
+                else:
+                    for file_path in ALL_path:
+                        try:
+                            with Image.open(file_path) as img:
+                                if img.mode == 'RGBA':
+                                    img = img.convert('RGB')
+
+                                base, ext = os.path.splitext(file_path)
+                                new_file_path = f"{base}.{output_format}"
+                                img.save(new_file_path, format=output_format)
+                        except Exception as e:
+                            print(f"Error converting {file_path}: {e}")
+                    messagebox.showinfo("完成", "转换完成", parent=window__)
+                
+            def tf_Image():
+                
+                thread_PNG = threading.Thread(target=f_Image)
+                thread_PNG.start()
+
+            def down_box_save_1():
+                    with open(y_path, 'w',encoding='utf-8') as file:
+                        file.write(str(down_box.get()))
+
+            def w_4_3_load():
+                    try:
+                        with open(y_path, 'r',encoding='utf-8') as f:
+                            return f.read()
+                    except FileNotFoundError:
+                        pass
+                
+            text = ttkp.Label(window__, text="目标格式：")
+            text.grid(column=0, row=0, padx=10, pady=10)
+
+            down_box = ttkp.Combobox(window__, values=['png', 'jpeg', 'bmp', 'gif', 'tiff','二进制'], state="readonly")
+            down_box.grid(row=0, column=1, padx=5, pady=5)
+            down_box.bind("<<ComboboxSelected>>", lambda event: down_box_save_1())
+            down_box.bind("<Button-3>", lambda event: tf_Image())
+            t = str(w_4_3_load() or "png")
+            down_box.set(t)
+        
+        def sprites():
+            SpriteSheetMaker()
         window_ = ttkp.Toplevel(window)
         window_.title("图片操作")
         window_.iconbitmap(icon_path)
         wb1 = ttkp.Button(window_, text="颜色转换", bootstyle="outline", command=color)
         wb1.grid(column=0,row=0,padx=10,pady=10)
+        wb2 = ttkp.Button(window_, text="格式转换", bootstyle="outline", command=format)
+        wb2.grid(column=1,row=0,padx=10,pady=10)
+        wb3 = ttkp.Button(window_, text="精灵图制作", bootstyle="outline", command=sprites)
+        wb3.grid(column=2,row=0,padx=10,pady=10)
 
 
     window = ttkp.Toplevel(root)
@@ -5343,7 +5717,7 @@ def gadget():
     b3.grid(column=2,row=0,padx=10,pady=10)
     b4 = ttkp.Button(window,text="三角形计算", bootstyle="outline", command=Triangle)
     b4.grid(column=3,row=0,padx=10,pady=10)
-    b5 = ttkp.Button(window,text="图片操作", bootstyle="outline", command=Sprites)
+    b5 = ttkp.Button(window,text="图片操作", bootstyle="outline", command=picture)
     b5.grid(column=4,row=0,padx=10,pady=10)
 ###分割线
 
@@ -6189,6 +6563,7 @@ if __name__ == '__main__':
     v_path = os.path.join(p,"v")
     w_path = os.path.join(p,"w")
     x_path = os.path.join(p,"x")
+    y_path = os.path.join(p,"y")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
