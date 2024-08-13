@@ -22,7 +22,7 @@ The construction of the Ziwei Doushu frame is 10% complete
 
 At the moment, we have not yet touched on AI, and we expect to do so in September this year
 
-Currently, we support basic image operations
+We currently support basic image manipulation
 
 ## Current Usage & Support使用方法与支持
 
