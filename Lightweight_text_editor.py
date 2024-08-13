@@ -54,6 +54,18 @@ def x_save3(r):
     with open(q_path,"w",encoding='utf-8')as f:
         f.write(str(r))
 
+def save_var_num_w_4_3():
+    with open(z_path,"w",encoding='utf-8')as f:
+        f.write(str(var_num_w_4_3))
+
+def save_var2_num_w_4_3():
+    with open(aa_path,"w",encoding='utf-8')as f:
+        f.write(str(var2_num_w_4_3))
+
+def save_var3_num_w_4_3():
+    with open(ab_path,"w",encoding='utf-8')as f:
+        f.write(str(var3_num_w_4_3))
+
 def load_theme():
     try:
         with open(b_path, 'r',encoding='utf-8') as file:
@@ -156,6 +168,25 @@ def load_down_box3():
             return f.read()
     except FileNotFoundError:
             pass
+def loda_var_num_w_4_3():
+    try:
+        with open(z_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
+def loda_var2_num_w_4_3():
+    try:
+        with open(aa_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
+    
+def loda_var3_num_w_4_3():
+    try:
+        with open(ab_path, 'r',encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+            pass
 def s():
     global v
     v = v + 1
@@ -178,6 +209,19 @@ def wv_1():
     global num_wv1
     num_wv1 = num_wv1 + 1
     x_save()
+def var_num_w_4_3_s():
+    global var_num_w_4_3
+    var_num_w_4_3 += 1
+    save_var_num_w_4_3()
+def var2_num_w_4_3_s():
+    global var2_num_w_4_3
+    var2_num_w_4_3 += 1
+    save_var2_num_w_4_3()
+
+def var3_num_w_4_3_s():
+    global var3_num_w_4_3
+    var3_num_w_4_3 += 1
+    save_var3_num_w_4_3()
 
 #关于小六壬###分割线
 def x():
@@ -1504,35 +1548,41 @@ class SpriteSheetMaker(tk.Toplevel):
         self.canvas = tk.Canvas(main_frame)
         self.scrollbar = ttkp.Scrollbar(main_frame, orient=tk.VERTICAL, bootstyle="round", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
-        
+
         self.image_frame = tk.Frame(self.canvas)
 
-        self.canvas.create_window((0, 0), window=self.image_frame, anchor="nw")
-        self.image_frame.bind("<Configure>", self.update_scrollregion)
-        
+        internal_frame = tk.Frame(self.canvas)
+        internal_frame.pack(side=tk.RIGHT, fill=tk.Y)
+        internal_frame.bind("<Configure>", self.update_scrollregion)
+
+        self.image_frame.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.canvas.create_window((0, 0), window=self.image_frame, anchor="ne")
+
         control_frame = tk.Frame(main_frame)
         control_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.Y)
         
-        add_button = ttkp.Button(control_frame, text="添加图片", bootstyle="outline", command=self.t_add_images)
+        add_button = ttkp.Button(control_frame, text="添加图片",  bootstyle="outline",command=self.t_add_images)
         add_button.pack(pady=5)
         
-        clear_button = ttkp.Button(control_frame, text="清除图片", bootstyle="outline", command=self.clear_images)
+        clear_button = ttkp.Button(control_frame, text="清除图片",  bootstyle="outline",command=self.clear_images)
         clear_button.pack(pady=5)
         
-        create_button = ttkp.Button(control_frame, text="生成精灵图", bootstyle="outline", command=self.t_create_spritesheet)
+        create_button = ttkp.Button(control_frame, text="生成精灵图",  bootstyle="outline",command=self.t_create_spritesheet)
         create_button.pack(pady=5)
         
-        save_button = ttkp.Button(control_frame, text="保存精灵图", bootstyle="outline", command=self.save_spritesheet)
+        save_button = ttkp.Button(control_frame, text="保存精灵图",  bootstyle="outline",command=self.t_save_spritesheet)
         save_button.pack(pady=5)
 
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.image_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
+    def update_scrollregion(self, event=None):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def add_images(self):
         file_paths = filedialog.askopenfilenames(title="选择图片文件", filetypes=[("PNG文件", "*.png")], parent=self)
-        messagebox.showinfo("开始", "已开始", parent=self)
+        icon.notify("已开始", "Lightweight text editor")
         if file_paths:
             for file_path in file_paths:
                 image = Image.open(file_path)
@@ -1542,7 +1592,7 @@ class SpriteSheetMaker(tk.Toplevel):
                 label.image = thumbnail
                 label.pack(side=tk.TOP, padx=5, pady=5)
                 self.image_labels.append(label)
-        messagebox.showinfo("完成", "导入完成", parent=self)
+        icon.notify("已完成", "Lightweight text editor")
         self.update_scrollregion()
     
     def t_add_images(self):
@@ -1560,7 +1610,7 @@ class SpriteSheetMaker(tk.Toplevel):
         thread_PNG.start()
 
     def create_spritesheet(self):
-        messagebox.showinfo("开始", "已开始", parent=self)
+        icon.notify("已开始", "Lightweight text editor")
         if not self.images:
             messagebox.showerror("错误", "没有图片")
             return
@@ -1578,30 +1628,55 @@ class SpriteSheetMaker(tk.Toplevel):
             x_offset += img.width
         
         self.clear_images()
-        self.sprite_sheet.thumbnail((400, 400))
-        sprite_image = ImageTk.PhotoImage(self.sprite_sheet)
+
+        display_sprite_sheet = self.sprite_sheet.copy()
+        display_sprite_sheet.thumbnail((400, 400))
+        icon.notify("已完成", "Lightweight text editor")
+        
+        sprite_image = ImageTk.PhotoImage(display_sprite_sheet)
         self.canvas.create_image(0, 0, anchor="nw", image=sprite_image)
         self.canvas.image = sprite_image
-        messagebox.showinfo("完成", "已生成精灵图", parent=self)
         
+    def t_save_spritesheet(self):
+        thread = threading.Thread(target=self.save_spritesheet)
+        thread.start()
+
     def save_spritesheet(self):
+        icon.notify("已开始", "Lightweight text editor")
+        var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
+        var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
+        var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+
         if self.sprite_sheet:
             file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG文件", "*.png")])
-            if file_path:
+            try:
+                if var_num_w_4_3 % 2 == 1:
 
-                self.sprite_sheet.save(file_path)
-                messagebox.showinfo("保存成功", f"精灵图已保存到: {file_path}")
-                
-                self.generate_html_css(file_path)
+                    if file_path:
+
+                        self.sprite_sheet.save(file_path)
+                        icon.notify(f"保存成功\n精灵图已保存到: {file_path}", "Lightweight text editor")
+
+                if (var2_num_w_4_3 % 2 == 1) or (var3_num_w_4_3 % 2 == 1):
+
+                    thread = threading.Thread(target=self.generate_html_css, args=(file_path,))
+                    thread.start()
+            
+                if (var_num_w_4_3 % 2 == 0) and (var2_num_w_4_3 % 2 == 0) and (var3_num_w_4_3 % 2 == 0):
+                    messagebox.showerror("错误", "设置错误", parent=self)
+            except Exception as e:
+                messagebox.showerror("错误", f"错误{e}", parent=self)
         else:
-            messagebox.showerror("错误", "没有精灵图")
+            messagebox.showerror("错误", "没有精灵图", parent=self)
     
     def generate_html_css(self, sprite_path):
-        sprite_name = os.path.basename(sprite_path)
-        sprite_folder = os.path.dirname(sprite_path)
+        try:
+            var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
+            var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+            sprite_name = os.path.basename(sprite_path)
+            sprite_folder = os.path.dirname(sprite_path)
         
-        # HTML 文件内容
-        html_content = f"""
+            html_content = f"""
         <!DOCTYPE html>
         <html lang="zh-CN">
         <head>
@@ -1613,44 +1688,44 @@ class SpriteSheetMaker(tk.Toplevel):
             <div class="sprite-container">
         """
         
-        # CSS 文件内容
-        css_content = f""".sprite-container {{
+            css_content = f""".sprite-container {{
             background: url('{sprite_name}') no-repeat;
             width: {self.sprite_sheet.width}px;
             height: {self.sprite_sheet.height}px;
         }}\n"""
         
-        x_offset = 0
-        for index, img in enumerate(self.images):
-            width, height = img.size
-            html_content += f'<div class="sprite sprite-{index + 1}"></div>\n'
-            css_content += f""".sprite-{index + 1} {{
+            x_offset = 0
+            for index, img in enumerate(self.images):
+                width, height = img.size
+                html_content += f'<div class="sprite sprite-{index + 1}"></div>\n'
+                css_content += f""".sprite-{index + 1} {{
                 width: {width}px;
                 height: {height}px;
                 background-position: -{x_offset}px 0;
             }}\n"""
-            x_offset += width
+                x_offset += width
         
-        html_content += """
+            html_content += """
             </div>
         </body>
         </html>
         """
-        
-        # 保存 HTML 文件
-        html_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.html'))
-        with open(html_file_path, 'w', encoding='utf-8') as html_file:
-            html_file.write(html_content)
-        
-        # 保存 CSS 文件
-        css_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.css'))
-        with open(css_file_path, 'w', encoding='utf-8') as css_file:
-            css_file.write(css_content)
-        
-        messagebox.showinfo("HTML和CSS保存成功", f"HTML 和 CSS 文件已保存到: {sprite_folder}")
-        
-    def update_scrollregion(self, event=None):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+            if var3_num_w_4_3 % 2 == 1:
+                html_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.html'))
+                with open(html_file_path, 'w', encoding='utf-8') as html_file:
+                    html_file.write(html_content)
+                icon.notify(f"HTML文件已保存到: {sprite_folder}", "Lightweight text editor")
+
+
+            if var2_num_w_4_3 % 2 == 1:
+                css_file_path = os.path.join(sprite_folder, sprite_name.replace('.png', '.css'))
+                with open(css_file_path, 'w', encoding='utf-8') as css_file:
+                    css_file.write(css_content)
+                icon.notify(f"CSS文件已保存到: {sprite_folder}", "Lightweight text editor")
+
+        except Exception as e:
+                messagebox.showerror("错误", f"错误{e}", parent=self)
 
 def gadget():
 
@@ -5961,6 +6036,9 @@ def root_window():
         w_4_3 = ttkp.Frame(w_4)
         w_4_3.grid(column=1,row=3,sticky=W)
 
+        w_4_3_1 = ttkp.Frame(w_4_3)
+        w_4_3_1.grid(column=1,row=2,sticky=W)
+
         lb5 = ttkp.Label(w_4, text="小工具设置:")
         lb5.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
 
@@ -6004,6 +6082,9 @@ def root_window():
         w_4_3_lb2 = ttkp.Label(w_4_3,text="色彩空间：")
         w_4_3_lb2.grid(column=0,row=1,padx=5,pady=5)
 
+        w_4_3_lb3 = ttkp.Label(w_4_3,text="精灵图文件导出：")
+        w_4_3_lb3.grid(column=0,row=2,padx=5,pady=5)
+
 
         def w_4_3_():
 
@@ -6029,8 +6110,6 @@ def root_window():
                 except FileNotFoundError:
                     pass
 
-
-
             down_box = ttkp.Combobox(w_4_3, values=["颜色选择器","十六进制","RGB值"], state="readonly")
             down_box.grid(row=0, column=1, padx=5, pady=5)
             down_box.bind("<<ComboboxSelected>>", lambda event: down_box_save_1())
@@ -6052,6 +6131,34 @@ def root_window():
                     down_box2.set("RBGA")
                 case "RGB":
                     down_box2.set("RGB")
+
+            var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
+            var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
+            var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+
+            w_4_3_var = ttkp.IntVar()
+            if var_num_w_4_3 % 2 == 1:
+                w_4_3_var.set(1)
+            else:
+                w_4_3_var.set(0)
+            w_4_3_var_ = ttkp.Checkbutton(w_4_3_1, text="PNG", variable=w_4_3_var, command=var_num_w_4_3_s, bootstyle="round-toggle")
+            w_4_3_var_.grid(column=0,row=0,padx=5,pady=5)
+
+            w_4_3_var2 = ttkp.IntVar()
+            if var2_num_w_4_3 % 2 == 1:
+                w_4_3_var2.set(1)
+            else:
+                w_4_3_var2.set(0)
+            w_4_3_var2_ = ttkp.Checkbutton(w_4_3_1, text="CSS", variable=w_4_3_var2, command=var2_num_w_4_3_s, bootstyle="round-toggle")
+            w_4_3_var2_.grid(column=1,row=0,padx=5,pady=5)
+
+            w_4_3_var3 = ttkp.IntVar()
+            if var3_num_w_4_3 % 2 == 1:
+                w_4_3_var3.set(1)
+            else:
+                w_4_3_var3.set(0)
+            w_4_3_var3_ = ttkp.Checkbutton(w_4_3_1, text="HTML", variable=w_4_3_var3, command=var3_num_w_4_3_s, bootstyle="round-toggle")
+            w_4_3_var3_.grid(column=2,row=0,padx=5,pady=5)
 
         def w_4_2_():
 
@@ -6568,6 +6675,9 @@ if __name__ == '__main__':
     w_path = os.path.join(p,"w")
     x_path = os.path.join(p,"x")
     y_path = os.path.join(p,"y")
+    z_path = os.path.join(p,"z")
+    aa_path = os.path.join(p,"aa")
+    ab_path = os.path.join(p,"ab")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
@@ -6577,6 +6687,9 @@ if __name__ == '__main__':
     v5 = int(load9() or 0)
     v6 = int(load10() or 0)
     num_wv1 = int(load11() or 0)
+    var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
+    var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
+    var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
     _size_ = (load5() or "70MB")
     divide_up = (load6() or "等于大文件定义")
     onandoff = (load7() or "开启")
