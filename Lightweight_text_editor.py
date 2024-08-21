@@ -6,6 +6,7 @@ from tkinter.ttk import Separator
 import numpy as np
 import ttkbootstrap as ttkp
 from ttkbootstrap.constants import *
+from ttkbootstrap.tooltip import ToolTip
 import ctypes
 import os
 import shutil
@@ -17,6 +18,12 @@ import windnd
 import XiaoLliuren
 import re
 import ZiWeidoushu
+import json
+
+class CustomToolTip(ToolTip):
+    def update_text(self, text):
+        """更新 ToolTip 的文本"""
+        self.text = text  # 更新文本
 
 def save(theme):
     with open(b_path, 'w',encoding='utf-8') as file:
@@ -1542,37 +1549,37 @@ class SpriteSheetMaker(tk.Toplevel):
         self.image_labels = []
         self.sprite_sheet = None
 
-        main_frame = tk.Frame(self)
-        main_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+        self.main_frame = tk.Frame(self)
+        self.main_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
         
-        self.canvas = tk.Canvas(main_frame)
-        self.scrollbar = ttkp.Scrollbar(main_frame, orient=tk.VERTICAL, bootstyle="round", command=self.canvas.yview)
+        self.canvas = tk.Canvas(self.main_frame)
+        self.scrollbar = ttkp.Scrollbar(self.main_frame, orient=tk.VERTICAL, bootstyle="round", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
         self.image_frame = tk.Frame(self.canvas)
 
-        internal_frame = tk.Frame(self.canvas)
-        internal_frame.pack(side=tk.RIGHT, fill=tk.Y)
-        internal_frame.bind("<Configure>", self.update_scrollregion)
+        self.internal_frame = tk.Frame(self.canvas)
+        self.internal_frame.pack(side=tk.RIGHT, fill=tk.Y)
+        self.internal_frame.bind("<Configure>", self.update_scrollregion)
 
         self.image_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.canvas.create_window((0, 0), window=self.image_frame, anchor="ne")
 
-        control_frame = tk.Frame(main_frame)
-        control_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.Y)
+        self.control_frame = tk.Frame(self.main_frame)
+        self.control_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.Y)
         
-        add_button = ttkp.Button(control_frame, text="添加图片",  bootstyle="outline",command=self.t_add_images)
-        add_button.pack(pady=5)
+        self.add_button = ttkp.Button(self.control_frame, text="添加图片",  bootstyle="outline",command=self.t_add_images)
+        self.add_button.pack(pady=5)
         
-        clear_button = ttkp.Button(control_frame, text="清除图片",  bootstyle="outline",command=self.clear_images)
-        clear_button.pack(pady=5)
+        self.clear_button = ttkp.Button(self.control_frame, text="清除图片",  bootstyle="outline",command=self.clear_images)
+        self.clear_button.pack(pady=5)
         
-        create_button = ttkp.Button(control_frame, text="生成精灵图",  bootstyle="outline",command=self.t_create_spritesheet)
-        create_button.pack(pady=5)
+        self.create_button = ttkp.Button(self.control_frame, text="生成精灵图",  bootstyle="outline",command=self.t_create_spritesheet)
+        self.create_button.pack(pady=5)
         
-        save_button = ttkp.Button(control_frame, text="保存精灵图",  bootstyle="outline",command=self.t_save_spritesheet)
-        save_button.pack(pady=5)
+        self.save_button = ttkp.Button(self.control_frame, text="保存精灵图",  bootstyle="outline",command=self.t_save_spritesheet)
+        self.save_button.pack(pady=5)
 
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -1581,6 +1588,7 @@ class SpriteSheetMaker(tk.Toplevel):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
     
     def add_images(self):
+        self.add_button.configure(state="disabled")
         file_paths = filedialog.askopenfilenames(title="选择图片文件", filetypes=[("PNG文件", "*.png")], parent=self)
         icon.notify("已开始", "Lightweight text editor")
         if file_paths:
@@ -1593,6 +1601,7 @@ class SpriteSheetMaker(tk.Toplevel):
                 label.pack(side=tk.TOP, padx=5, pady=5)
                 self.image_labels.append(label)
         icon.notify("已完成", "Lightweight text editor")
+        self.add_button.configure(state="normal")
         self.update_scrollregion()
     
     def t_add_images(self):
@@ -1600,6 +1609,7 @@ class SpriteSheetMaker(tk.Toplevel):
         thread_PNG.start()
 
     def clear_images(self):
+        self.add_button.configure(state="normal")
         self.images.clear()
         for label in self.image_labels:
             label.destroy()
@@ -1610,6 +1620,7 @@ class SpriteSheetMaker(tk.Toplevel):
         thread_PNG.start()
 
     def create_spritesheet(self):
+        self.add_button.configure(state="disabled")
         icon.notify("已开始", "Lightweight text editor")
         if not self.images:
             messagebox.showerror("错误", "没有图片")
@@ -1629,6 +1640,7 @@ class SpriteSheetMaker(tk.Toplevel):
         
         self.clear_images()
 
+        self.add_button.configure(state="disabled")
         display_sprite_sheet = self.sprite_sheet.copy()
         display_sprite_sheet.thumbnail((400, 400))
         icon.notify("已完成", "Lightweight text editor")
@@ -1784,6 +1796,20 @@ def gadget():
                             .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,wuXingju,male_or_female)
 
                         def z_t():
+                            支_dict ={
+                                "子":1,
+                                "丑":2,
+                                "寅":3,
+                                "卯":4,
+                                "辰":5,
+                                "巳":6,
+                                "午":7,
+                                "未":8,
+                                "申":9,
+                                "酉":10,
+                                "戌":11,
+                                "亥":12
+                            }
                             window_z = ttkp.Toplevel()
                             window_z.title("轻量记事本-小工具-紫微斗数-三合派")
                             window_z.iconbitmap(icon_path)
@@ -2326,6 +2352,9 @@ def gadget():
                                         tianLiang = ttkp.Label(w12,text="天梁",font=font_style)
                                         qiSha = ttkp.Label(w11,text="七杀",font=font_style)
                                         poJun = ttkp.Label(w7,text="破军",font=font_style)
+                                        match nianZhi:
+                                            case"戌":
+                                                pass
                                         match nianGan:
                                             case "甲":
                                                 禄存 = ttkp.Label(w7,text="禄存",font=font_style)
@@ -4304,9 +4333,33 @@ def gadget():
                                 grid_deploy()
 
                             def confirm_ziWei_time_and_month_and_day_group():
-                                
+                                Shen_num = 支_dict[Shen]
+                                nianZhi_num = 支_dict[nianZhi]
+                                Ming_num = 支_dict[Ming]
+                                天寿_num = (Shen_num-1+nianZhi_num)%12
+
                                 match nianZhi:
                                     case "戌"|"午"|"寅":
+                                        match nianZhi:
+                                            case "戌":
+                                                天马 = ttkp.Label(w4,text="天马",font=font_style)
+                                                解神 = ttkp.Label(w8,text="解神",font=font_style)
+                                                天哭 = ttkp.Label(w4,text="天哭",font=font_style)
+                                                天虚 = ttkp.Label(w5,text="天虚",font=font_style)
+                                                龙池 = ttkp.Label(w7,text="龙池",font=font_style)
+                                                凤阁 = ttkp.Label(w9,text="凤阁",font=font_style)
+                                                红鸾 = ttkp.Label(w,text="红鸾",font=font_style)
+                                                天喜 = ttkp.Label(w10,text="天喜",font=font_style)
+                                                孤辰 = ttkp.Label(w10,text="孤辰",font=font_style)
+                                                寡宿 = ttkp.Label(w3,text="寡宿",font=font_style)
+                                                蜚廉 = ttkp.Label(w9,text="蜚廉",font=font_style)
+                                                破碎 = ttkp.Label(w8,text="破碎",font=font_style)
+                                                天空 = ttkp.Label(w10,text="天空",font=font_style)
+                                                月德 = ttkp.Label(w6,text="月德",font=font_style)
+                                            case "午":
+                                                pass
+                                            case "寅":
+                                                pass
                                         match shiChen:
                                             case "子":
                                                 wenChang = ttkp.Label(w11,text="文昌",font=font_style)
@@ -5041,7 +5094,7 @@ def gadget():
                                 youbi_num = ((youbi_num - 1 - day) % 12 + 2)%12
                                 wenchang_num = ((wenchang_num - 1 - day)%12 + 1)%12
                                 wenqu_num = ((wenqu_num - 1 - day) % 12 + 1)%12
-
+                                
                                 match zuofu_num:
                                     case 1:
                                         santai = ttkp.Label(w9,text="三台",font=font_style)
@@ -5269,17 +5322,379 @@ def gadget():
                 entry4.bind('<Shift_R>', lambda event: z_judge())
                 combobox.bind('<Shift_R>', lambda event: z_judge())
 
-
     def regression():
+        list_language_path = os.path.join(p, "regression-list-language-path")
+        regression_data_path = os.path.join(p, "regression_data.json")
+        temp_list = []
+        selected_index = 0
+        selected_index_2 = 0
+        selected_index_3 = 0
+        combo4_text = 0
+        combo5_text = 0
+        language = "英"
+        regression_data = {
+            "特征缩放":"0",
+            "损失函数":"0",
+            "梯度下降":"0",
+            "学习率调度器":"0",
+            "使用硬件":"0"
+        }
+
+        def regression_data_save():
+            with open(regression_data_path, 'w', encoding='utf-8') as file:
+                json.dump(regression_data, file, indent=4)
+
+        def regression_data_load():
+            nonlocal selected_index,selected_index_2,selected_index_3,combo4_text,combo5_text
+
+            if not os.path.exists(regression_data_path):
+                regression_data_save()
+
+            with open(regression_data_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                selected_index = int(data["特征缩放"])
+                selected_index_2 = int(data["损失函数"])
+                selected_index_3 = int(data["梯度下降"])
+                combo4_text = int(data["学习率调度器"])
+                combo5_text = int(data["使用硬件"])
+
+        regression_data_load()
+
+        def list_language_save_path():
+            with open(list_language_path, 'w', encoding='utf-8') as file:
+                file.write(language)
+
+        def list_language_load_path():
+            try:
+                with open(list_language_path, 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                    return None
+
+        def csv_path():
+            data_path = filedialog.askopenfilename(parent=window_, defaultextension="d",
+                                               filetypes=[("csv-utf-8", "*.csv")])
+            temp_list.clear()
+            temp_list.append(data_path)
+            text_1.delete(0, END)
+            print(data_path)
+            text_1.insert(END, data_path)
+
+        def update_language(lang):
+            nonlocal language, selected_index,selected_index_2,selected_index_3
+            if language == "英":
+                list_ = ["min-max_normalization",
+                     "mean_normalization",
+                     "max_abs_normalization",
+                     "z-score_normalization",
+                     "robust_standardization"]
+                
+                list_2 = ["mean_squared_error",
+                          "mean_absolute_error",
+                          "huber_loss"]
+                
+                list_3 = ["batch_GD",
+                          "stochastic_GD",
+                          "mini-batch_GD",
+                          "momentum_GD"]
+                
+                
+            else:
+                list_ = ["最大最小值归一化",
+                     "均值归一化",
+                     "最大绝对值归一化",
+                     "Z-Score标准化",
+                     "稳健标准化"]
+
+                list_2 = ["均方误差",
+                          "绝对误差",
+                          "Huber损失"]
+                
+                list_3 = ["批量梯度下降",
+                          "随机梯度下降",
+                          "小批量梯度下降",
+                          "动量梯度下降"]
+            
+            selected_index = list_.index(combo.get())
+            selected_index_2 = list_2.index(combo2.get())
+            selected_index_3 = list_3.index(combo3.get())
+
+            language = lang
+            list_language_save_path()
+            update_combo_list()
+            update_combo_2_list()
+            update_combo_3_list()
+
+        def update_combo_list():
+            options = {
+                "英": ["min-max_normalization",
+                   "mean_normalization",
+                   "max_abs_normalization",
+                   "z-score_normalization",
+                   "robust_standardization"],
+                "中": ["最大最小值归一化",
+                   "均值归一化",
+                   "最大绝对值归一化",
+                   "Z-Score标准化",
+                   "稳健标准化"]
+            }
+
+            new_values = options.get(language, options["英"])
+
+            combo.config(values=new_values)
+            combo.set(new_values[selected_index])
+
+        def update_combo_2_list():
+            options = {
+                "英": ["mean_squared_error",
+                      "mean_absolute_error",
+                      "huber_loss"],
+
+                "中": ["均方误差",
+                      "绝对误差",
+                      "Huber损失"
+                   ]
+                   }
+            
+            new_values = options.get(language, options["英"])
+            combo2.config(values=new_values)
+            combo2.set(new_values[selected_index_2])
+
+        def update_combo_3_list():
+            options = {
+                "英": ["batch_GD",
+                       "stochastic_GD",
+                       "mini-batch_GD",
+                       "momentum_GD"],
+
+                "中": ["批量梯度下降",
+                       "随机梯度下降",
+                       "小批量梯度下降",
+                       "动量梯度下降"]
+                   }
+            new_values = options.get(language, options["英"])
+            combo3.config(values=new_values)
+            combo3.set(new_values[selected_index_3])
+
+        def update_combo_4_list():
+            list_4 = [
+                "None",
+                "LambdaLR",
+                "StepLR",
+                "MultiStepLR",
+                "ExponentialLR",
+                "CosineAnnealingLR",
+                "ReduceLROnPlateau",
+                "CyclicLR",
+                "OneCycleLR",
+                "CosineAnnealingWarmRestarts",
+                "PolynomialLR",
+                "ConstantLR",
+                "ChainedScheduler"
+                ]
+            combo4.config(values=list_4)   
+            combo4.set(list_4[combo4_text])
+
+        def update_combo_5_list():
+            list_5 = [
+                "GPU",
+                "CPU"
+            ]
+            combo5.config(values=list_5)
+            combo5.set(list_5[combo5_text])
+
+        language = list_language_load_path() or "英"
+
         window_ = ttkp.Toplevel(window)
         window_.title("小六壬")
         window_.iconbitmap(icon_path)
-        wb1 = ttkp.Button(window_, text="数据导入", bootstyle="outline", command=x)
-        wb1.grid(column=0,row=0,padx=10,pady=10)
-        data_path = filedialog.asksaveasfilename(parent=window_, defaultextension="d",
-                                                 filetypes=[("csv-utf-8", "*.csv")])
-        print(data_path)
-    
+
+        menu_bar = tk.Menu(window_)
+        window_.config(menu=menu_bar)
+
+        file_menu = tk.Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="语言", menu=file_menu)
+        menu_bar.add_command(label="开始", command=lambda: print("hello"))
+        file_menu.add_command(label="中文", command=lambda: update_language("中"))
+        file_menu.add_command(label="英文", command=lambda: update_language("英"))
+
+        f0 = ttkp.Frame(window_)
+
+        f0.grid(row=0, column=0, sticky='w')
+
+        wb1 = ttkp.Button(f0, text="导入文件", bootstyle="link", command=csv_path)
+        text_1 = ttkp.Entry(f0)
+        text_1.insert(END, "没有文件")
+
+        text_0 = ttkp.Label(f0, text="特征缩放")
+        text_2 = ttkp.Label(f0,text="损失函数")
+        text_3 = ttkp.Label(f0,text="梯度下降")
+        text_4 = ttkp.Label(f0,text="学习率调度器")
+        text_5 = ttkp.Label(f0,text="学习率")
+        text_6 = ttkp.Label(f0,text="训练次数")
+        text_7 = ttkp.Label(f0,text="使用硬件")
+
+        combo = ttkp.Combobox(f0, state="readonly")
+        combo2 = ttkp.Combobox(f0, state="readonly")
+        combo3 = ttkp.Combobox(f0, state="readonly")
+        combo4 = ttkp.Combobox(f0, state="readonly")
+        text_e = ttkp.Entry(f0)
+        text_e_1 = ttkp.Entry(f0)
+        combo5 = ttkp.Combobox(f0, state="readonly")
+
+        text_1.grid(column=1, row=0, padx=10, pady=10)
+        wb1.grid(column=0, row=0, padx=10, pady=10)
+        text_0.grid(row=1, column=0, padx=10, pady=10)
+        combo.grid(row=1, column=1, padx=10, pady=10)
+        text_2.grid(column=0, row=2, padx=10, pady=10)
+        combo2.grid(row=2, column=1, padx=10, pady=10)
+        text_3.grid(column=0, row=3, padx=10, pady=10)
+        combo3.grid(row=3, column=1, padx=10, pady=10)
+        text_4.grid(column=0, row=4, padx=10, pady=10)
+        combo4.grid(row=4, column=1, padx=10, pady=10)
+        text_5.grid(column=0, row=5, padx=10, pady=10)
+        text_e.grid(row=5, column=1, padx=10, pady=10)
+        text_6.grid(column=0, row=6, padx=10, pady=10)
+        text_e_1.grid(row=6, column=1, padx=10, pady=10)
+        text_7.grid(column=0, row=7, padx=10, pady=10)
+        combo5.grid(column=1, row=7, padx=10, pady=10)
+
+        def change_tooltip_text():
+            match combo.get():
+                case "最大最小值归一化"|"min-max_normalization":
+                    text_ = '将数据缩放到 [0, 1]范围'
+                    regression_data["特征缩放"] = "0"
+                case "均值归一化"|"mean_normalization":
+                    text_ = '将数据缩放到  [-1, 1]范围'
+                    regression_data["特征缩放"] = "1"
+                case "最大绝对值归一化"|"max_abs_normalization":
+                    text_ = '将数据缩放到 [-1, 1] 范围内，但保留了数据的稀疏性'
+                    regression_data["特征缩放"] = "2"
+                case "Z-Score标准化"|"z-score_normalization":
+                    text_ = '将数据转化为标准正态分布'
+                    regression_data["特征缩放"] = "3"
+                case "稳健标准化"|"robust_standardization":
+                    text_ = '对异常值具有较好的鲁棒性，不易受极端值的影响'
+                    regression_data["特征缩放"] = "4"
+
+            regression_data_save()
+            ToolTip(combo, text=text_)
+
+        def change_tooltip_text_2():
+            match combo2.get():
+                case "均方误差"|"mean_squared_error":
+                    text_ = "对大误差敏感"
+                    regression_data["损失函数"] = "0"
+                case "绝对误差"|"mean_absolute_error":
+                    text_ = "对异常值鲁棒"
+                    regression_data["损失函数"] = "1"
+                case "Huber损失":
+                    text_ = "均方误差和绝对误差之间"
+                    regression_data["损失函数"] = "2"
+                case "huber_loss":
+                    text_ = "MSE和MAE之间"
+                    regression_data["损失函数"] = "3"
+
+            regression_data_save()
+            ToolTip(combo2, text=text_)
+
+        def change_tooltip_text_3():
+            match combo3.get():
+                case "批量梯度下降"|"batch_GD":
+                    text_ ='一定能够得到全局最优解\n训练样本过多时很慢'
+                    regression_data["梯度下降"] = "0"
+                case "随机梯度下降"|"stochastic_GD":
+                    text_ = "准确度下降\n可能会收敛到局部最优"
+                    regression_data["梯度下降"] = "1"
+                case "小批量梯度下降"|"mini-batch_GD":
+                    text_ = "每次迭代使用batch_size个样本来对参数进行更新\n减小收敛所需要的迭代次数"
+                    regression_data["梯度下降"] = "2"
+                case "动量梯度下降"|"momentum_GD":
+                    text_ = "加速收敛，减少震荡"
+                    regression_data["梯度下降"] = "3"
+            
+            regression_data_save()
+            ToolTip(combo3, text=text_)
+
+        def change_tooltip_text_4():
+            match combo4.get():
+                case "None":
+                    text_ ='使用固定的学习率'
+                    regression_data["学习率调度器"] = "0"
+                case "LambdaLR":
+                    text_ = "根据用户定义的函数对学习率进行更改"
+                    regression_data["学习率调度器"] = "1"
+                case "StepLR":
+                    text_ = "每隔一定的epoch数将学习率乘以一个预定的衰减因子"
+                    regression_data["学习率调度器"] = "2"
+                case "MultiStepLR":
+                    text_ = "在预定的epoch列表中每次到达时将学习率乘以一个预定的衰减因子"
+                    regression_data["学习率调度器"] = "3"
+                case "ExponentialLR":
+                    text_ = "每个epoch将学习率按照一个固定的指数衰减"
+                    regression_data["学习率调度器"] = "4"
+                case "CosineAnnealingLR":
+                    text_ = "学习率在训练期间根据余弦曲线衰减"
+                    regression_data["学习率调度器"] = "5"
+                case "ReduceLROnPlateau":
+                    text_ = "当指标停止改进时减少学习率"
+                    regression_data["学习率调度器"] = "6"
+                case "CyclicLR":
+                    text_ = "学习率在两个边界之间循环变化"
+                    regression_data["学习率调度器"] = "7"
+                case "OneCycleLR":
+                    text_ = "在单个周期内调整学习率，以适应较大的学习率"
+                    regression_data["学习率调度器"] = "8"
+                case "CosineAnnealingWarmRestarts":
+                    text_ = "使用余弦退火和周期性重启来调整学习率"
+                    regression_data["学习率调度器"] = "9"
+                case "PolynomialLR":
+                    text_ = "使用多项式衰减的方式调整学习率"
+                    regression_data["学习率调度器"] = "10"
+                case "ConstantLR":
+                    text_ = "在预定的steps数内保持学习率不变"
+                    regression_data["学习率调度器"] = "11"
+                case "ChainedScheduler":
+                    text_ = "按顺序连接多个调度器"
+                    regression_data["学习率调度器"] = "12"
+            
+            regression_data_save()
+            ToolTip(combo4, text=text_)
+
+        def change_tooltip_text_5():
+            match combo5.get():
+                case "GPU":
+                    text_ = '若用户设备不支持CUDA，将使用DirectML'
+                    regression_data["使用硬件"] = "0"
+                case "CPU":
+                    text_ = '使用CPU进行'
+                    regression_data["使用硬件"] = "1"
+            
+            regression_data_save()
+            ToolTip(combo5, text=text_)
+        def combo_():
+            combo.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text())
+            update_combo_list()
+
+            combo2.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_2())
+            update_combo_2_list()
+
+            combo3.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_3())
+            update_combo_3_list()
+
+            combo4.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_4())
+            update_combo_4_list()
+
+            combo5.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_5())
+            update_combo_5_list()
+
+        combo_()
+        change_tooltip_text()
+        change_tooltip_text_2()
+        change_tooltip_text_3()
+        change_tooltip_text_4()
+        change_tooltip_text_5()
+
     def Triangle():
         pass
     
@@ -5562,7 +5977,6 @@ def gadget():
                 window_.wm_attributes('-topmost', 1)
                 window_.wm_attributes('-topmost', 0)
             
-            PNG_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片', filetypes=[("PNG", "*.PNG")])
 
             window__ = ttkp.Toplevel(window_)
             window__.title("颜色转换")
@@ -5681,6 +6095,8 @@ def gadget():
 
             canvas_frame.columnconfigure(0, weight=1)
             canvas_frame.rowconfigure(0, weight=1)
+
+            PNG_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片', filetypes=[("PNG", "*.PNG")],parent=window__)
             
             def PNG():
                 if PNG_path:
@@ -5701,7 +6117,7 @@ def gadget():
             thread_PNG.start()
 
         def format():
-            ALL_path = filedialog.askopenfilenames(title='请选择需要格式转换的图片', filetypes=[("All Images", "*.png *.jpg *.jpeg *.bmp *.gif *.tiff")])
+
             def exit_win():
                 window__.destroy()
                 window_.wm_attributes('-topmost', 1)
@@ -5711,7 +6127,6 @@ def gadget():
             window__.title("格式转换")
             window__.iconbitmap(icon_path)
             window__.bind("<Shift_R>", lambda event: exit_win())
-            
 
             def f_Image():
                 output_format = down_box.get()
@@ -5722,12 +6137,12 @@ def gadget():
                             with Image.open(file_path) as img:
                                 if img.mode == 'RGBA':
                                     img = img.convert('RGB')
-                                
+
                                 base, _ = os.path.splitext(file_path)
                                 new_file_path = f"{base}.bin"
                                 with open(new_file_path, 'wb') as f:
                                     img.save(f, format='BMP')
-                            
+
                         except Exception as e:
                             print(f"Error converting {file_path}: {e}")
                     messagebox.showinfo("完成", "转换完成", parent=window__)
@@ -5744,9 +6159,9 @@ def gadget():
                         except Exception as e:
                             print(f"Error converting {file_path}: {e}")
                     messagebox.showinfo("完成", "转换完成", parent=window__)
-                
+
             def tf_Image():
-                
+
                 thread_PNG = threading.Thread(target=f_Image)
                 thread_PNG.start()
 
@@ -5760,7 +6175,7 @@ def gadget():
                             return f.read()
                     except FileNotFoundError:
                         pass
-                
+
             text = ttkp.Label(window__, text="目标格式：")
             text.grid(column=0, row=0, padx=10, pady=10)
 
@@ -5770,7 +6185,8 @@ def gadget():
             down_box.bind("<Button-3>", lambda event: tf_Image())
             t = str(w_4_3_load() or "png")
             down_box.set(t)
-        
+            ALL_path = filedialog.askopenfilenames(title='请选择需要格式转换的图片', filetypes=[("All Images", "*.png *.jpg *.jpeg *.bmp *.gif *.tiff")],parent=window__)
+
         def sprites():
             SpriteSheetMaker()
         
