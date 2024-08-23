@@ -5319,9 +5319,6 @@ def gadget():
                 combobox.bind('<Shift_R>', lambda event: z_judge())
 
     def regression():
-        window_ = ttk.Toplevel()
-        window_.title("小六壬")
-        window_.iconbitmap(icon_path)
         list_language_path = os.path.join(p, "regression-list-language-path")
         regression_data_path = os.path.join(p, "regression_data.json")
         temp_list = []
@@ -5346,6 +5343,9 @@ def gadget():
 
         def regression_data_load():
             nonlocal selected_index,selected_index_2,selected_index_3,combo4_text,combo5_text
+
+            if not os.path.exists(regression_data_path):
+                regression_data_save()
             try:
                 with open(regression_data_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
@@ -5355,10 +5355,9 @@ def gadget():
                     combo4_text = int(data["学习率调度器"])
                     combo5_text = int(data["使用硬件"])
             except Exception as e:
-                messagebox.showerror("错误", f"发生错误: {e}", parent=window_)
-                regression_data_save()
+                messagebox.showerror("错误", f"发生错误: {e}")
 
-        regression_data_load()
+    regression_data_load()
 
         def list_language_save_path():
             with open(list_language_path, 'w', encoding='utf-8') as f:
@@ -5544,6 +5543,10 @@ def gadget():
             combo5.set(list_5[combo5_text])
 
         language = list_language_load_path() or "英"
+
+        window_ = ttk.Toplevel()
+        window_.title("小六壬")
+        window_.iconbitmap(icon_path)
 
         menu_bar = tk.Menu(window_)
         window_.config(menu=menu_bar)
@@ -6283,8 +6286,11 @@ def gadget():
     b4.grid(column=3,row=0,padx=10,pady=10)
     b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=picture)
     b5.grid(column=4,row=0,padx=10,pady=10)
-
 ###分割线
+
+
+
+
 #关于设置界面###分割线
 def set_window():
     child_windows = []
