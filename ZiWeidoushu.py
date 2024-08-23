@@ -1,9 +1,8 @@
 import math
 import os
 import re
-from lunardate import LunarDate
-from datetime import datetime
 from lunar_python import LunarMonth
+from Gregorian_calendar_Lunar import GregorianCalendarToLunar
 
 p = os.path.dirname(__file__)
 
@@ -121,12 +120,8 @@ class ZiWeidoushu(object):
         '''
         新历转农历
         '''
-
-        def convert_solar_to_lunar(year, month, day):
-            solar_date = datetime(year, month, day)
-            lunar_date = LunarDate.fromSolarDate(solar_date.year, solar_date.month, solar_date.day)
-            return lunar_date
-        lunar_date = convert_solar_to_lunar(solar_year, solar_month, solar_day)
+        
+        Lunar_year,Lunar_month,Lunar_day = GregorianCalendarToLunar.to_lunar(solar_year, solar_month, solar_day)
 
         '''
         年干年支计算
@@ -166,7 +161,7 @@ class ZiWeidoushu(object):
         月干月支
         ''' 
 
-        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[lunar_date.month]
+        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[Lunar_month]
 
         yueGan = ""
 
@@ -359,32 +354,32 @@ class ZiWeidoushu(object):
         紫微斗数闰月作下月
         '''
         def ZiWeidoushuRunyue_is_next_month():
-            runYue = LunarMonth.fromYm(lunar_date.year, lunar_date.month)
+            runYue = LunarMonth.fromYm(Lunar_year, Lunar_month)
             yes_runYue = ""
             if runYue.isLeap():
-                yes_runYue = lunar_date.month + 1
+                yes_runYue = Lunar_month + 1
                 if yes_runYue > 12:
                     yes_runYue = 1
                 return yes_runYue
             else:
-                return lunar_date.month
+                return Lunar_month
 
         '''
         紫微斗数闰月中分界
         ''' 
         def ZiWeidoushuRunyue_is_middle_month():
-            runYue = LunarMonth.fromYm(lunar_date.year, lunar_date.month)
+            runYue = LunarMonth.fromYm(Lunar_year, Lunar_month)
             yes_runYue = ""
             if runYue.isLeap():
-                if lunar_date.month <= 15:
-                    return lunar_date.month
+                if Lunar_month <= 15:
+                    return Lunar_month
                 else:
-                    yes_runYue = lunar_date.month + 1
+                    yes_runYue = Lunar_month + 1
                     if yes_runYue > 12:
                         yes_runYue = 1
                     return yes_runYue
             else:
-                return lunar_date.month
+                return Lunar_month
         
 
         s_path = p + "\\" + "s"
@@ -415,7 +410,7 @@ class ZiWeidoushu(object):
             case "作下月":
                 birth_month = ZiWeidoushuRunyue_is_next_month()
             case "作本月":
-                birth_month = lunar_date.month
+                birth_month = Lunar_month
             case "月中为界":
                 birth_month = ZiWeidoushuRunyue_is_middle_month()
         '''
@@ -600,7 +595,7 @@ class ZiWeidoushu(object):
         ziWei28 = ["申", "酉", "申", "丑", "卯"]
         ziWei29 = ["巳", "午", "午", "戌", "卯"]
         ziWei30 = ["午", "未", "亥", "亥", "辰"]
-        shenRi_ty = shenRi_y.index(lunar_date.day)
+        shenRi_ty = shenRi_y.index(Lunar_day)
 
         match shenRi_ty:
             case 0:
@@ -677,7 +672,7 @@ class ZiWeidoushu(object):
                                 ,riGan,riGanwuXing,ruGanyinYang\
                                     ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
                                     ,shiGan,shiGanwuXing,shiGanyinYang\
-                                    ,lunar_date.day
+                                    ,Lunar_day
             
 
 '''
