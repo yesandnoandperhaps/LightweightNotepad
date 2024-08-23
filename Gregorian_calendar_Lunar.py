@@ -29,6 +29,3 @@ class GregorianCalendarToLunar:
         solar = Solar.fromDate(datetime(year, month, day))
         lunar = SolarNew.getLunar(solar)
         return lunar
-
-a,b,c = GregorianCalendarToLunar.to_lunar(2018,1,31)
-print(a,b,c)

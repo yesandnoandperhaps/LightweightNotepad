@@ -1741,7 +1741,7 @@ class SpriteSheetMaker(tk.Toplevel):
                 messagebox.showerror("错误", f"错误{e}", parent=self)
 
 def gadget():
-    '''
+
     def z():
         t = str(load_down_box() or "横排样式")
 
@@ -5237,6 +5237,12 @@ def gadget():
                             window_z.grid_columnconfigure(1, weight=1)
                         z_t()
 
+        '''
+            [ w  巳 ][ w2 午 ][ w3 未 ][ w4 申 ]
+            [ w5 辰 ][ w13][     ][ w12  酉 ]
+            [ w6 卯 ][     ][     ][ w11 戌]
+            [ w7 寅 ][ w8 丑 ][ w9 子 ][ w10  亥]
+        '''
 
         match t:
             case "横排样式":
@@ -5309,7 +5315,6 @@ def gadget():
                 entry3.bind('<Shift_R>', lambda event: z_judge())
                 entry4.bind('<Shift_R>', lambda event: z_judge())
                 combobox.bind('<Shift_R>', lambda event: z_judge())
-'''
 
     def regression():
         list_language_path = os.path.join(p, "regression-list-language-path")
@@ -6269,7 +6274,7 @@ def gadget():
     window.iconbitmap(icon_path)
     b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=x)
     b1.grid(column=0,row=0,padx=10,pady=10)
-    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=())
+    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=z)
     b2.grid(column=1,row=0,padx=10,pady=10)
     b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=regression)
     b3.grid(column=2,row=0,padx=10,pady=10)
