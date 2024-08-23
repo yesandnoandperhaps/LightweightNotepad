@@ -1,3 +1,4 @@
+import datetime
 import tkinter as tk
 import tkinter.font as tk_font
 from tkinter import filedialog,messagebox,colorchooser
@@ -19,6 +20,7 @@ import re
 import ZiWeidoushu
 import json
 import LinearRegression
+
 
 class CustomToolTip(ToolTip):
     def update_text(self, text):
@@ -5317,6 +5319,9 @@ def gadget():
                 combobox.bind('<Shift_R>', lambda event: z_judge())
 
     def regression():
+        window_ = ttk.Toplevel()
+        window_.title("小六壬")
+        window_.iconbitmap(icon_path)
         list_language_path = os.path.join(p, "regression-list-language-path")
         regression_data_path = os.path.join(p, "regression_data.json")
         temp_list = []
@@ -5337,21 +5342,21 @@ def gadget():
 
         def regression_data_save():
             with open(regression_data_path, 'w', encoding='utf-8') as f:
-                json.dump(regression_data, file, indent=4)
+                json.dump(regression_data, f, indent=4)
 
         def regression_data_load():
             nonlocal selected_index,selected_index_2,selected_index_3,combo4_text,combo5_text
-
-            if not os.path.exists(regression_data_path):
+            try:
+                with open(regression_data_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    selected_index = int(data["特征缩放"])
+                    selected_index_2 = int(data["损失函数"])
+                    selected_index_3 = int(data["优化方法"])
+                    combo4_text = int(data["学习率调度器"])
+                    combo5_text = int(data["使用硬件"])
+            except Exception as e:
+                messagebox.showerror("错误", f"发生错误: {e}", parent=window_)
                 regression_data_save()
-
-            with open(regression_data_path, 'r', encoding='utf-8') as f:
-                data = json.load(file)
-                selected_index = int(data["特征缩放"])
-                selected_index_2 = int(data["损失函数"])
-                selected_index_3 = int(data["优化方法"])
-                combo4_text = int(data["学习率调度器"])
-                combo5_text = int(data["使用硬件"])
 
         regression_data_load()
 
@@ -5539,10 +5544,6 @@ def gadget():
             combo5.set(list_5[combo5_text])
 
         language = list_language_load_path() or "英"
-
-        window_ = ttk.Toplevel()
-        window_.title("小六壬")
-        window_.iconbitmap(icon_path)
 
         menu_bar = tk.Menu(window_)
         window_.config(menu=menu_bar)
@@ -6282,11 +6283,8 @@ def gadget():
     b4.grid(column=3,row=0,padx=10,pady=10)
     b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=picture)
     b5.grid(column=4,row=0,padx=10,pady=10)
+
 ###分割线
-
-
-
-
 #关于设置界面###分割线
 def set_window():
     child_windows = []
