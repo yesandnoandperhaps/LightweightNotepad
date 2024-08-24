@@ -1,10 +1,11 @@
 import datetime
 import tkinter as tk
 import tkinter.font as tk_font
-from tkinter import filedialog,messagebox,colorchooser
+from tkinter import filedialog,messagebox,colorchooser,scrolledtext
 from tkinter.ttk import Separator
 import numpy as np
 import ttkbootstrap as ttk
+from sympy.polys.agca.modules import SubModule
 from ttkbootstrap.constants import *
 from ttkbootstrap.tooltip import ToolTip
 import ctypes
@@ -19,7 +20,9 @@ import XiaoLliuren
 import re
 import ZiWeidoushu
 import json
-import LinearRegression
+import idlelib.colorizer as idc
+import idlelib.percolator as idp
+#import LinearRegression
 
 
 class CustomToolTip(ToolTip):
@@ -1741,6 +1744,72 @@ class SpriteSheetMaker(tk.Toplevel):
 
         except Exception as e:
                 messagebox.showerror("错误", f"错误{e}", parent=self)
+
+class start_training_front_window:
+    def __init__(self,window,combo5,combo4,temp_list_2):
+        self.whether_save = False
+        if temp_list_2 == []:
+            result = messagebox.askyesno("线性回归", "请等待-本次计算将不会保存模型，是否需要进行计算后预测",parent=window)
+            if result:
+                self.whether_save = True
+                if combo5.get() == "CPU":
+                    pass
+                else:
+                    if combo4.get() == "LambdaLR":
+                        self.LambdaLR_window()
+                    else:
+                        pass
+            else:
+                self.whether_save = False
+
+    def LambdaLR_window_(self,code_input,window):
+        try:
+            user_code = code_input.get("1.0", tk.END)
+            local_vars = {}
+            exec(user_code, globals(), local_vars)
+            if 'lr_lambda' not in local_vars:
+                messagebox.showerror("错误", "未定义lr_lambda",parent=window)
+                return
+            lr_lambda = local_vars['lr_lambda']
+        except Exception as e:
+            messagebox.showerror("错误", e,parent=window)
+
+    def LambdaLR_window(self):
+        window___ = ttk.Toplevel()
+        window___.title("线性回归-LambdaLR-编写函数")
+        window___.iconbitmap(icon_path)
+        scrollbar = ttk.Scrollbar(window___, style="round")
+        scrollbar.grid(row=1, column=1, sticky="ns")
+        text_widget = tk.Text(window___, wrap="word",
+                              yscrollcommand=scrollbar.set, font=font_style)
+        text_widget.grid(row=1, column=0, sticky="nsew")
+        text_widget.bind('<Shift_R>', lambda event: self.LambdaLR_window_(text_widget,window___))
+        idc.color_config(text_widget)
+        scrollbar.config(command=text_widget.yview)
+        default_code = \
+"""#自定义Py代码
+#必须要存在def lr_lambda(epoch)
+#基本教程：
+#*乘号，**幂
+#\\是整除-向下取整，\是除
+#return是返回关键字，这是必须的
+#epoch是模型训练数
+#<Shift-R>下一步
+def lr_lambda(epoch):
+    return 0.5 ** (epoch // 5)
+"""
+        text_widget.insert(tk.END, default_code)
+        p = idp.Percolator(text_widget)
+        d = idc.ColorDelegator()
+        p.insertfilter(d)
+
+    @staticmethod
+    def pytorch_window():
+        pass
+
+    @staticmethod
+    def simple_window():
+        pass
 
 def gadget():
 
@@ -5356,8 +5425,9 @@ def gadget():
                     combo5_text = int(data["使用硬件"])
             except Exception as e:
                 messagebox.showerror("错误", f"发生错误: {e}")
+                regression_data_save()
 
-    regression_data_load()
+        regression_data_load()
 
         def list_language_save_path():
             with open(list_language_path, 'w', encoding='utf-8') as f:
@@ -5499,12 +5569,13 @@ def gadget():
                 "英": ["batch_GD",
                        "stochastic_GD",
                        "mini-batch_GD",
-                       "Adam",
-                       "RMSprop",
-                       "Adagrad",
-                       "AdamW",
-                       "NAdam",
-                       "Adadelta"],
+                       #"Adam",
+                       #"RMSprop",
+                       #"Adagrad",
+                       #"AdamW",
+                       #"NAdam",
+                       #"Adadelta"
+                       ],
 
                 "中": ["批量梯度下降",
                        "随机梯度下降",
@@ -5545,7 +5616,7 @@ def gadget():
         language = list_language_load_path() or "英"
 
         window_ = ttk.Toplevel()
-        window_.title("小六壬")
+        window_.title("线性回归")
         window_.iconbitmap(icon_path)
 
         menu_bar = tk.Menu(window_)
@@ -5554,7 +5625,7 @@ def gadget():
         file_menu = tk.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="语言", menu=file_menu)
         menu_bar.add_cascade(label="使用模型", menu=file_menu)
-        menu_bar.add_command(label="开始训练", command=lambda: print("hello"))
+        menu_bar.add_command(label="开始训练", command=lambda: start_training_front_window(window_,combo5,combo4,temp_list_2))
         file_menu.add_command(label="中文", command=lambda: update_language("中"))
         file_menu.add_command(label="英文", command=lambda: update_language("英"))
 
