@@ -561,7 +561,18 @@ def numqgua():
     t = new_num1 % 6
     r = (new_num1 + new_num2 - 1) % 6
     d = (new_num1 + new_num2 + new_num3 - 2) % 6
-    return t,r,d                                
+    return t,r,d
+
+'''
+def numqgua_2():
+    new_num1 = round(random.uniform(0, 5))
+    new_num2 = round(random.uniform(0, 5))
+    new_num3 = round(random.uniform(0, 5))
+    t = new_num1 % 6
+    r = (new_num1 + new_num2) % 6
+    d = (new_num1 + new_num2 + new_num3) % 6
+    return t, r, d
+'''
 
 def numgua2_2():
     t,r,d = numqgua()

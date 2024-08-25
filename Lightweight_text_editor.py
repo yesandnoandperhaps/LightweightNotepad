@@ -16,13 +16,13 @@ from PIL import Image, ImageTk
 from pystray import MenuItem, Menu
 import threading
 import windnd
-import XiaoLliuren
+import XiaoLiuren
 import re
 import ZiWeidoushu
 import json
 import idlelib.colorizer as idc
 import idlelib.percolator as idp
-#import LinearRegression
+import LinearRegression
 
 
 class CustomToolTip(ToolTip):
@@ -235,6 +235,30 @@ def var3_num_w_4_3_s():
     save_var3_num_w_4_3()
 
 #关于小六壬###分割线
+
+class new_x:
+    def __init__(self):
+        self.w_4_1_path = os.path.join(p, "w_4_1_path")
+
+    def qi_gua_fangshi(self):
+        window_ = ttk.Toplevel()
+        window.title("小六壬-起卦")
+        window.iconbitmap(icon_path)
+
+
+    @staticmethod
+    def down_box_save_1(w_4_1_path,down_box):
+        with open(w_4_1_path, 'w', encoding='utf-8') as f:
+            f.write(str(down_box.get()))
+
+    @staticmethod
+    def w_4_3_load(w_4_1_path):
+        try:
+            with open(w_4_1_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        except FileNotFoundError:
+            pass
+
 def x():
     window = ttk.Toplevel(str(root))
     window.title("小六壬")
@@ -1478,11 +1502,12 @@ def x():
         text_widget.delete(1.0, END)
         if combo.get() == "算一卦":
             text_widget.insert(tk.END,XiaoLliuren.numgua())
-
-    combo = ttk.Combobox(window, values=["算一卦"], state="readonly")
+        if combo.get() == "起卦":
+            pass
+    combo = ttk.Combobox(window, values=["起卦","算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     combo.bind("<Button-3>", lambda event: generate_and_display())
-    combo.set("算一卦")
+    combo.set("起卦","算一卦")
 
     def event_t():
         if down_box.get() == "返回主页":
@@ -6797,6 +6822,18 @@ def set_window():
             consider_var2.set(0)
         consider_checkbutton2 = ttk.Checkbutton(w_4_1, text="不计算吉值", variable=consider_var2, command=s6, style="round-toggle")
         consider_checkbutton2.grid(column=0,row=1,padx=10,pady=10,sticky=W)
+
+        def w_4_1_():
+            w_4_1_text = ttk.Label(w_4_1,text="起卦方式")
+            w_4_1_path = os.path.join(p, "w_4_1_path")
+            down_box = ttk.Combobox(w_4_1, values=["农历时起卦", "新历时起卦", "随机数起卦","五行起卦","八卦起卦","八卦五行起卦"], state="readonly")
+            down_box.grid(row=2, column=1, padx=10, pady=10,sticky=W)
+            down_box.bind("<<ComboboxSelected>>", lambda event: new_x.down_box_save_1(w_4_1_path, down_box))
+            t = str(new_x.w_4_3_load(w_4_1_path) or "随机数起卦")
+            down_box.set(t)
+
+
+        w_4_1_()
 
         w_4_2_lb1 = ttk.Label(w_4_2, text="界面样式：")
         w_4_2_lb1.grid(column=0,row=0,padx=5,pady=5)

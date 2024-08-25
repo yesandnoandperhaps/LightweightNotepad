@@ -3,15 +3,18 @@ import torch
 import torch.nn as nn
 import torch_directml
 import torch.optim as optim
+from sklearn.metrics import mean_squared_error, r2_score
 from torch.optim.lr_scheduler import LambdaLR,StepLR,MultiStepLR\
     ,ExponentialLR,CosineAnnealingLR,ReduceLROnPlateau,CyclicLR\
     ,CosineAnnealingWarmRestarts,PolynomialLR,ConstantLR,ChainedScheduler
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 from sklearn.linear_model import LinearRegression as SLinearRegression
+import matplotlib.pyplot as plt
 
 
 class FeatureScaling:
-    def __init__(self, feature_scaling, csv_path, input_columns="0,0",output_columns="1,1", device='gpu') -> None:
+    def __init__(self, feature_scaling, csv_path, input_columns="0,0",output_columns="1,1", device='gpu',start=True) -> None:
+        self.start = start
         self.user_device = device.lower()
         self.input_columns = self.extract_columns(input_columns)
         self.output_columns = self.extract_columns(output_columns)
@@ -27,7 +30,8 @@ class FeatureScaling:
 
     @staticmethod
     def load_data(csv_path, columns_to_read):
-        data = pd.read_csv(csv_path, encoding='utf-8', usecols=columns_to_read)
+        start_col, end_col = columns_to_read
+        data = pd.read_csv(csv_path, encoding='utf-8', usecols=range(start_col, end_col + 1))
         return data
 
     @staticmethod
@@ -58,17 +62,18 @@ class FeatureScaling:
             "max_abs_normalization": self.__max_abs_normalization_gpu,
             "robust_standardization": self.__robust_standardization_gpu
         }
-
-        if self.user_device == "cpu":
-            return methods_cpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),self.actual_device
-        else:
-            if self.actual_device == torch.device('cpu'):
-                if self.user_device == "强制cpu操作pytorch":
-                    return methods_gpu[self.feature_scaling_method](), self.output_data, len(self.data.columns.tolist()), len(self.output_data.columns.tolist()), self.user_device
-                return methods_cpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),self.actual_device
+        if self.start:
+            if self.user_device == "cpu":
+                return methods_cpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),torch.device('cpu')
             else:
-                return methods_gpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),self.actual_device
-
+                if self.actual_device == torch.device('cpu'):
+                    if self.user_device == "强制cpu操作pytorch":
+                        return methods_gpu[self.feature_scaling_method](), self.output_data, len(self.data.columns.tolist()), len(self.output_data.columns.tolist()), self.user_device
+                    return methods_cpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),self.actual_device
+                else:
+                    return methods_gpu[self.feature_scaling_method](),self.output_data,len(self.data.columns.tolist()),len(self.output_data.columns.tolist()),self.actual_device
+        else:
+            return self.data, self.output_data, len(self.data.columns.tolist()), len(self.output_data.columns.tolist()), torch.device('cpu')
     def __min_max_normalization_cpu(self):
         scaler_object = MinMaxScaler()
         return pd.DataFrame(scaler_object.fit_transform(self.data), columns=self.data.columns)
@@ -163,12 +168,13 @@ class LinearRegression:
         self.m = lr_m
         self.n = lr_n
         self.w = lr_w
-        self.feature_scaling,self.output,input_size,output_size,self.actual_device = FeatureScaling(feature_scaling,csv_path,input_columns,output_columns,device)
+        self.feature_scaling,self.output,input_size,output_size,self.actual_device = FeatureScaling(feature_scaling,csv_path,input_columns,output_columns,device,True).feature_scaling()
 
         self.features,self.target = self.pytorch_tensor()
         self.model = self.LinearRegressionModule(input_size, output_size).to(self.actual_device)
         self.actual_loss_function = self.criterion_loss_function(lr_loss_function)
         self.actual_optimization = self.optimization_methods(lr_optimization,self.model,self.a,self.m,self.d,self.w,self.n)
+        self.losses = []
 
     class LinearRegressionModule(nn.Module):
         def __init__(self,input_size,output_size):
@@ -179,15 +185,23 @@ class LinearRegression:
             return self.linear(x)
 
     def linear_regression(self):
+        print(self.actual_device)
         if self.actual_device == torch.device('cpu'):
             feature_scaling = self.feature_scaling.to_numpy()
             output = self.output.to_numpy()
-            reg = SLinearRegression.fit(feature_scaling, output)
+            reg = SLinearRegression()
+            reg.fit(feature_scaling, output)
+            print("Coefficients:", reg.coef_)
+            print("Intercepts:", reg.intercept_)
+            score = reg.score(feature_scaling, output)
+            print("Score:", score)
+
             return reg
         elif self.actual_device == "强制cpu操作pytorch":
             self.actual_device = torch.device('cpu')
+            self.pytorch_linear_regression_bgd()
         else:
-            pass
+            self.pytorch_linear_regression_bgd()
 
     @staticmethod
     def criterion_loss_function(user_loss_function):
@@ -220,8 +234,8 @@ class LinearRegression:
         return optimization_dictionary[lr_optimization]()
 
     def pytorch_tensor(self):
-        x = torch.tensor(self.feature_scaling.to_numpy(), device=self.actual_device)
-        y = torch.tensor(self.output.to_numpy(), device=self.actual_device)
+        x = torch.tensor(self.feature_scaling.to_numpy(), device=self.actual_device, dtype=torch.float32)
+        y = torch.tensor(self.output.to_numpy(), device=self.actual_device, dtype=torch.float32)
         return x, y
 
     def pytorch_linear_regression_bgd(self):
@@ -232,23 +246,97 @@ class LinearRegression:
             outputs = self.model(self.features)
             loss = self.actual_loss_function(outputs,self.target)
 
+            self.losses.append(loss.item())
             loss.backward()
-            self.actual_optimization.step()
+            # 获取模型的参数和梯度
+            device_params = [param for param in self.model.parameters() if param.requires_grad]
+            device_grads = [param.grad for param in self.model.parameters() if param.requires_grad]
+
+            # 使用 torch.no_grad() 避免在计算图中产生梯度
+            with torch.no_grad():
+                lr = self.actual_optimization.param_groups[0]['lr']  # 从优化器中获取学习率
+                for i in range(len(device_params)):
+                    device_params[i].sub_(device_grads[i] * lr)
+
             self.actual_optimization.zero_grad()
 
+            if (_ + 1) % 100 == 0:
+                print(f'Epoch [{_ + 1}/{self.e}], Loss: {loss.item():.4f}')
+            # 打印模型参数
+        print("Model parameters after training:")
+        for name, param in self.model.named_parameters():
+            print(f"{name}: {param.data}")
+
+        plt.plot(range(1, self.e + 1), self.losses)
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.title('Loss over Epochs')
+        plt.show()
+
+        # 在训练结束后进行评估
+        self.model.eval()
+        with torch.no_grad():
+            predictions = self.model(self.features)
+            true_values = self.target.cpu().numpy()
+            predicted_values = predictions.cpu().numpy()
+
+            # 计算评估指标
+            mse = mean_squared_error(true_values, predicted_values)
+            rmse = mse ** 0.5
+            r2 = r2_score(true_values, predicted_values)
+
+            print(f'Mean Squared Error (MSE): {mse:.4f}')
+            print(f'Root Mean Squared Error (RMSE): {rmse:.4f}')
+            print(f'R^2 Score: {r2:.4f}')
+
+            # 计算残差
+            residuals = true_values - predicted_values
+
+            # 绘制损失图和残差图
+            plt.figure(figsize=(14, 7))
+
+            # 绘制损失图
+            plt.subplot(1, 2, 1)
+            plt.plot(range(1, self.e + 1), self.losses, color='b')
+            plt.xlabel('Epoch')
+            plt.ylabel('Loss')
+            plt.title('Loss over Epochs')
+
+            # 绘制残差图
+            plt.subplot(1, 2, 2)
+            plt.scatter(predicted_values, residuals, alpha=0.5)
+            plt.axhline(y=0, color='r', linestyle='--')
+            plt.xlabel('Predicted Values')
+            plt.ylabel('Residuals')
+            plt.title('Residuals vs Predicted Values')
+
+            plt.tight_layout()
+            plt.show()
+
+            # 绘制残差直方图
+            plt.figure(figsize=(7, 5))
+            plt.hist(residuals, bins=30, edgecolor='k', alpha=0.7)
+            plt.xlabel('Residuals')
+            plt.ylabel('Frequency')
+            plt.title('Histogram of Residuals')
+            plt.show()
+
+    '''
     def pytorch_linear_regression_sgd(self):
         for _ in range(self.e):
             self.model.train()
 
-            outputs = self.model(x)
-            loss = self.actual_loss_function(outputs, y)
+            outputs = self.model(self.features)
+            loss = self.actual_loss_function(outputs, self.target)
 
             loss.backward()
             self.actual_optimization.step()
             self.actual_optimization.zero_grad()
+    '''
 
     @staticmethod
     def whether_scheduler(optimization):
+        pass
         '''
         scheduler_dict = {
             "None":lambda:None
@@ -266,7 +354,9 @@ class LinearRegression:
             "ChainedScheduler"
         }
         '''
+
+
 path = r"D:\桌面\Lightweight_notepad\啊.csv"
-scaler = FeatureScaling("mean_normalization", path,"0,0","1，2","gpu")
-scaled_data = scaler.feature_scaling()
+scaler = LinearRegression("批量梯度下降", "均方误差","a",0.01,6500,"z-score_normalization",r"D:\桌面\Lightweight_notepad\啊.csv","0,2","3,3","cpu")
+scaled_data = scaler.linear_regression()
 print(scaled_data)
