@@ -16,7 +16,7 @@ from PIL import Image, ImageTk
 from pystray import MenuItem, Menu
 import threading
 import windnd
-import XiaoLiuren
+import XiaoLiuren as XiaoLliuren
 import re
 import ZiWeidoushu
 import json
@@ -53,29 +53,16 @@ def save(theme):
     with open(k_path,"w",encoding="utf-8")as f:
         f.write(combobox3.get())
 
-def x_save():
-    with open(n_path,"w",encoding='utf-8')as f:
-        f.write(str(num_wv1))
+def t_save(path,text_path):
+    with open(path,"w",encoding='utf-8')as f:
+        f.write(str(text_path))
 
-def x_save2(r):
-    with open(p_path,"w",encoding='utf-8')as f:
-        f.write(str(r))
-
-def x_save3(r):
-    with open(q_path,"w",encoding='utf-8')as f:
-        f.write(str(r))
-
-def save_var_num_w_4_3():
-    with open(z_path,"w",encoding='utf-8')as f:
-        f.write(str(var_num_w_4_3))
-
-def save_var2_num_w_4_3():
-    with open(aa_path,"w",encoding='utf-8')as f:
-        f.write(str(var2_num_w_4_3))
-
-def save_var3_num_w_4_3():
-    with open(ab_path,"w",encoding='utf-8')as f:
-        f.write(str(var3_num_w_4_3))
+def t_load(path):
+    try:
+        with open(path,"r",encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        messagebox.showerror("错误", f"发生错误: {e}")
 
 def load_theme():
     try:
@@ -83,121 +70,7 @@ def load_theme():
             return f.read().strip()
     except FileNotFoundError:
         return None
-def load():
-    try:
-        with open(c_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load2():
-    try:
-        with open(d_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load3():
-    try:
-        with open(e_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load4():
-    try:
-        with open(f_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load5():
-    try:
-        with open(h_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load6():
-    try:
-        with open(i_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load7():
-    try:
-        with open(j_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load8():
-    try:
-        with open(k_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load9():
-    try:
-        with open(l_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load10():
-    try:
-        with open(m_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load11():
-    try:
-        with open(n_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load12():
-    try:
-        with open(p_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load13():
-    try:
-        with open(q_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        pass
-def load_down_box():
-    try:
-        with open(r_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
-def load_down_box2():
-    try:
-        with open(s_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
-def load_down_box3():
-    try:
-        with open(t_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
-def loda_var_num_w_4_3():
-    try:
-        with open(z_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
-def loda_var2_num_w_4_3():
-    try:
-        with open(aa_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
-    
-def loda_var3_num_w_4_3():
-    try:
-        with open(ab_path, 'r',encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-            pass
+
 def s():
     global v
     v = v + 1
@@ -219,20 +92,20 @@ def s6():
 def wv_1():
     global num_wv1
     num_wv1 = num_wv1 + 1
-    x_save()
+    t_save(n_path,num_wv1)
 def var_num_w_4_3_s():
     global var_num_w_4_3
     var_num_w_4_3 += 1
-    save_var_num_w_4_3()
+    t_save(z_path, var_num_w_4_3)
 def var2_num_w_4_3_s():
     global var2_num_w_4_3
     var2_num_w_4_3 += 1
-    save_var2_num_w_4_3()
+    t_save(aa_path, var2_num_w_4_3)
 
 def var3_num_w_4_3_s():
     global var3_num_w_4_3
     var3_num_w_4_3 += 1
-    save_var3_num_w_4_3()
+    t_save(ab_path, var3_num_w_4_3)
 
 #关于小六壬###分割线
 
@@ -242,8 +115,8 @@ class new_x:
 
     def qi_gua_fangshi(self):
         window_ = ttk.Toplevel()
-        window.title("小六壬-起卦")
-        window.iconbitmap(icon_path)
+        window_.title("小六壬-起卦")
+        window_.iconbitmap(icon_path)
 
 
     @staticmethod
@@ -256,8 +129,8 @@ class new_x:
         try:
             with open(w_4_1_path, 'r', encoding='utf-8') as f:
                 return f.read()
-        except FileNotFoundError:
-            pass
+        except Exception as e:
+            messagebox.showerror("错误", f"发生错误: {e}")
 
 def x():
     window = ttk.Toplevel(str(root))
@@ -299,8 +172,8 @@ def x():
                 match entry___:
                     case []:
                         text_widget.insert(tk.END,"已循环次数：0")
-                        t_rule_num = int(load12() or 1)
-                        t_rule_num2 = int(load13() or 2)
+                        t_rule_num = int(t_load(p_path) or 1)
+                        t_rule_num2 = int(t_load(q_path) or 2)
                         buffer = []
 
                         match t_rule_num:
@@ -1132,7 +1005,7 @@ def x():
                 combobox.bind('<Shift_L>', lambda event: entry2_2_1())
                 combobox.bind("<<ComboboxSelected>>", lambda event: combobox_save())
 
-            check_up_num = int(load12() or 1)
+            check_up_num = int(t_load(p_path) or 1)
 
 
             if check_up_num == 0:
@@ -1238,8 +1111,8 @@ def x():
                     case []:
                         try:
                             text_widget.insert(tk.END,"已循环次数：0")
-                            t_rule_num = int(load12() or 1)
-                            t_rule_num2 = int(load13() or 2)
+                            t_rule_num = int(t_load(p_path) or 1)
+                            t_rule_num2 = int(t_load(q_path) or 2)
                             buffer = []
 
                             match t_rule_num:
@@ -1403,7 +1276,7 @@ def x():
             w.grid_remove()
             w3 = ttk.Frame(window)
             w3.grid(row=2,column=0,sticky=E)
-            t_rule_num = int(load12() or 1)
+            t_rule_num = int(t_load(p_path) or 1)
 
 
             if t_rule_num2 == 1:
@@ -1465,37 +1338,37 @@ def x():
     def CountB3_3():
         rule_num = 1
         b3.config(text="输出不去尾",command=CountB3_1)
-        x_save3(rule_num)
+        t_save(q_path, rule_num)
 
     def CountB3_2():
         rule_num = 2
         b3.config(text="输出保留两位",command=CountB3_3)
-        x_save3(rule_num)
+        t_save(q_path, rule_num)
 
     def CountB3_1():
         rule_num = 0
         b3.config(text="输出保留整数",command=CountB3_2)
-        x_save3(rule_num)
+        t_save(q_path, rule_num)
 
     def CountB2_4():
         rule_num = 3
         b2.config(text="旧版循环输出【仅限txt文件】",command=CountB2_2)
-        x_save2(rule_num)
+        t_save(p_path,rule_num)
 
     def CountB2_3():
         rule_num = 2
         b2.config(text="常规数据循环输出",command=CountB2_4)
-        x_save2(rule_num)
+        t_save(p_path, rule_num)
 
     def CountB2_2():
         rule_num = 1
         b2.config(text="常规文字循环输出",command=CountB2_1)
-        x_save2(rule_num)
+        t_save(p_path, rule_num)
 
     def CountB2_1():
         rule_num = 0
         b2.config(text="只循环输出吉值",command=CountB2_3)
-        x_save2(rule_num)
+        t_save(p_path, rule_num)
 
 
     def generate_and_display():
@@ -1686,9 +1559,9 @@ class SpriteSheetMaker(tk.Toplevel):
 
     def save_spritesheet(self):
         icon.notify("已开始", "Lightweight text editor")
-        var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
-        var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
-        var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+        var_num_w_4_3 = int(t_load(z_path) or 1)
+        var2_num_w_4_3 = int(t_load(aa_path) or 0)
+        var3_num_w_4_3 = int(t_load(ab_path) or 0)
 
         if self.sprite_sheet:
             file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG文件", "*.png")])
@@ -1714,8 +1587,8 @@ class SpriteSheetMaker(tk.Toplevel):
 
     def generate_html_css(self, sprite_path):
         try:
-            var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
-            var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+            var2_num_w_4_3 = int(t_load(aa_path) or 0)
+            var3_num_w_4_3 = int(t_load(ab_path) or 0)
             sprite_name = os.path.basename(sprite_path)
             sprite_folder = os.path.dirname(sprite_path)
 
@@ -2001,7 +1874,7 @@ CyclicLR中max_momentum在每个周期的最高点时，动量上升到 max_mome
 def gadget():
 
     def z():
-        t = str(load_down_box() or "横排样式")
+        t = str(t_load(r_path) or "横排样式")
 
         def z_judge():
             gain_entry1 = entry1.get()
@@ -6900,9 +6773,9 @@ def set_window():
                 case "RGB":
                     down_box2.set("RGB")
 
-            var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
-            var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
-            var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
+            var_num_w_4_3 = int(t_load(z_path) or 1)
+            var2_num_w_4_3 = int(t_load(aa_path) or 0)
+            var3_num_w_4_3 = int(t_load(ab_path) or 0)
 
             w_4_3_var = ttk.IntVar()
             if var_num_w_4_3 % 2 == 1:
@@ -6946,7 +6819,7 @@ def set_window():
             down_box = ttk.Combobox(w_4_2, values=["横排样式", "竖排样式", "自定义样式【未完成】"], state="readonly")
             down_box.grid(row=0, column=1, padx=5, pady=5)
             down_box.bind("<<ComboboxSelected>>", lambda event: event_t())
-            t = str(load_down_box() or "横排样式")
+            t = str(t_load(r_path) or "横排样式")
             match t:
                 case "横排样式":
                     down_box.set("横排样式")
@@ -6956,7 +6829,7 @@ def set_window():
             down_box2 = ttk.Combobox(w_4_2, values=["作本月", "作下月", "月中为界"], state="readonly")
             down_box2.grid(row=1, column=1, padx=5, pady=5)
             down_box2.bind("<<ComboboxSelected>>", lambda event: down_box2_save())
-            t2 = str(load_down_box2() or "作下月")
+            t2 = str(t_load(s_path) or "作下月")
             match t2:
                 case "作下月":
                     down_box2.set("作下月")
@@ -6968,7 +6841,7 @@ def set_window():
             down_box3 = ttk.Combobox(w_4_2, values=["子时视明日", "子时视本日", "子时中而分界"], state="readonly")
             down_box3.grid(row=2, column=1, padx=5, pady=5)
             down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
-            t3 = str(load_down_box3() or "子时视明日")
+            t3 = str(t_load(t_path) or "子时视明日")
             match t3:
                 case "子时视明日":
                     down_box3.set("子时视明日")
@@ -6985,7 +6858,7 @@ def set_window():
 
     def w_root5():
 
-        t = str(load_down_box() or "横排样式")
+        t = str(t_load(r_path) or "横排样式")
 
         def w_root5_window1_():
                 w_root5_window1 = ttk.Toplevel()
@@ -7450,21 +7323,21 @@ if __name__ == '__main__':
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
     v = int(load() or 0)
-    v2 = int(load2() or 1)
-    v3 = int(load3() or 0)
-    v4 = int(load4() or 0)
-    v5 = int(load9() or 0)
-    v6 = int(load10() or 0)
-    num_wv1 = int(load11() or 0)
-    var_num_w_4_3 = int(loda_var_num_w_4_3() or 1)
-    var2_num_w_4_3 = int(loda_var2_num_w_4_3() or 0)
-    var3_num_w_4_3 = int(loda_var3_num_w_4_3() or 0)
-    _size_ = (load5() or "70MB")
-    divide_up = (load6() or "等于大文件定义")
-    onandoff = (load7() or "开启")
-    circular = (load8() or "30MB")
-    t_rule_num = int(load12() or 1)
-    t_rule_num2 = int(load13()or 2)
+    v2 = int(t_load(d_path) or 1)
+    v3 = int(t_load(e_path) or 0)
+    v4 = int(t_load(f_path) or 0)
+    v5 = int(t_load(l_path) or 0)
+    v6 = int(t_load(m_path) or 0)
+    num_wv1 = int(t_load(n_path) or 0)
+    var_num_w_4_3 = int(t_load(z_path) or 1)
+    var2_num_w_4_3 = int(t_load(aa_path) or 0)
+    var3_num_w_4_3 = int(t_load(ab_path) or 0)
+    _size_ = (t_loda(h_path) or "70MB")
+    divide_up = (t_loda(i_path) or "等于大文件定义")
+    onandoff = (t_loda(j_path) or "开启")
+    circular = (t_load(k_path) or "30MB")
+    t_rule_num = int(t_load(p_path) or 1)
+    t_rule_num2 = int(t_load(q_path) or 2)
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(icon_path)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)

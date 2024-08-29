@@ -356,7 +356,9 @@ class LinearRegression:
         '''
 
 
+'''
 path = r"D:\桌面\Lightweight_notepad\啊.csv"
 scaler = LinearRegression("批量梯度下降", "均方误差","a",0.01,6500,"z-score_normalization",r"D:\桌面\Lightweight_notepad\啊.csv","0,2","3,3","cpu")
 scaled_data = scaler.linear_regression()
 print(scaled_data)
+'''
