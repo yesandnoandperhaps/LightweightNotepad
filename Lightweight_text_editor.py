@@ -1,11 +1,10 @@
 import datetime
 import tkinter as tk
 import tkinter.font as tk_font
-from tkinter import filedialog,messagebox,colorchooser,scrolledtext
+from tkinter import filedialog,messagebox,colorchooser
 from tkinter.ttk import Separator
 import numpy as np
 import ttkbootstrap as ttk
-from sympy.polys.agca.modules import SubModule
 from ttkbootstrap.constants import *
 from ttkbootstrap.tooltip import ToolTip
 import ctypes
@@ -30,44 +29,44 @@ class CustomToolTip(ToolTip):
         self.text = text
 
 def save(theme):
-    with open(b_path, 'w',encoding='utf-8') as f:
-        f.write(theme)
-    with open(c_path, 'w',encoding='utf-8') as f:
-        f.write(str(v))
-    with open(d_path,"w",encoding='utf-8')as f:
-        f.write(str(v2))
-    with open(e_path,"w",encoding='utf-8')as f:
-        f.write(str(v3))
-    with open(f_path,"w",encoding='utf-8')as f:
-        f.write(str(v4))
-    with open(l_path,"w",encoding='utf-8')as f:
-        f.write(str(v5))
-    with open(m_path,"w",encoding='utf-8')as f:
-        f.write(str(v6))
-    with open(h_path,"w",encoding='utf-8')as f:
-        f.write(combobox1.get())
-    with open(i_path,"w",encoding='utf-8')as f:
-        f.write(combobox2.get())
-    with open(j_path,"w",encoding="utf-8")as f:
-        f.write(combobox0.get())
-    with open(k_path,"w",encoding="utf-8")as f:
-        f.write(combobox3.get())
+    with open(b_path, 'w',encoding='utf-8') as file:
+        file.write(theme)
+    with open(c_path, 'w',encoding='utf-8') as file:
+        file.write(str(v))
+    with open(d_path,"w",encoding='utf-8') as file:
+        file.write(str(v2))
+    with open(e_path,"w",encoding='utf-8') as file:
+        file.write(str(v3))
+    with open(f_path,"w",encoding='utf-8') as file:
+        file.write(str(v4))
+    with open(l_path,"w",encoding='utf-8') as file:
+        file.write(str(v5))
+    with open(m_path,"w",encoding='utf-8') as file:
+        file.write(str(v6))
+    with open(h_path,"w",encoding='utf-8') as file:
+        file.write(combobox1.get())
+    with open(i_path,"w",encoding='utf-8') as file:
+        file.write(combobox2.get())
+    with open(j_path,"w",encoding="utf-8") as file:
+        file.write(combobox0.get())
+    with open(k_path,"w",encoding="utf-8") as file:
+        file.write(combobox3.get())
 
 def t_save(path,text_path):
-    with open(path,"w",encoding='utf-8')as f:
-        f.write(str(text_path))
+    with open(path,"w",encoding='utf-8') as file:
+        file.write(str(text_path))
 
 def t_load(path):
     try:
-        with open(path,"r",encoding='utf-8') as f:
-            return f.read()
+        with open(path,"r",encoding='utf-8') as file:
+            return file.read()
     except Exception as e:
         messagebox.showerror("错误", f"发生错误: {e}")
 
 def load_theme():
     try:
-        with open(b_path, 'r',encoding='utf-8') as f:
-            return f.read().strip()
+        with open(b_path, 'r',encoding='utf-8') as file:
+            return file.read().strip()
     except FileNotFoundError:
         return None
 
@@ -109,11 +108,12 @@ def var3_num_w_4_3_s():
 
 #关于小六壬###分割线
 
-class new_x:
+class NewX:
     def __init__(self):
         self.w_4_1_path = os.path.join(p, "w_4_1_path")
 
-    def qi_gua_fangshi(self):
+    @staticmethod
+    def qi_gua_fangshi():
         window_ = ttk.Toplevel()
         window_.title("小六壬-起卦")
         window_.iconbitmap(icon_path)
@@ -121,14 +121,14 @@ class new_x:
 
     @staticmethod
     def down_box_save_1(w_4_1_path,down_box):
-        with open(w_4_1_path, 'w', encoding='utf-8') as f:
-            f.write(str(down_box.get()))
+        with open(w_4_1_path, 'w', encoding='utf-8') as file:
+            file.write(str(down_box.get()))
 
     @staticmethod
     def w_4_3_load(w_4_1_path):
         try:
-            with open(w_4_1_path, 'r', encoding='utf-8') as f:
-                return f.read()
+            with open(w_4_1_path, 'r', encoding='utf-8') as file:
+                return file.read()
         except Exception as e:
             messagebox.showerror("错误", f"发生错误: {e}")
 
@@ -136,7 +136,7 @@ def x():
     window = ttk.Toplevel(str(root))
     window.title("小六壬")
     window.iconbitmap(icon_path)
-    def LoopOutput2():
+    def loop_output2():
 
         file_path_csv = filedialog.asksaveasfilename(parent=window, defaultextension=".csv",
                                                  filetypes=[("csv-utf-8", "*.csv")])
@@ -151,10 +151,10 @@ def x():
             window.destroy()
             x()
 
-        # noinspection PyArgumentList
-        def T_LoopOutput_X():
+        # noinspection PyArgumentList,PyShadowingNames
+        def t_loop_output_x():
             
-            def LoopOutput_X():
+            def loop_output_x():
                 def recover():
                     text_widget.delete(1.0, END)
                     text_widget.insert(tk.END,"已完成循环")
@@ -172,18 +172,18 @@ def x():
                 match entry___:
                     case []:
                         text_widget.insert(tk.END,"已循环次数：0")
-                        t_rule_num = int(t_load(p_path) or 1)
-                        t_rule_num2 = int(t_load(q_path) or 2)
+                        loop_t_rule_num = int(t_load(p_path) or 1)
+                        loop_t_rule_num2 = int(t_load(q_path) or 2)
                         buffer = []
 
-                        match t_rule_num:
+                        match loop_t_rule_num:
                             case 0:
-                                match t_rule_num2:
+                                match loop_t_rule_num2:
                                     case 1:
                                         while True:
                                             if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as f:
-                                                    f.write(''.join(buffer))
+                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
+                                                    file.write(''.join(buffer))
                                                 recover()
                                                 break
                                             buffer.append(XiaoLliuren.numgua2_1())
@@ -194,8 +194,8 @@ def x():
                                     case 0:
                                         while True:
                                             if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as f:
-                                                    f.write(''.join(buffer))
+                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
+                                                    file.write(''.join(buffer))
                                                 recover()
                                                 break
                                             buffer.append(XiaoLliuren.numgua2_0())
@@ -206,8 +206,8 @@ def x():
                                     case 2:
                                         while True:
                                             if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as f:
-                                                    f.write(''.join(buffer))
+                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
+                                                    file.write(''.join(buffer))
                                                 recover()
                                                 break
                                             buffer.append(XiaoLliuren.numgua2_2())
@@ -218,8 +218,8 @@ def x():
                             case 1:
                                 while True:
                                     if num == int(entry_):
-                                        with open(file_path_csv, 'a+',encoding='utf-8') as f:
-                                            f.write(''.join(buffer))
+                                        with open(file_path_csv, 'a+',encoding='utf-8') as file:
+                                            file.write(''.join(buffer))
                                         recover()
                                         break
                                     buffer.append(XiaoLliuren.numgua2_3())
@@ -230,8 +230,8 @@ def x():
                             case 2:
                                 while True:
                                     if num == int(entry_):
-                                        with open(file_path_csv, 'a+',encoding='utf-8') as f:
-                                            f.write(''.join(buffer))
+                                        with open(file_path_csv, 'a+',encoding='utf-8') as file:
+                                            file.write(''.join(buffer))
                                         recover()
                                         break
                                     buffer.append(XiaoLliuren.numgua2_4())
@@ -257,19 +257,19 @@ def x():
                 def entry_row_name_():
                     if entry_row_name.get():
                         try:
-                            with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                f.write("{}\n".format(entry_row_name.get()))
+                            with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                file.write("{}\n".format(entry_row_name.get()))
                             window_x.destroy()
                             window.wm_attributes('-disabled', 0)
                             window.wm_attributes('-topmost', 1)
                             window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=LoopOutput_X)
+                            thread = threading.Thread(target=loop_output_x)
                             thread.start()
-                        except:
-                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                        except Exception as e:
+                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
                             entry2_2_1()
                     else:
-                        icon.notify("必须有列名", "Lightweight text editor")
+                        messagebox.showerror("错误", f"必须有列名",parent=window_x)
                 window_x = ttk.Toplevel()
                 window_x.title("小六壬")
                 window_x.iconbitmap(icon_path)
@@ -293,19 +293,19 @@ def x():
                 def entry_row_name_():
                     if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
                         try:
-                            with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                            with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                             window_x.destroy()
                             window.wm_attributes('-disabled', 0)
                             window.wm_attributes('-topmost', 1)
                             window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=LoopOutput_X)
+                            thread = threading.Thread(target=loop_output_x)
                             thread.start()
-                        except:
-                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                        except Exception as e:
+                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
                             entry2_2_1()
                     else:
-                        icon.notify("必须有列名", "Lightweight text editor")
+                        messagebox.showerror("错误", f"必须有列名",parent=window_x)
 
                 window_x = ttk.Toplevel()
                 window_x.title("小六壬")
@@ -349,13 +349,13 @@ def x():
             def x_x__():
 
                 def combobox_save():
-                    with open(u_path,"w",encoding='utf-8')as f:
-                        f.write(str(combobox.get()))
+                    with open(u_path,"w",encoding='utf-8') as file:
+                        file.write(str(combobox.get()))
 
                 def combobox_load():
                     try:
-                        with open(u_path, 'r',encoding='utf-8') as f:
-                            return f.read()
+                        with open(u_path, 'r',encoding='utf-8') as file:
+                            return file.read()
                     except FileNotFoundError:
                         pass
 
@@ -376,8 +376,8 @@ def x():
                             entry2_2()
 
                         def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
+                            with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
                                                                                          entry_row_name2_.get(),
                                                                                          entry_row_name3_.get(),
                                                                                          entry_row_name4_.get(),
@@ -392,7 +392,7 @@ def x():
                             window.wm_attributes('-disabled', 0)
                             window.wm_attributes('-topmost', 1)
                             window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=LoopOutput_X)
+                            thread = threading.Thread(target=loop_output_x)
                             thread.start()
 
                         window_x_ = ttk.Toplevel()
@@ -487,8 +487,8 @@ def x():
                             window_x_.destroy()
                             entry2_2()
                         def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
+                            with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
                                                                                          entry_row_name2_.get(),
                                                                                          entry_row_name3_.get(),
                                                                                          entry_row_name4_.get(),
@@ -509,7 +509,7 @@ def x():
                             window.wm_attributes('-disabled', 0)
                             window.wm_attributes('-topmost', 1)
                             window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=LoopOutput_X)
+                            thread = threading.Thread(target=loop_output_x)
                             thread.start()
                         window_x_ = ttk.Toplevel()
                         window_x_.title("小六壬")
@@ -660,8 +660,8 @@ def x():
                             window_x_.destroy()
                             entry2_2()
                         def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
+                            with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
                                                                                          entry_row_name2_.get(),
                                                                                          entry_row_name3_.get(),
                                                                                          entry_row_name4_.get(),
@@ -682,7 +682,7 @@ def x():
                             window.wm_attributes('-disabled', 0)
                             window.wm_attributes('-topmost', 1)
                             window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=LoopOutput_X)
+                            thread = threading.Thread(target=loop_output_x)
                             thread.start()
                         window_x_ = ttk.Toplevel()
                         window_x_.title("小六壬")
@@ -859,40 +859,40 @@ def x():
                         try:
                             match t:
                                 case "顺序数据【空亡定为6】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "顺序数据【空亡定为0】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "值数据":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "详细值数据【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "详细值数据【十列】":
                                     x_x__x()
@@ -901,31 +901,31 @@ def x():
                                     x_x__x_()
                                     window_x.destroy()
                                 case "全部【空亡定为6】【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "全部【空亡定为0】【十六列】":
                                     x_x__x_()
                                     window_x.destroy()
                                 case "全部【空亡定为0】【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as f:
-                                        f.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
+                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
+                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
                                     window_x.destroy()
                                     window.wm_attributes('-disabled', 0)
                                     window.wm_attributes('-topmost', 1)
                                     window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=LoopOutput_X)
+                                    thread = threading.Thread(target=loop_output_x)
                                     thread.start()
                                 case "真全部【十九列】":
                                     x_x__x__()
                                     window_x.destroy()
-                        except:
-                            icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                        except Exception as e:
+                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
                             entry2_2_1()
                     else:
                         icon.notify("必须有列名", "Lightweight text editor")
@@ -1077,10 +1077,10 @@ def x():
         text = ttk.Label(w2, text="循环次数")
         text.pack(padx=5,pady=5,side='right')
         entry.focus_set()
-        entry.bind('<Return>', lambda event: T_LoopOutput_X())
+        entry.bind('<Return>', lambda event: t_loop_output_x())
         entry.bind('<Shift_L>', lambda event: entry2_2())
 
-    def LoopOutput():
+    def loop_output():
         file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt",
                                                  filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
         def entry2_():
@@ -1092,8 +1092,8 @@ def x():
         def entry2_2():
             window.destroy()
             x()
-        def T_LoopOutput_X():
-            def LoopOutput_X():
+        def t_loop_output_x():
+            def loop_output_x():
                 def recover():
                     text_widget.delete(1.0, END)
                     text_widget.insert(tk.END,"已完成循环")
@@ -1121,8 +1121,8 @@ def x():
                                         case 1:
                                             while True:
                                                 if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as f:
-                                                        f.write(''.join(buffer))
+                                                    with open(file_path, 'a+',encoding='utf-8') as file:
+                                                        file.write(''.join(buffer))
                                                     recover()
                                                     break
                                                 buffer.append(XiaoLliuren.numgua2_1())
@@ -1133,8 +1133,8 @@ def x():
                                         case 0:
                                             while True:
                                                 if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as f:
-                                                        f.write(''.join(buffer))
+                                                    with open(file_path, 'a+',encoding='utf-8') as file:
+                                                        file.write(''.join(buffer))
                                                     recover()
                                                     break
                                                 buffer.append(XiaoLliuren.numgua2_0())
@@ -1145,8 +1145,8 @@ def x():
                                         case 2:
                                             while True:
                                                 if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as f:
-                                                        f.write(''.join(buffer))
+                                                    with open(file_path, 'a+',encoding='utf-8') as file:
+                                                        file.write(''.join(buffer))
                                                     recover()
                                                     break
                                                 buffer.append(XiaoLliuren.numgua2_2())
@@ -1157,8 +1157,8 @@ def x():
                                 case 1:
                                     while True:
                                         if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as f:
-                                                f.write(''.join(buffer))
+                                            with open(file_path, 'a+',encoding='utf-8') as file:
+                                                file.write(''.join(buffer))
                                             recover()
                                             break
                                         buffer.append(XiaoLliuren.numgua2_3())
@@ -1169,8 +1169,8 @@ def x():
                                 case 2:
                                     while True:
                                         if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as f:
-                                                f.write(''.join(buffer))
+                                            with open(file_path, 'a+',encoding='utf-8') as file:
+                                                file.write(''.join(buffer))
                                             recover()
                                             break
                                         buffer.append(XiaoLliuren.numgua2_5())
@@ -1181,8 +1181,8 @@ def x():
                                 case 3:
                                     while True:
                                         if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as f:
-                                                f.write(''.join(buffer))
+                                            with open(file_path, 'a+',encoding='utf-8') as file:
+                                                file.write(''.join(buffer))
                                             recover()
                                             break
                                         buffer.append(XiaoLliuren.numgua())
@@ -1190,8 +1190,8 @@ def x():
                                         if num%200 == 0:
                                             text_widget.delete(1.6, END)
                                             text_widget.insert(tk.END,"{}".format(num))
-                        except:
-                            icon.notify("未设置文件或其它原因，已退出循环", "Lightweight text editor")
+                        except Exception as e:
+                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
                             entry2_2()
                     case _:
                         messagebox.showerror("错误", message="请只输入整数",parent=window)
@@ -1210,13 +1210,13 @@ def x():
                     entry2_2()
 
                 def combobox_save():
-                    with open(v_path,"w",encoding='utf-8')as f:
-                        f.write(str(combobox.get()))
+                    with open(v_path,"w",encoding='utf-8') as file:
+                        file.write(str(combobox.get()))
 
                 def combobox_load():
                     try:
-                        with open(v_path, 'r',encoding='utf-8') as f:
-                            return f.read()
+                        with open(v_path, 'r',encoding='utf-8') as file:
+                            return file.read()
                     except FileNotFoundError:
                         pass
 
@@ -1226,10 +1226,10 @@ def x():
                         window.wm_attributes('-disabled', 0)
                         window.wm_attributes('-topmost', 1)
                         window.wm_attributes('-topmost', 0)
-                        thread = threading.Thread(target=LoopOutput_X)
+                        thread = threading.Thread(target=loop_output_x)
                         thread.start()
-                    except:
-                        icon.notify("未设置文件，已退出循环", "Lightweight text editor")
+                    except Exception as e:
+                        messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关", parent=window)
                         entry2_2_1()
 
                 window_x = ttk.Toplevel()
@@ -1292,12 +1292,12 @@ def x():
             if t_rule_num == 1:
                 b2 = ttk.Button(w3, text="常规文字循环输出", style=OUTLINE, command=entry2__)
                 b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=LoopOutput_X)
+                thread = threading.Thread(target=loop_output_x)
                 thread.start()
             elif t_rule_num == 0:
                 b2 = ttk.Button(w3, text="只循环输出吉值", style=OUTLINE, command=entry2__)
                 b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=LoopOutput_X)
+                thread = threading.Thread(target=loop_output_x)
                 thread.start()
             elif t_rule_num == 2:
                 b2 = ttk.Button(w3, text="常规数据循环输出", style=OUTLINE, command=entry2__)
@@ -1306,7 +1306,7 @@ def x():
             elif t_rule_num == 3:
                 b2 = ttk.Button(w3, text="旧版循环输出【仅限txt文件】", style=OUTLINE, command=entry2__)
                 b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=LoopOutput_X)
+                thread = threading.Thread(target=loop_output_x)
                 thread.start()
 
             b4 = ttk.Button(w3, text="循环输出csv文件", style=OUTLINE, command=entry2__)
@@ -1331,43 +1331,43 @@ def x():
         text = ttk.Label(w2, text="循环次数")
         text.pack(padx=5,pady=5,side='right')
         entry.focus_set()
-        entry.bind('<Return>', lambda event: T_LoopOutput_X())
+        entry.bind('<Return>', lambda event: t_loop_output_x())
         entry.bind('<Shift_L>', lambda event: entry2_2())
 
 
-    def CountB3_3():
+    def count_b3_3():
         rule_num = 1
-        b3.config(text="输出不去尾",command=CountB3_1)
+        b3.config(text="输出不去尾", command=count_b3_1)
         t_save(q_path, rule_num)
 
-    def CountB3_2():
+    def count_b3_2():
         rule_num = 2
-        b3.config(text="输出保留两位",command=CountB3_3)
+        b3.config(text="输出保留两位", command=count_b3_3)
         t_save(q_path, rule_num)
 
-    def CountB3_1():
+    def count_b3_1():
         rule_num = 0
-        b3.config(text="输出保留整数",command=CountB3_2)
+        b3.config(text="输出保留整数", command=count_b3_2)
         t_save(q_path, rule_num)
 
-    def CountB2_4():
+    def count_b2_4():
         rule_num = 3
-        b2.config(text="旧版循环输出【仅限txt文件】",command=CountB2_2)
+        b2.config(text="旧版循环输出【仅限txt文件】", command=count_b2_2)
         t_save(p_path,rule_num)
 
-    def CountB2_3():
+    def count_b2_3():
         rule_num = 2
-        b2.config(text="常规数据循环输出",command=CountB2_4)
+        b2.config(text="常规数据循环输出", command=count_b2_4)
         t_save(p_path, rule_num)
 
-    def CountB2_2():
+    def count_b2_2():
         rule_num = 1
-        b2.config(text="常规文字循环输出",command=CountB2_1)
+        b2.config(text="常规文字循环输出", command=count_b2_1)
         t_save(p_path, rule_num)
 
-    def CountB2_1():
+    def count_b2_1():
         rule_num = 0
-        b2.config(text="只循环输出吉值",command=CountB2_3)
+        b2.config(text="只循环输出吉值", command=count_b2_3)
         t_save(p_path, rule_num)
 
 
@@ -1380,7 +1380,7 @@ def x():
     combo = ttk.Combobox(window, values=["起卦","算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     combo.bind("<Button-3>", lambda event: generate_and_display())
-    combo.set("起卦","算一卦")
+    combo.set("起卦")
 
     def event_t():
         if down_box.get() == "返回主页":
@@ -1402,31 +1402,31 @@ def x():
     w.grid(row=2,column=0,sticky=E)
 
     if t_rule_num2 == 1:
-        b3 = ttk.Button(w, text="输出不去尾", style=OUTLINE, command=CountB3_1)
+        b3 = ttk.Button(w, text="输出不去尾", style=OUTLINE, command=count_b3_1)
         b3.pack(padx=5,pady=5,side='right')
     elif t_rule_num2 == 0:
-        b3 = ttk.Button(w, text="输出保留整数", style=OUTLINE, command=CountB3_2)
+        b3 = ttk.Button(w, text="输出保留整数", style=OUTLINE, command=count_b3_2)
         b3.pack(padx=5,pady=5,side='right')
     elif t_rule_num2 == 2:
-        b3 = ttk.Button(w, text="输出保留两位", style=OUTLINE, command=CountB3_3)
+        b3 = ttk.Button(w, text="输出保留两位", style=OUTLINE, command=count_b3_3)
         b3.pack(padx=5,pady=5,side='right')
 
     if t_rule_num == 1:
-        b2 = ttk.Button(w, text="常规文字循环输出", style=OUTLINE, command=CountB2_1)
+        b2 = ttk.Button(w, text="常规文字循环输出", style=OUTLINE, command=count_b2_1)
         b2.pack(padx=5,pady=5,side='right')
     elif t_rule_num == 0:
-        b2 = ttk.Button(w, text="只循环输出吉值", style=OUTLINE, command=CountB2_3)
+        b2 = ttk.Button(w, text="只循环输出吉值", style=OUTLINE, command=count_b2_3)
         b2.pack(padx=5,pady=5,side='right')
     elif t_rule_num == 2:
-        b2 = ttk.Button(w, text="常规数据循环输出", style=OUTLINE, command=CountB2_4)
+        b2 = ttk.Button(w, text="常规数据循环输出", style=OUTLINE, command=count_b2_4)
         b2.pack(padx=5,pady=5,side='right')
     elif t_rule_num == 3:
-        b2 = ttk.Button(w, text="旧版循环输出【仅限txt文件】", style=OUTLINE, command=CountB2_2)
+        b2 = ttk.Button(w, text="旧版循环输出【仅限txt文件】", style=OUTLINE, command=count_b2_2)
         b2.pack(padx=5,pady=5,side='right')
 
-    b4 = ttk.Button(w, text="循环输出csv文件", style=OUTLINE, command=LoopOutput2)
+    b4 = ttk.Button(w, text="循环输出csv文件", style=OUTLINE, command=loop_output2)
     b4.pack(padx=5,pady=5,side='right')
-    b1 = ttk.Button(w, text="循环输出txt文件", style=OUTLINE, command=LoopOutput)
+    b1 = ttk.Button(w, text="循环输出txt文件", style=OUTLINE, command=loop_output)
     b1.pack(padx=5,pady=5,side='right')
     Separator(w, orient=VERTICAL).pack(fill=Y,padx=5,pady=5,side='right')
     wv1 = ttk.IntVar()
@@ -1464,6 +1464,7 @@ class SpriteSheetMaker(tk.Toplevel):
 
         self.internal_frame = tk.Frame(self.canvas)
         self.internal_frame.pack(side=tk.RIGHT, fill=tk.Y)
+        # noinspection PyTypeChecker
         self.internal_frame.bind("<Configure>", self.update_scrollregion)
 
         self.image_frame.pack(side=tk.RIGHT, fill=tk.Y)
@@ -1488,7 +1489,7 @@ class SpriteSheetMaker(tk.Toplevel):
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-    def update_scrollregion(self, event=None):
+    def update_scrollregion(self):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def add_images(self):
@@ -1500,7 +1501,7 @@ class SpriteSheetMaker(tk.Toplevel):
                 image = Image.open(file_path)
                 self.images.append(image)
                 thumbnail = ImageTk.PhotoImage(image.resize((50, 50)))
-                label = tk.Label(self.image_frame, image=thumbnail)
+                label = tk.Label(self.image_frame, image=str(thumbnail))
                 label.image = thumbnail
                 label.pack(side=tk.TOP, padx=5, pady=5)
                 self.image_labels.append(label)
@@ -1509,8 +1510,8 @@ class SpriteSheetMaker(tk.Toplevel):
         self.update_scrollregion()
 
     def t_add_images(self):
-        thread_PNG = threading.Thread(target=self.add_images)
-        thread_PNG.start()
+        thread_png = threading.Thread(target=self.add_images)
+        thread_png.start()
 
     def clear_images(self):
         self.add_button.configure(state="normal")
@@ -1520,8 +1521,8 @@ class SpriteSheetMaker(tk.Toplevel):
         self.image_labels.clear()
 
     def t_create_spritesheet(self):
-        thread_PNG = threading.Thread(target=self.create_spritesheet)
-        thread_PNG.start()
+        thread_png = threading.Thread(target=self.create_spritesheet)
+        thread_png.start()
 
     def create_spritesheet(self):
         self.add_button.configure(state="disabled")
@@ -1643,10 +1644,11 @@ class SpriteSheetMaker(tk.Toplevel):
         except Exception as e:
                 messagebox.showerror("错误", f"错误{e}", parent=self)
 
-class start_training_front_window:
+class StartTrainingFrontWindow:
     def __init__(self,window,combo5,combo4,temp_list_2,temp_list):
+        self.temp_list = temp_list
         self.whether_save = False
-        if temp_list_2 == []:
+        if not temp_list_2:
             result = messagebox.askyesno("线性回归", "请等待-本次计算将不会保存模型，是否需要进行计算后预测",parent=window)
             if result:
                 self.whether_save = True
@@ -1654,13 +1656,14 @@ class start_training_front_window:
                     pass
                 else:
                     if combo4.get() == "LambdaLR":
-                        self.LambdaLR_window()
+                        self.lambda_lr_window()
                     else:
                         self.pytorch_window()
             else:
                 self.whether_save = False
 
-    def LambdaLR_window_(self,code_input,window):
+    @staticmethod
+    def lambda_lr_window_(code_input, window):
         try:
             user_code = code_input.get("1.0", tk.END)
             local_vars = {}
@@ -1668,11 +1671,12 @@ class start_training_front_window:
             if 'lr_lambda' not in local_vars:
                 messagebox.showerror("错误", "未定义lr_lambda",parent=window)
                 return
+            # noinspection PyUnusedLocal
             lr_lambda = local_vars['lr_lambda']
         except Exception as e:
-            messagebox.showerror("错误", e,parent=window)
+            messagebox.showerror("错误", str(e),parent=window)
 
-    def LambdaLR_window(self):
+    def lambda_lr_window(self):
         window___ = ttk.Toplevel()
         window___.title("线性回归-LambdaLR-编写函数")
         window___.iconbitmap(icon_path)
@@ -1681,7 +1685,7 @@ class start_training_front_window:
         text_widget = tk.Text(window___, wrap="word",
                               yscrollcommand=scrollbar.set, font=font_style)
         text_widget.grid(row=1, column=0, sticky="nsew")
-        text_widget.bind('<Shift_R>', lambda event: self.LambdaLR_window_(text_widget,window___))
+        text_widget.bind('<Shift_R>', lambda event: self.lambda_lr_window_(text_widget, window___))
         idc.color_config(text_widget)
         scrollbar.config(command=text_widget.yview)
         default_code = \
@@ -1725,6 +1729,7 @@ def lr_lambda(epoch):
         sep0 = Separator(window___, orient='horizontal')
 
         text_1_x_0 = ttk.Label(f1,text="开始值")
+        # noinspection PyUnusedLocal
         text_1_x_1 = ttk.Label(f1,text="绘制学习率")
         text_1_x_2 = ttk.Label(f1,text="因子")
         text_1_x_4 = ttk.Label(f1,text="衰减周期")
@@ -1743,8 +1748,10 @@ def lr_lambda(epoch):
         text_1_x_17 = ttk.Label(f2,text="cycle_momentum")
         text_1_x_18 = ttk.Label(f2,text="每次循环中动量上限")
         text_1_x_19 = ttk.Label(f2,text="每次循环中动量下限")
+        # noinspection PyUnusedLocal
         text_1_x_20 = ttk.Label(f3,text="串联方式数")
 
+        # noinspection PyUnusedLocal
         def tool_tip():
             text_1_x_2_text =\
 '''适用于
@@ -1847,7 +1854,7 @@ CyclicLR中max_momentum在每个周期的最高点时，动量上升到 max_mome
         window___.config(menu=menu_bar)
         file_menu = tk.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="上一步", menu=file_menu)
-        menu_bar.add_command(label="下一步",command=lambda: start_training_front_window(window_, combo5, combo4, temp_list_2))
+        menu_bar.add_command(label="下一步",command=lambda: ())
 
         def grid():
             f0.grid(column=0, row=0,padx=10,pady=10)
@@ -1866,6 +1873,8 @@ CyclicLR中max_momentum在每个周期的最高点时，动量上升到 max_mome
             text_0_x_e_3.grid(column=1, row=3,padx=10,pady=10)
             text_0_x_e_4.grid(column=1, row=4,padx=10,pady=10)
 
+        grid()
+        
     @staticmethod
     def simple_window():
         pass
@@ -1876,6 +1885,7 @@ def gadget():
     def z():
         t = str(t_load(r_path) or "横排样式")
 
+        # noinspection PyPep8Naming
         def z_judge():
             gain_entry1 = entry1.get()
             gain_entry2 = entry2.get()
@@ -1883,9 +1893,9 @@ def gadget():
             gain_entry4 = entry4.get()
             gain_combobox = combobox.get()
             r = re.sub(r'[^公元前\d]+', '', gain_entry1)
-            r_ = re.sub(r'[^\d]+',"",gain_entry2)
-            r__ = re.sub(r'[^\d]+',"",gain_entry3)
-            r___ = re.sub(r'[^\d]+',"",gain_entry4)
+            r_ = re.sub(r'\D+',"",gain_entry2)
+            r__ = re.sub(r'\D+',"",gain_entry3)
+            r___ = re.sub(r'\D+',"",gain_entry4)
             r____ = re.sub(r'^(?!男$|女$|其它$).+$',"",gain_combobox)
             if gain_entry1 and (r != gain_entry1):
                 messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
@@ -1900,7 +1910,7 @@ def gadget():
             elif not (r and r_ and r__ and r___ and r____):
                 messagebox.showerror("错误", message="并未输入值", parent=window)
             else:
-                    date = datetime.datetime(int(re.sub(r'[^\d]+',"",r)), int(r_), int(r__)).date()
+                    datetime.datetime(int(re.sub(r'\D+',"",r)), int(r_), int(r__)).date()
                     if not (0 < int(r___) <= 24):
                         messagebox.showerror("错误", message="错误的日期", parent=window)
                     else:
@@ -1927,6 +1937,7 @@ def gadget():
                              = "天干地支：{}\n干支五行：{}\n干支阴阳：{}\n干支生肖：{}\n儒略日【傍晚】：{}\n儒略日【正午】：{}\n简化儒略日：{}\n五行局：{}\n{}\n"\
                             .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,wuXingju,male_or_female)
 
+                        # noinspection PyPep8Naming
                         def z_t():
                             支_dict ={
                                 "子":1,
@@ -1999,6 +2010,7 @@ def gadget():
                                 w12_l.grid(row=10,column=0)
                                 w13_l.grid(row=10,column=0)
 
+                            # noinspection PyPep8Naming
                             def twelve_god():
                                 match Ming:
                                     case "子":
@@ -2467,6 +2479,7 @@ def gadget():
                                         ___________.grid(row=9,column=0)
                                         ____________.grid(row=9,column=0)
 
+                            # noinspection PyPep8Naming
                             def confirm_ziWei_and_ziWei_five():
                                 match ziWei:
                                     case "子":
@@ -4464,7 +4477,8 @@ def gadget():
 
                                 grid_deploy()
 
-                            def confirm_ziWei_time_and_month_and_day_group():
+                            # noinspection PyPep8Naming,PyUnusedLocal
+                            def confirm_zi_wei_time_and_month_and_day_group():
                                 Shen_num = 支_dict[Shen]
                                 nianZhi_num = 支_dict[nianZhi]
                                 Ming_num = 支_dict[Ming]
@@ -5362,7 +5376,7 @@ def gadget():
                             twelve_god()
                             person()
                             confirm_ziWei_and_ziWei_five()
-                            confirm_ziWei_time_and_month_and_day_group()
+                            confirm_zi_wei_time_and_month_and_day_group()
 
                             window_z.grid_rowconfigure(1, weight=1)
                             window_z.grid_columnconfigure(1, weight=1)
@@ -5377,7 +5391,7 @@ def gadget():
 
         match t:
             case "横排样式":
-                window = ttk.Toplevel(root)
+                window = ttk.Toplevel(str(root))
                 window.title("紫微斗数")
                 window.iconbitmap(icon_path)
                 text1 = tk.Label(window,text="年:")
@@ -5412,7 +5426,7 @@ def gadget():
                 entry4.bind('<Shift_R>', lambda event: z_judge())
                 combobox.bind('<Shift_R>', lambda event: z_judge())
             case "竖排样式":
-                window = ttk.Toplevel(root)
+                window = ttk.Toplevel(str(root))
                 window.title("紫微斗数")
                 window.iconbitmap(icon_path)
                 text1 = tk.Label(window,text="年:")
@@ -5467,8 +5481,8 @@ def gadget():
         }
 
         def regression_data_save():
-            with open(regression_data_path, 'w', encoding='utf-8') as f:
-                json.dump(regression_data, f, indent=4)
+            with open(regression_data_path, 'w', encoding='utf-8') as file:
+                json.dump(regression_data, file, indent=4)
 
         def regression_data_load():
             nonlocal selected_index,selected_index_2,selected_index_3,combo4_text,combo5_text
@@ -5476,8 +5490,8 @@ def gadget():
             if not os.path.exists(regression_data_path):
                 regression_data_save()
             try:
-                with open(regression_data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
+                with open(regression_data_path, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
                     selected_index = int(data["特征缩放"])
                     selected_index_2 = int(data["损失函数"])
                     selected_index_3 = int(data["优化方法"])
@@ -5490,13 +5504,13 @@ def gadget():
         regression_data_load()
 
         def list_language_save_path():
-            with open(list_language_path, 'w', encoding='utf-8') as f:
-                f.write(language)
+            with open(list_language_path, 'w', encoding='utf-8') as file:
+                file.write(language)
 
         def list_language_load_path():
             try:
-                with open(list_language_path, 'r', encoding='utf-8') as f:
-                    return f.read()
+                with open(list_language_path, 'r', encoding='utf-8') as file:
+                    return file.read()
             except FileNotFoundError:
                     return None
 
@@ -5520,6 +5534,7 @@ def gadget():
             ToolTip(wb2, text=f"已定义保存数据位置{data_path}")
             text_1_1.insert(END, data_path)
 
+        # noinspection PyShadowingBuiltins
         def test_input(input):
             if re.match(r'^\d+,\d+$|^\d+，\d+$', input):
                 if temp_list:
@@ -5684,10 +5699,10 @@ def gadget():
         window_.config(menu=menu_bar)
 
         def whether_path(temp_list):
-            if temp_list == []:
+            if not temp_list:
                 messagebox.showinfo("测试", message="没有数据文件", parent=window_)
             else:
-                start_training_front_window(window_, combo5, combo4, temp_list_2, temp_list)
+                StartTrainingFrontWindow(window_, combo5, combo4, temp_list_2, temp_list)
 
         file_menu = tk.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="语言", menu=file_menu)
@@ -5908,7 +5923,7 @@ def gadget():
         change_tooltip_text_4()
         change_tooltip_text_5()
 
-    def Triangle():
+    def triangle():
         pass
 
     def picture():
@@ -5919,15 +5934,15 @@ def gadget():
 
             def root_w_4_3_load():
                 try:
-                    with open(w_path, 'r',encoding='utf-8') as f:
-                        return f.read()
+                    with open(w_path, 'r',encoding='utf-8') as file:
+                        return file.read()
                 except FileNotFoundError:
                     pass
 
             def root_w_4_3_load_2():
                 try:
-                    with open(x_path, 'r',encoding='utf-8') as f:
-                        return f.read()
+                    with open(x_path, 'r',encoding='utf-8') as file:
+                        return file.read()
                 except FileNotFoundError:
                     pass
 
@@ -5941,16 +5956,16 @@ def gadget():
                 color = colorchooser.askcolor(parent=window__)
                 rgb_ = color[0]
 
-            def color_RGB():
+            def color_rgb():
                 if rgb is None or rgb_ is None:
                     messagebox.showerror("错误", message="没有值", parent=window__)
                     return
-                if not PNG_path:
+                if not png_path:
                     messagebox.showerror("错误", message="没有路径", parent=window__)
                     return
 
                 try:
-                    for path in PNG_path:
+                    for path in png_path:
                         img = Image.open(path).convert("RGB")
                         datas = np.array(img)
 
@@ -5967,7 +5982,7 @@ def gadget():
                 except Exception as e:
                     messagebox.showerror("错误", message=f"处理图像时出错: {e}", parent=window__)
 
-            def color_RGBA():
+            def color_rgba():
                 try:
                     entry1_value = entry1.get()
                     entry2_value = entry2.get()
@@ -5988,11 +6003,11 @@ def gadget():
                         messagebox.showerror("错误", message="没有值", parent=window__)
                         return
 
-                    if not PNG_path:
+                    if not png_path:
                         messagebox.showerror("错误", message="没有路径", parent=window__)
                         return
 
-                    for path in PNG_path:
+                    for path in png_path:
                         img = Image.open(path).convert("RGBA")
                         datas = np.array(img)
 
@@ -6000,23 +6015,23 @@ def gadget():
 
                         if entry1_value == "保留原本":
                             if entry2_value_int is not None:
-                                datas[mask] = [rgb_[0], rgb_[1], rgb_[2], entry2_value_int]
+                                datas[mask] = [rgb_, rgb_, rgb_, entry2_value_int]
                             else:
-                                datas[mask] = [rgb_[0], rgb_[1], rgb_[2], datas[mask, 3]]
+                                datas[mask] = [rgb_, rgb_, rgb_, datas[mask, 3]]
                         else:
                             if entry2_value_int is not None:
-                                datas[mask] = [rgb_[0], rgb_[1], rgb_[2], entry2_value_int]
+                                datas[mask] = [rgb_, rgb_, rgb_, entry2_value_int]
                             datas[:, :, 3] = entry1_value_int if entry1_value_int is not None else datas[:, :, 3]
 
                         img = Image.fromarray(datas, 'RGBA')
                         img.save(path, "PNG")
                     messagebox.showinfo("完成", "颜色转换完成", parent=window__)
-                except Exception as e:
-                    messagebox.showerror("错误", message=f"发生错误: {str(e)}", parent=window__)
+                except Exception as error:
+                    messagebox.showerror("错误", message=f"发生错误: {str(error)}", parent=window__)
 
-            def is_valid_hex_color(color):
+            def is_valid_hex_color(color_):
                 pattern = re.compile(r'^#[0-9A-Fa-f]{6}$', re.IGNORECASE)
-                return bool(pattern.match(color))
+                return bool(pattern.match(color_))
 
             def hex_to_rgb(hex_value):
 
@@ -6028,36 +6043,36 @@ def gadget():
                 g = int(hex_value[2:4], 16)
                 b = int(hex_value[4:6], 16)
 
-                return (r, g, b)
+                return r, g, b
 
-            def color_RGBA_16():
+            def color_rgba_16():
                 nonlocal rgb,rgb_
                 if is_valid_hex_color(entry1_1.get()) and is_valid_hex_color(entry2_1.get()):
-                    if not PNG_path:
+                    if not png_path:
                         messagebox.showerror("错误", message="没有路径", parent=window__)
                         return
                     rgb = hex_to_rgb(entry1_1.get())
                     rgb_ = hex_to_rgb(entry2_1.get())
-                    color_RGBA()
+                    color_rgba()
                 else:
                     messagebox.showerror("错误", message="十六进制错误", parent=window__)
 
-            def color_RGB_16():
+            def color_rgb_16():
                 nonlocal rgb,rgb_
                 if is_valid_hex_color(entry1_1.get()) and is_valid_hex_color(entry2_1.get()):
-                    if not PNG_path:
+                    if not png_path:
                         messagebox.showerror("错误", message="没有路径", parent=window__)
                         return
                     rgb = hex_to_rgb(entry1_1.get())
                     rgb_ = hex_to_rgb(entry2_1.get())
-                    color_RGB()
+                    color_rgb()
                 else:
                     messagebox.showerror("错误", message="十六进制错误", parent=window__)
 
             def is_valid_rgb(rgb):
                 return all(0 <= value <= 255 for value in rgb)
 
-            def color_RGBA_RGB():
+            def color_rgba_rgb():
                 nonlocal rgb,rgb_
                 entry1_2_t = entry1_2.get()
                 entry2_2_t = entry2_2.get()
@@ -6065,13 +6080,13 @@ def gadget():
                 rgb = tuple(map(int, entry1_2_t.split(',')))
                 rgb_ = tuple(map(int, entry2_2_t.split(',')))
                 if is_valid_rgb(rgb) and is_valid_rgb(rgb_):
-                    if not PNG_path:
+                    if not png_path:
                         messagebox.showerror("错误", message="没有路径", parent=window__)
-                    color_RGBA()
+                    color_rgba()
                 else:
                     messagebox.showerror("错误", message="RGB值错误", parent=window__)
 
-            def color_RGB_RGB():
+            def color_rgb_rgb():
                 nonlocal rgb,rgb_
                 entry1_2_t = entry1_2.get()
                 entry2_2_t = entry2_2.get()
@@ -6079,9 +6094,9 @@ def gadget():
                 rgb = tuple(map(int, entry1_2_t.split(',')))
                 rgb_ = tuple(map(int, entry2_2_t.split(',')))
                 if all(0 <= x <= 225 for x in rgb) and all(0 <= x <= 225 for x in rgb_):
-                    if not PNG_path:
+                    if not png_path:
                         messagebox.showerror("错误", message="没有路径", parent=window__)
-                    color_RGB()
+                    color_rgb()
                 else:
                     messagebox.showerror("错误", message="RGB值错误", parent=window__)
 
@@ -6191,7 +6206,7 @@ def gadget():
                 window_.wm_attributes('-topmost', 0)
 
 
-            window__ = ttk.Toplevel(window_)
+            window__ = ttk.Toplevel(str(window_))
             window__.title("颜色转换")
             window__.iconbitmap(icon_path)
             window__.bind("<Shift_R>", lambda event: exit_win())
@@ -6200,7 +6215,7 @@ def gadget():
             f.grid(column=0, row=0, padx=10, pady=10)
 
             t = str(root_w_4_3_load() or "颜色选择器")
-            t_ = str(root_w_4_3_load_2() or "RBGA")
+            t_ = str(root_w_4_3_load_2() or "RGBA")
 
             if t == "颜色选择器":
                 wb1_ = ttk.Button(f, text="颜色选择器", style=OUTLINE, command=choose_color)
@@ -6220,13 +6235,13 @@ def gadget():
                     entry2.insert(tk.END, "255")
                     entry1.bind("<Return>", lambda event: entry2.focus_set())
                     entry2.bind("<Return>", lambda event: entry1.focus_set())
-                    entry1.bind('<Shift_L>', lambda event: color_RGBA())
-                    entry2.bind('<Shift_L>', lambda event: color_RGBA())
-                    wb1_.bind("<Button-3>", lambda event: color_RGBA())
-                    wb2_.bind("<Button-3>", lambda event: color_RGBA())
+                    entry1.bind('<Shift_L>', lambda event: color_rgba())
+                    entry2.bind('<Shift_L>', lambda event: color_rgba())
+                    wb1_.bind("<Button-3>", lambda event: color_rgba())
+                    wb2_.bind("<Button-3>", lambda event: color_rgba())
                 elif t_ == "RGB":
-                    wb1_.bind("<Button-3>", lambda event: color_RGB())
-                    wb2_.bind("<Button-3>", lambda event: color_RGB())
+                    wb1_.bind("<Button-3>", lambda event: color_rgb())
+                    wb2_.bind("<Button-3>", lambda event: color_rgb())
             elif t == "十六进制":
                 entry1_1 = tk.Entry(f)
                 entry1_1.grid(column=1, row=0, padx=5, pady=5)
@@ -6247,13 +6262,13 @@ def gadget():
                     entry2.bind("<Return>", lambda event: entry1_1.focus_set())
                     entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
                     entry2_1.bind("<Return>", lambda event: entry1.focus_set())
-                    entry1.bind('<Shift_L>', lambda event: color_RGBA_16())
-                    entry2.bind('<Shift_L>', lambda event: color_RGBA_16())
-                    entry1_1.bind('<Shift_L>', lambda event: color_RGBA_16())
-                    entry2_1.bind('<Shift_L>', lambda event: color_RGBA_16())
+                    entry1.bind('<Shift_L>', lambda event: color_rgba_16())
+                    entry2.bind('<Shift_L>', lambda event: color_rgba_16())
+                    entry1_1.bind('<Shift_L>', lambda event: color_rgba_16())
+                    entry2_1.bind('<Shift_L>', lambda event: color_rgba_16())
                 elif t_ == "RGB":
-                    entry1_1.bind('<Shift_L>', lambda event: color_RGB_16())
-                    entry2_1.bind('<Shift_L>', lambda event: color_RGB_16())
+                    entry1_1.bind('<Shift_L>', lambda event: color_rgb_16())
+                    entry2_1.bind('<Shift_L>', lambda event: color_rgb_16())
                     entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
                     entry2_1.bind("<Return>", lambda event: entry1_1.focus_set())
             elif t == "RGB值":
@@ -6278,15 +6293,15 @@ def gadget():
                     entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
                     entry2_2.bind("<Return>", lambda event: entry1.focus_set())
 
-                    entry1.bind('<Shift_L>', lambda event: color_RGBA_RGB())
-                    entry2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
-                    entry1_2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
-                    entry2_2.bind('<Shift_L>', lambda event: color_RGBA_RGB())
+                    entry1.bind('<Shift_L>', lambda event: color_rgba_rgb())
+                    entry2.bind('<Shift_L>', lambda event: color_rgba_rgb())
+                    entry1_2.bind('<Shift_L>', lambda event: color_rgba_rgb())
+                    entry2_2.bind('<Shift_L>', lambda event: color_rgba_rgb())
                 elif t_ == "RGB":
                     entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
                     entry2_2.bind("<Return>", lambda event: entry1_2.focus_set())
-                    entry1_2.bind('<Shift_L>', lambda event: color_RGB_RGB())
-                    entry2_2.bind('<Shift_L>', lambda event: color_RGB_RGB())
+                    entry1_2.bind('<Shift_L>', lambda event: color_rgb_rgb())
+                    entry2_2.bind('<Shift_L>', lambda event: color_rgb_rgb())
 
 
             text = ttk.Label(f, text="需要转换的颜色：")
@@ -6309,10 +6324,10 @@ def gadget():
             canvas_frame.columnconfigure(0, weight=1)
             canvas_frame.rowconfigure(0, weight=1)
 
-            PNG_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片', filetypes=[("PNG", "*.PNG")],parent=window__)
+            png_path = filedialog.askopenfilenames(title='请选择需要颜色转换的图片', filetypes=[("PNG", "*.PNG")],parent=window__)
 
             def PNG():
-                if PNG_path:
+                if png_path:
                     window__.focus_set()
                     window__.wm_attributes('-disabled', 1)
                     icon.notify("已开始导入，请耐心等待\n导入期间，当前窗口将被禁用\n强制退出<右Shift>", "Lightweight text editor")
@@ -6320,7 +6335,7 @@ def gadget():
 
                     all_colors = set()
 
-                    for file_path in PNG_path:
+                    for file_path in png_path:
                         colors = get_image_colors(file_path)
                         all_colors.update(colors)
 
@@ -6336,7 +6351,7 @@ def gadget():
                 window_.wm_attributes('-topmost', 1)
                 window_.wm_attributes('-topmost', 0)
 
-            window__ = ttk.Toplevel(window_)
+            window__ = ttk.Toplevel(str(window_))
             window__.title("格式转换")
             window__.iconbitmap(icon_path)
             window__.bind("<Shift_R>", lambda event: exit_win())
@@ -6353,8 +6368,8 @@ def gadget():
 
                                 base, _ = os.path.splitext(file_path)
                                 new_file_path = f"{base}.bin"
-                                with open(new_file_path, 'wb') as f:
-                                    img.save(f, format='BMP')
+                                with open(new_file_path, 'wb') as file:
+                                    img.save(file, format='BMP')
 
                         except Exception as e:
                             print(f"Error converting {file_path}: {e}")
@@ -6379,13 +6394,13 @@ def gadget():
                 thread_PNG.start()
 
             def down_box_save_1():
-                    with open(y_path, 'w',encoding='utf-8') as f:
-                        f.write(str(down_box.get()))
+                    with open(y_path, 'w',encoding='utf-8') as file:
+                        file.write(str(down_box.get()))
 
             def w_4_3_load():
                     try:
-                        with open(y_path, 'r',encoding='utf-8') as f:
-                            return f.read()
+                        with open(y_path, 'r',encoding='utf-8') as file:
+                            return file.read()
                     except FileNotFoundError:
                         pass
 
@@ -6414,7 +6429,7 @@ def gadget():
         wb3.grid(column=2,row=0,padx=10,pady=10)
 
 
-    window = ttk.Toplevel(root)
+    window = ttk.Toplevel(str(root))
     window.title("轻量记事本-小工具")
     window.iconbitmap(icon_path)
     b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=x)
@@ -6423,7 +6438,7 @@ def gadget():
     b2.grid(column=1,row=0,padx=10,pady=10)
     b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=regression)
     b3.grid(column=2,row=0,padx=10,pady=10)
-    b4 = ttk.Button(window, text="三角形计算", style=OUTLINE, command=Triangle)
+    b4 = ttk.Button(window, text="三角形计算", style=OUTLINE, command=triangle)
     b4.grid(column=3,row=0,padx=10,pady=10)
     b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=picture)
     b5.grid(column=4,row=0,padx=10,pady=10)
@@ -6701,8 +6716,8 @@ def set_window():
             w_4_1_path = os.path.join(p, "w_4_1_path")
             down_box = ttk.Combobox(w_4_1, values=["农历时起卦", "新历时起卦", "随机数起卦","五行起卦","八卦起卦","八卦五行起卦"], state="readonly")
             down_box.grid(row=2, column=1, padx=10, pady=10,sticky=W)
-            down_box.bind("<<ComboboxSelected>>", lambda event: new_x.down_box_save_1(w_4_1_path, down_box))
-            t = str(new_x.w_4_3_load(w_4_1_path) or "随机数起卦")
+            down_box.bind("<<ComboboxSelected>>", lambda event: NewX.down_box_save_1(w_4_1_path, down_box))
+            t = str(NewX.w_4_3_load(w_4_1_path) or "随机数起卦")
             down_box.set(t)
 
 
@@ -6730,24 +6745,24 @@ def set_window():
         def w_4_3_():
 
             def down_box_save_1():
-                with open(w_path, 'w',encoding='utf-8') as f:
-                    f.write(str(down_box.get()))
+                with open(w_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box.get()))
 
             def down_box_save_2():
-                with open(x_path, 'w',encoding='utf-8') as f:
-                    f.write(str(down_box2.get()))
+                with open(x_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box2.get()))
 
             def w_4_3_load():
                 try:
-                    with open(w_path, 'r',encoding='utf-8') as f:
-                        return f.read()
+                    with open(w_path, 'r',encoding='utf-8') as file:
+                        return file.read()
                 except FileNotFoundError:
                     pass
 
             def w_4_3_load_2():
                 try:
-                    with open(x_path, 'r',encoding='utf-8') as f:
-                        return f.read()
+                    with open(x_path, 'r',encoding='utf-8') as file:
+                        return file.read()
                 except FileNotFoundError:
                     pass
 
@@ -6769,7 +6784,7 @@ def set_window():
             t_ = str(w_4_3_load_2() or "RGBA")
             match t_:
                 case "RGBA":
-                    down_box2.set("RBGA")
+                    down_box2.set("RGBA")
                 case "RGB":
                     down_box2.set("RGB")
 
@@ -6804,17 +6819,17 @@ def set_window():
         def w_4_2_():
 
             def event_t():
-                with open(r_path, 'w',encoding='utf-8') as f:
-                    f.write(str(down_box.get()))
+                with open(r_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box.get()))
                 w_root5()
 
             def down_box2_save():
-                with open(s_path, 'w',encoding='utf-8') as f:
-                    f.write(str(down_box2.get()))
+                with open(s_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box2.get()))
 
             def down_box3_save():
-                with open(t_path, 'w',encoding='utf-8') as f:
-                    f.write(str(down_box3.get()))
+                with open(t_path, 'w',encoding='utf-8') as file:
+                    file.write(str(down_box3.get()))
 
             down_box = ttk.Combobox(w_4_2, values=["横排样式", "竖排样式", "自定义样式【未完成】"], state="readonly")
             down_box.grid(row=0, column=1, padx=5, pady=5)
@@ -6999,12 +7014,14 @@ def two_window():
         window2.iconbitmap(icon_path)
         window2.resizable( width=False, height=False )
         window2.wm_attributes("-topmost", True)
-        lbl = ttk.Label(window2, text="查找:").grid(row=0, column=0, padx=5, pady=5)
+        lbl = ttk.Label(window2, text="查找:")
+        lbl.grid(row=0, column=0, padx=5, pady=5)
         entry = tk.Entry(window2, width=30)
         entry.grid(row=0, column=1,padx=5,pady=5)
         entry.bind("<Return>", lambda event: mySearch())
         entry.focus_set()
-        lb2 = ttk.Label(window2, text="替换:").grid(row=1, column=0, padx=5, pady=5)
+        lb2 = ttk.Label(window2, text="替换:")
+        lb2.grid(row=1, column=0, padx=5, pady=5)
         entry2 = tk.Entry(window2, width=30)
         entry2.grid(row=1, column=1,padx=5,pady=5)
         entry2.bind("<Return>", lambda event: replace())
@@ -7019,6 +7036,7 @@ def two_window():
 def toggle_window():
     global window2
     if window2:
+        # noinspection PyUnresolvedReferences
         window2.destroy()
         window2 = None
     else:
@@ -7029,9 +7047,9 @@ def save_2():
         file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
             ("Text files", "*.txt"), ("All files", "*.*")])
 
-        with open(a_path, 'w',encoding='utf-8') as f:
+        with open(a_path, 'w',encoding='utf-8') as file:
              lines = text_widget.get("1.0","end")
-             f.writelines(lines)
+             file.writelines(lines)
 
         if file_path:
             shutil.copy(a_path, file_path)
@@ -7043,11 +7061,11 @@ def save_2():
 def read(filename, msg):
     def read_and_split():
         global index,index_,t_size
-        with open(msg, 'r',encoding='utf-8',errors = 'ignore') as f:
+        with open(msg, 'r',encoding='utf-8',errors = 'ignore') as file:
             index = 0
             while True:
-                f.seek(index * t_divide_up)
-                data = f.read(t_divide_up)
+                file.seek(index * t_divide_up)
+                data = file.read(t_divide_up)
                 if not data:
                     folder = os.path.join(p, "text-temp")
                     try:
@@ -7075,8 +7093,8 @@ def read(filename, msg):
                                 division08=division*0.1
                                 progressbarOne['value'] -= division08
 
-                                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
-                                    a = f.read()
+                                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as file:
+                                    a = file.read()
                                     progressbarOne['value'] += division08
                                     text_widget.insert(tk.END, a)
                                     window3.destroy()
@@ -7084,8 +7102,8 @@ def read(filename, msg):
                             break
                     break
 
-                with open(f'{filename}_{index}', 'w',encoding='utf-8',errors = 'ignore') as f1:
-                    f1.write(str(data))
+                with open(f'{filename}_{index}', 'w',encoding='utf-8',errors = 'ignore') as file:
+                    file.write(str(data))
                 index += 1
                 progressbarOne['value'] += 1
 
@@ -7106,11 +7124,11 @@ def save_ff():
          while True:
              try:
                  folder_t = (folder + "\\" + f'{filename}_{index}')
-                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as f:
-                     a = f.read()
+                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as file:
+                     a = file.read()
                      index += 1
-                 with open(filename_,'a',encoding='utf-8',errors = 'ignore') as f:
-                     f.write(a)
+                 with open(filename_,'a',encoding='utf-8',errors = 'ignore') as file:
+                     file.write(a)
                      progressbarOne2['value'] += 1
              except:
                  index -= 1
@@ -7130,13 +7148,14 @@ def save_ff():
     division = size//t_divide_up
     window4 = tk.Toplevel(root)
     window4.title("保存")
-    window4.resizable(0, 0)
+    window4.resizable(None, None)
     window4.iconbitmap(icon_path)
     window4.minsize(400, 50)
     window4.maxsize(400, 50)
     window4.wm_attributes("-topmost", True)
     root.attributes("-disabled", 1)
-    lbl = ttk.Label(window4, text="正在保存中").pack(padx=5, pady=5)
+    lbl = ttk.Label(window4, text="正在保存中")
+    lbl.pack(padx=5, pady=5)
     def on2():
         messagebox.showerror("错误", message="正在保存中，请勿退出",parent=window4)
     progressbarOne2 = ttk.Progressbar(window4,style="striped")
@@ -7153,17 +7172,17 @@ def save_t():
      filename = os.path.basename(msg)
      if os.path.exists(msg):
         if size < t_size:
-            with open(msg, 'w', encoding='utf-8') as f:
+            with open(msg, 'w', encoding='utf-8') as file:
                 lines = text_widget.get("1.0","end")
-                f.writelines(lines)
+                file.writelines(lines)
                 icon.notify("文件已成功保存", "Lightweight text editor")
         else:
             if index_ ==  1:
                 folder = os.path.join(p, "text-temp")
                 folder_t = (folder + "\\" + f'{filename}_{index}')
-                with open(folder_t, 'w',encoding='utf-8') as f:
+                with open(folder_t, 'w',encoding='utf-8') as file:
                     lines = text_widget.get("1.0","end")
-                    f.writelines(lines)
+                    file.writelines(lines)
                     save_ff()
             else:
                 pass
@@ -7179,19 +7198,19 @@ def i(files):
     size = os.path.getsize(msg)
 
     if size < t_size:
-        with open(msg, 'r', encoding='utf-8') as f:
-            data = f.read()
+        with open(msg, 'r', encoding='utf-8') as file:
+            data = file.read()
             text_widget.insert(tk.END, data)
 
     elif onandoff == ("关闭"):
 
         def save_ttt():
             icon.notify("正在导入文件，不建议操作当前窗口", "Lightweight text editor")
-            with open(msg, 'r', encoding='utf-8') as f:
+            with open(msg, 'r', encoding='utf-8') as file:
 
                 while True:
 
-                    data = f.readlines(circular_num)
+                    data = file.readlines(circular_num)
 
                     if not data:
                         icon.notify("导入成功", "Lightweight text editor")
@@ -7207,7 +7226,7 @@ def i(files):
         division = size//t_divide_up
         window3 = tk.Toplevel(root)
         window3.title("导入")
-        window3.resizable(0, 0)
+        window3.resizable(None, None)
         window3.iconbitmap(icon_path)
         window3.minsize(400, 50)
         window3.maxsize(400, 50)
@@ -7232,18 +7251,18 @@ def next_page():
          index += 1
          folder = os.path.join(p, "text-temp")
          folder_t = (folder + "\\" + f'{filename}_{index}')
-         with open(folder_t, 'r',encoding='utf-8') as f:
+         with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
-             next_page_text = f.read()
+             next_page_text = file.read()
              text_widget.insert(tk.END, next_page_text)
         except:
             messagebox.showerror("错误", message="已经是尾页",parent=root)
             index -= 1
             folder = os.path.join(p, "text-temp")
             folder_t = (folder + "\\" + f'{filename}_{index}')
-            with open(folder_t, 'r',encoding='utf-8') as f:
+            with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
-             next_page_text = f.read()
+             next_page_text = file.read()
              text_widget.insert(tk.END, next_page_text)
     else:
         messagebox.showerror("错误", message="仅限大文件操作",parent=root)
@@ -7255,18 +7274,18 @@ def return_page():
          index -= 1
          folder = os.path.join(p, "text-temp")
          folder_t = (folder + "\\" + f'{filename}_{index}')
-         with open(folder_t, 'r',encoding='utf-8') as f:
+         with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
-             return_page_text = f.read()
+             return_page_text = file.read()
              text_widget.insert(tk.END, return_page_text)
         except:
             messagebox.showerror("错误", message="已经是首页",parent=root)
             index += 1
             folder = os.path.join(p, "text-temp")
             folder_t = (folder + "\\" + f'{filename}_{index}')
-            with open(folder_t, 'r',encoding='utf-8') as f:
+            with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
-             return_page_text = f.read()
+             return_page_text = file.read()
              text_widget.insert(tk.END, return_page_text)
     else:
         messagebox.showerror("错误", message="仅限大文件操作",parent=root)
@@ -7275,7 +7294,7 @@ def sever():
     w.grid_forget()
     window = tk.Toplevel(root)
     window.title("分离控制")
-    window.resizable(0, 0)
+    window.resizable(None, None)
     window.iconbitmap(icon_path)
     window.minsize(400, 50)
     window.maxsize(400, 50)
@@ -7322,7 +7341,7 @@ if __name__ == '__main__':
     ab_path = os.path.join(p,"ab")
     icon_path = os.path.join(p, "aaa.ico")
     error_path = os.path.join(p,"error.png")
-    v = int(load() or 0)
+    v = int(t_load(c_path) or 0)
     v2 = int(t_load(d_path) or 1)
     v3 = int(t_load(e_path) or 0)
     v4 = int(t_load(f_path) or 0)
@@ -7332,9 +7351,9 @@ if __name__ == '__main__':
     var_num_w_4_3 = int(t_load(z_path) or 1)
     var2_num_w_4_3 = int(t_load(aa_path) or 0)
     var3_num_w_4_3 = int(t_load(ab_path) or 0)
-    _size_ = (t_loda(h_path) or "70MB")
-    divide_up = (t_loda(i_path) or "等于大文件定义")
-    onandoff = (t_loda(j_path) or "开启")
+    _size_ = (t_load(h_path) or "70MB")
+    divide_up = (t_load(i_path) or "等于大文件定义")
+    onandoff = (t_load(j_path) or "开启")
     circular = (t_load(k_path) or "30MB")
     t_rule_num = int(t_load(p_path) or 1)
     t_rule_num2 = int(t_load(q_path) or 2)
@@ -7439,10 +7458,10 @@ if __name__ == '__main__':
     try:
         if v % 2 == 1:
             text_widget.delete('1.0', tk.END)
-            with open(a_path, 'r',encoding='utf-8') as f:
-                data = f.read()
+            with open(a_path, 'r',encoding='utf-8') as f_:
+                data = f_.read()
                 text_widget.insert(tk.END, data)
-    except Exception as e:
-        messagebox.showerror("错误", f"发生错误: {e}")
+    except Exception as error:
+        messagebox.showerror("错误", f"发生错误: {error}")
 
     root.mainloop()
