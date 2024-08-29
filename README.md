@@ -1,28 +1,12 @@
 ## sum-up总结
 
-未来，在保证轻量化的同时，还将在软件中增加更多功能
+软件目前还有许多需要补全，请等待
+目前，小六壬已经完成70%，紫微斗数10%
+目前，支持基本的图片操作，并且会在下一个版本实现线性回归模块的大量内容
 
-软件开发将侧重自动算命，目前开发重点为搭建自动算命框架
-
-小六壬框架完成50%
-
-紫微斗数框架搭建完成10%
-
-目前我们还未涉及到AI，预计今年九月份可以涉及到AI
-
-目前我们支持基本的图片操作
-
-In the future, more functions will be added to the software while ensuring weight reduction
-
-Software development will focus on automatic fortune telling, and the current development focus is on building an automated fortune-telling framework
-
-50% completion of the small six-piece frame
-
-The construction of the Ziwei Doushu frame is 10% complete
-
-At the moment, we have not yet touched on AI, and we expect to do so in September this year
-
-We currently support basic image manipulation
+The software still has a lot to be completed, please wait!
+At present, 70% of Xiao Liu Nun has been completed, and 10% of Zi Wei Dou Shu.
+Currently, basic image manipulation is supported, and a lot of the linear regression module will be implemented in the next release
 
 ## Current Usage & Support使用方法与支持
 
