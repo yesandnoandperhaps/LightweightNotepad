@@ -1,5 +1,6 @@
 ## sum-up总结
 软件目前还有许多需要补全，请等待
+
 The software still has a lot of catching up to do, so please wait!
 
 ## Current Usage & Support使用方法与支持
