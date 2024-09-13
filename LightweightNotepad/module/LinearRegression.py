@@ -1,15 +1,12 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 import torch
 import torch.nn as nn
-import torch_directml
 import torch.optim as optim
-from sklearn.metrics import mean_squared_error, r2_score
-from torch.optim.lr_scheduler import LambdaLR,StepLR,MultiStepLR\
-    ,ExponentialLR,CosineAnnealingLR,ReduceLROnPlateau,CyclicLR\
-    ,CosineAnnealingWarmRestarts,PolynomialLR,ConstantLR,ChainedScheduler
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
+import torch_directml
 from sklearn.linear_model import LinearRegression as SLinearRegression
-import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 
 class FeatureScaling:
@@ -373,7 +370,7 @@ class LinearRegression:
         }
         '''
 if __name__ == '__main__':
-    path = r"D:\LightweightNotepad\LightweightNotepad\啊.csv"
+    path = r"D:\LightweightNotepad\LightweightNotepad\data\啊.csv"
     scaler = LinearRegression("批量梯度下降", "均方误差","a",0.01,6500,"z-score_normalization",path,"0,2","3,3","gpu")
     scaled_data = scaler.linear_regression()
     print(scaled_data)

@@ -23,11 +23,9 @@ from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 from ttkbootstrap.tooltip import ToolTip
 
-import LinearRegression
-import XiaoLiuren
-import ZiWeidoushu
-import JsonFile
-
+from function import JsonFile
+from module import ZiWeidoushu, XiaoLiuren, LinearRegression
+from function.ProjectVariables import UTC_TIME
 
 class CustomToolTip(ToolTip):
     def update_text(self, text):
@@ -1423,7 +1421,7 @@ def x():
     def generate_and_display():
         text_widget.delete(1.0, END)
         if combo.get() == "算一卦":
-            text_widget.insert(tk.END,XiaoLiuren.numgua())
+            text_widget.insert(tk.END, XiaoLiuren.numgua())
         if combo.get() == "起卦":
             pass
     combo = ttk.Combobox(window, values=["起卦","算一卦"], state="readonly")
@@ -1489,6 +1487,7 @@ def x():
     window.grid_columnconfigure(0, weight=1)
 
     window.mainloop()
+
 ###分割线
 #关于紫微斗数###分割线
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
@@ -2532,7 +2531,7 @@ def gadget():
                                         ___________.grid(row=9,column=0)
                                         ____________.grid(row=9,column=0)
 
-                            # noinspection PyPep8Naming
+                            # noinspection PyPep8Naming,SpellCheckingInspection
                             def confirm_ziWei_and_ziWei_five():
                                 match ziWei:
                                     case "子":
@@ -4530,7 +4529,7 @@ def gadget():
 
                                 grid_deploy()
 
-                            # noinspection PyPep8Naming,PyUnusedLocal,PyUnboundLocalVariable
+                            # noinspection PyPep8Naming,PyUnusedLocal,PyUnboundLocalVariable,SpellCheckingInspection
                             def confirm_zi_wei_time_and_month_and_day_group():
                                 Shen_num = 支_dict[Shen]
                                 nianZhi_num = 支_dict[nianZhi]
@@ -5595,7 +5594,7 @@ def gadget():
             if re.match(r'^\d+,\d+$|^\d+，\d+$', input):
                 if temp_list:
                     input_columns = LinearRegression.FeatureScaling.extract_columns(input)
-                    data = LinearRegression.FeatureScaling.load_data(temp_list[0],input_columns)
+                    data = LinearRegression.FeatureScaling.load_data(temp_list[0], input_columns)
                     messagebox.showinfo("测试", message=f"特征数据列：{data.columns.tolist()}\n特征数量：{len(data.columns.tolist())}", parent=window_)
                 else:
                     messagebox.showerror("错误", message="错误，没有文件", parent=window_)
@@ -5609,7 +5608,7 @@ def gadget():
             if re.match(r'^\d+,\d+$|^\d+，\d+$', output):
                 if temp_list:
                     input_columns = LinearRegression.FeatureScaling.extract_columns(output)
-                    data = LinearRegression.FeatureScaling.load_data(temp_list[0],input_columns)
+                    data = LinearRegression.FeatureScaling.load_data(temp_list[0], input_columns)
                     messagebox.showinfo("测试", message=f"目标数据列：{data.columns.tolist()}\n目标数量：{len(data.columns.tolist())}", parent=window_)
                 else:
                     messagebox.showerror("错误", message="错误，没有文件", parent=window_)
@@ -6419,7 +6418,7 @@ def gadget():
             thread_png.start()
 
         # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def format():
+        def format_():
 
             def exit_win():
                 window__.destroy()
@@ -6498,7 +6497,7 @@ def gadget():
         window_.iconbitmap(icon_path)
         wb1 = ttk.Button(window_, text="颜色转换", style=OUTLINE, command=color)
         wb1.grid(column=0,row=0,padx=10,pady=10)
-        wb2 = ttk.Button(window_, text="格式转换", style=OUTLINE, command=format)
+        wb2 = ttk.Button(window_, text="格式转换", style=OUTLINE, command=format_)
         wb2.grid(column=1,row=0,padx=10,pady=10)
         wb3 = ttk.Button(window_, text="精灵图制作", style=OUTLINE, command=sprites)
         wb3.grid(column=2,row=0,padx=10,pady=10)
@@ -6518,9 +6517,6 @@ def gadget():
     b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=picture)
     b5.grid(column=4,row=0,padx=10,pady=10)
 ###分割线
-
-
-
 
 #关于设置界面###分割线
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
@@ -6554,6 +6550,7 @@ def set_window():
 
         global theme_cbo
 
+        # noinspection SpellCheckingInspection
         def bao_chun():
             global v2,v3,v4
             p1=v2%2
@@ -6937,22 +6934,14 @@ def set_window():
                 "起卦历法": 0,
                 "起卦时间": 0,
                 "起卦时区": 0,
-                "起卦方式": 0
+                "起卦方式": 0,
             }
 
             xlr_data_path = os.path.join(data_file_path, "xiao_liu_ren_data.json")
-            xlr_json = JsonFile.File.dict_load(xlr_data_path,xlr_data)
+            xlr_json = JsonFile.File.dict_load(xlr_data_path, xlr_data)
 
             w_4_1_v_0 = ["新历","农历","道历"]
             w_4_1_v_1 = ["时区","平太阳时","真太阳时"]
-            w_4_1_v_2 = [
-                "UTC-12:00", "UTC-11:00", "UTC-10:00", "UTC-09:00", "UTC-09:30", "UTC-08:00", "UTC-07:00",
-                "UTC-06:00", "UTC-05:00", "UTC-04:00", "UTC-03:00", "UTC-02:00", "UTC-01:00", "UTC+00:00",
-                "UTC-00:00", "UTC+01:00", "UTC+02:00", "UTC+03:00", "UTC+03:30", "UTC+04:00", "UTC+04:30",
-                "UTC+05:00", "UTC+05:30", "UTC+05:45", "UTC+06:00", "UTC+06:30", "UTC+07:00", "UTC+08:00",
-                "UTC+08:45", "UTC+09:00", "UTC+09:30", "UTC+10:00", "UTC+10:30", "UTC+11:00", "UTC+12:00",
-                "UTC+12:45", "UTC+13:00", "UTC+14:00"
-            ]
             w_4_1_v_3 = ["时起卦", "随机数起卦", "五行起卦", "八卦起卦", "八卦五行起卦"]
 
             def utc():
@@ -6961,15 +6950,15 @@ def set_window():
                 offset = now.strftime('%z')
                 formatted_offset = f"UTC{offset[:3]}:{offset[3:]}"
                 var2 = int(t_load(w_root2_c_var_2_path) or 0)
-                if xlr_json[2] != w_4_1_v_2.index(formatted_offset):
+                if xlr_json[2] != UTC_TIME.index(formatted_offset):
                     if var2 % 2 == 1:
-                        down_box_2.set(w_4_1_v_2[int(xlr_json[2])])
+                        down_box_2.set(UTC_TIME[int(xlr_json[2])])
                     else:
-                        down_box_2.set(w_4_1_v_2[w_4_1_v_2.index(formatted_offset)])
-                        xlr_json[2] = w_4_1_v_2.index(formatted_offset)
+                        down_box_2.set(UTC_TIME[UTC_TIME.index(formatted_offset)])
+                        xlr_json[2] = UTC_TIME.index(formatted_offset)
                         JsonFile.File.dict_save(xlr_data_path, xlr_json.file_dict)
                 else:
-                    down_box_2.set(w_4_1_v_2[w_4_1_v_2.index(formatted_offset)])
+                    down_box_2.set(UTC_TIME[UTC_TIME.index(formatted_offset)])
                 down_box_0.set(w_4_1_v_0[xlr_json[0]])
                 down_box_1.set(w_4_1_v_1[xlr_json[1]])
                 down_box_3.set(w_4_1_v_3[xlr_json[3]])
@@ -6982,7 +6971,7 @@ def set_window():
 
                 xlr_json[1] = w_4_1_v_1.index(down_box_1.get())
 
-                xlr_json[2] = w_4_1_v_2.index(down_box_2.get())
+                xlr_json[2] = UTC_TIME.index(down_box_2.get())
 
                 xlr_json[3] = w_4_1_v_3.index(down_box_3.get())
 
@@ -7001,7 +6990,7 @@ def set_window():
             down_box_1 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_1, state="readonly")
             down_box_1.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            down_box_2 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_2, state="readonly")
+            down_box_2 = ttk.Combobox(w_4_1_f_1, values=UTC_TIME, state="readonly")
             down_box_2.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
             down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
@@ -7111,6 +7100,8 @@ def show_window():
 def on_exit():
     root.withdraw()
 
+
+# noinspection PyPep8Naming
 def 前_下拉框事件():
         if 下拉框.get() == "保存":
             save_t()
@@ -7147,6 +7138,8 @@ def on():
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def two_window():
     global window2
+
+    # noinspection PyPep8Naming
     def mySearch():
         text_widget.tag_remove("found","1.0",END)
         start = "1.0"
@@ -7533,6 +7526,7 @@ if __name__ == '__main__':
     var3_num_w_4_3 = int(t_load(ab_path) or 0)
     _size_ = (t_load(h_path) or "70MB")
     divide_up = (t_load(i_path) or "等于大文件定义")
+    # noinspection SpellCheckingInspection
     onandoff = (t_load(j_path) or "开启")
     circular = (t_load(k_path) or "30MB")
     t_rule_num = int(t_load(p_path) or 1)

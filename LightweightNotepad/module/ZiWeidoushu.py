@@ -1,11 +1,17 @@
 import math
 import os
 import re
+
 from lunar_python import LunarMonth
-from Gregorian_calendar_Lunar import GregorianCalendarToLunar
+
+from function.GregorianCalendarLunar import GregorianCalendarToLunar
+
+from function.ProjectVariables import ZHI_DICT_NUM,TIAN_GAN_DICT,DI_ZHI_DICT,YUE_GAN_DICT,YUE_ZHI_DICT,SHI_CHEN_DICT
 
 p = os.path.dirname(__file__)
 
+
+# noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection
 class ZiWeidoushu(object):
     def __init__(self, n,y,r,s):
         self.n = n
@@ -13,104 +19,8 @@ class ZiWeidoushu(object):
         self.r = r
         self.s = s
     def ZiWeisoushu(self):
-        
-        tianGan_dict = {
-            0:("甲","木","阳"),
-            1:("甲","木","阳"),
-            2:("乙","木","阴"),
-            3:("丙","火","阳"),
-            4:("丁","火","阴"),
-            5:("戊","土","阳"),
-            6:("己","土","阴"),
-            7:("庚","金","阳"),
-            8:("辛","金","阴"),
-            9:("壬","水","阳"),
-            10:("癸","水","阴")
-        }
-        diZhi_dict = {
-            1: ("子", "阳", "水", "鼠"),
-            2: ("丑", "阴", "土", "牛"),
-            3: ("寅", "阳", "木", "虎"),
-            4: ("卯", "阴", "木", "兔"),
-            5: ("辰", "阳", "土", "龙"),
-            6: ("巳", "阴", "火", "蛇"),
-            7: ("午", "阳", "火", "马"),
-            8: ("未", "阴", "土", "羊"),
-            9: ("申", "阳", "金", "猴"),
-            10: ("酉", "阴", "金", "鸡"),
-            11: ("戌", "阳", "土", "狗"),
-            12: ("亥", "阴", "水", "猪")
-            }
-        yueGan_dict = {
-            "甲":("甲","木","阳"),
-            "乙":("乙","木","阴"),
-            "丙":("丙","火","阳"),
-            "丁":("丁","火","阴"),
-            "戊":("戊","土","阳"),
-            "己":("己","土","阴"),
-            "庚":("庚","金","阳"),
-            "辛":("辛","金","阴"),
-            "壬":("壬","水","阳"),
-            "癸":("癸","水","阴")
 
-        }
-        yueZhi_dict = {
-            1:("寅", "阳", "木", "虎"),
-            2:("卯", "阴", "木", "兔"),
-            3:("辰", "阳", "土", "龙"),
-            4:("巳", "阴", "火", "蛇"),
-            5:("午", "阳", "火", "马"),
-            6:("未", "阴", "土", "羊"),
-            7:("申", "阳", "金", "猴"),
-            8:("酉", "阴", "金", "鸡"),
-            9:("戌", "阳", "土", "狗"),
-            10:("亥", "阴", "水", "猪"),
-            11:("子", "阳", "水", "鼠"),
-            12:("丑", "阴", "土", "牛")
-            }
-        shiChen_dict = {
-            1: ("丑", "阴", "土", "牛"),
-            2: ("丑", "阴", "土", "牛"),
-            3: ("寅", "阳", "木", "虎"),
-            4: ("寅", "阳", "木", "虎"),
-            5: ("卯", "阴", "木", "兔"),
-            6: ("卯", "阴", "木", "兔"),
-            7: ("辰", "阳", "土", "龙"),
-            8: ("辰", "阳", "土", "龙"), 
-            9: ("巳", "阴", "火", "蛇"),
-            10: ("巳", "阴", "火", "蛇"),
-            11: ("午", "阳", "火", "马"),
-            12: ("午", "阳", "火", "马"),
-            13: ("未", "阴", "土", "羊"),
-            14: ("未", "阴", "土", "羊"),
-            15: ("申", "阳", "金", "猴"),
-            16: ("申", "阳", "金", "猴"),
-            17: ("酉", "阴", "金", "鸡"), 
-            18: ("酉", "阴", "金", "鸡"),
-            19: ("戌", "阳", "土", "狗"),
-            20: ("戌", "阳", "土", "狗"),
-            21: ("亥", "阴", "水", "猪"),
-            22: ("亥", "阴", "水", "猪"),
-            23: ("子", "阳", "水", "鼠"),
-            24: ("子", "阳", "水", "鼠"),
-            }
-        Zhi_dict = {
-            "子":1,
-            "丑":2,
-            "寅":3,
-            "卯":4,
-            "辰":5,
-            "巳":6,
-            "午":7,
-            "未":8,
-            "申":9,
-            "酉":10,
-            "戌":11,
-            "亥":12
-        }
-
-        
-        r = re.sub(r'[^\d]+',"",self.n)
+        r = re.sub(r'\D+',"",self.n)
         nianGan_num = int(r)%10
         nianZhi_num = int(r)%12
         solar_year = int(r)
@@ -127,41 +37,41 @@ class ZiWeidoushu(object):
         年干年支计算
         '''
         
-        if self.n == re.sub(r'[^\d]+',"",self.n):#公元后
+        if self.n == re.sub(r'\D+',"",self.n):#公元后
             if nianGan_num > 3:
                 t_nianGan_num = nianGan_num - 3
-                nianGan,nianGanwuXing,nianGanyinYang = tianGan_dict[t_nianGan_num]
+                nianGan,nianGanwuXing,nianGanyinYang = TIAN_GAN_DICT[t_nianGan_num]
             else:
                 t_nianGan_num = nianGan_num - 3 + 10
-                nianGan,nianGanwuXing,nianGanyinYang = tianGan_dict[t_nianGan_num]
+                nianGan,nianGanwuXing,nianGanyinYang = TIAN_GAN_DICT[t_nianGan_num]
             
             if nianZhi_num > 3:
                 t_nianZhi_num = nianZhi_num - 3
-                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = diZhi_dict[t_nianZhi_num]
+                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = DI_ZHI_DICT[t_nianZhi_num]
             else:
                 t_nianZhi_num = nianZhi_num - 3 + 12
-                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = diZhi_dict[t_nianZhi_num]
+                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = DI_ZHI_DICT[t_nianZhi_num]
 
         else:#公元前
             if nianGan_num < 8:
                 t_nianGan_num = 8-nianGan_num
-                nianGan,nianGanwuXing,nianGanyinYang = tianGan_dict[t_nianGan_num]
+                nianGan,nianGanwuXing,nianGanyinYang = TIAN_GAN_DICT[t_nianGan_num]
             else:
                 t_nianGan_num = 8-nianGan_num+10
-                nianGan,nianGanwuXing,nianGanyinYang = tianGan_dict[t_nianGan_num]
+                nianGan,nianGanwuXing,nianGanyinYang = TIAN_GAN_DICT[t_nianGan_num]
             
             if nianZhi_num < 10:
                 t_nianZhi_num = 10 - nianZhi_num
-                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = diZhi_dict[t_nianZhi_num]
+                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = DI_ZHI_DICT[t_nianZhi_num]
             else:
                 t_nianZhi_num = 10 - nianZhi_num + 12
-                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = diZhi_dict[t_nianZhi_num]
+                nianZhi,nianZhiyinYang,nianZhiwuXing,nianZhishengXiao = DI_ZHI_DICT[t_nianZhi_num]
 
         '''
         月干月支
         ''' 
 
-        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  yueZhi_dict[Lunar_month]
+        yueZhi,yueZhiyinYang,yueZhiwuXing,yueZhishengXiao =  YUE_ZHI_DICT[Lunar_month]
 
         yueGan = ""
 
@@ -297,34 +207,34 @@ class ZiWeidoushu(object):
                     case "丑":
                         yueGan = "乙"
 
-        yueGan,yueGanwuXing,yueGanyinYang = yueGan_dict[yueGan]
+        yueGan,yueGanwuXing,yueGanyinYang = YUE_GAN_DICT[yueGan]
 
         '''
         儒略日和日干支
         '''
 
-        def ce2jd(Year,Month,D):
-            if Month in [1,2]:
-                M = Month + 12
-                Y = Year - 1
+        def ce2jd(year,month,d):
+            if month in [1,2]:
+                M = month + 12
+                Y = year - 1
             else:
-                Y = Year
-                M = Month
+                Y = year
+                M = month
             B = 0
-            if Y>1582 or (Y==1582 and M>10) or (Y==1582 and M==10 and D>=15):
+            if Y>1582 or (Y==1582 and M>10) or (Y==1582 and M==10 and d>=15):
                 B = 2 - int(Y/100) + int(Y/400)  #公元1582年10月15日以后每400年减少3闰
-            JD = math.floor(365.25*(Y+4716))+int(30.6*(M+1))+D+B-1524.5
-            MJD = "无"
+            JD_ = math.floor(365.25 * (Y + 4716)) + int(30.6 * (M + 1)) + d + B - 1524.5
+            MJD_ = "无"
             #JD = math.floor(365.25*(Y+4712))+int(30.6*(M+1))+D+B-63.5
-            if Y>1858 or (Y==1858 and M>11) or (Y==1858 and M==11 and D>=17):
-                MJD = int(JD - 2400000.5)
-                return JD,MJD
-            return JD,MJD
+            if Y>1858 or (Y==1858 and M>11) or (Y==1858 and M==11 and d>=17):
+                MJD_ = int(JD_ - 2400000.5)
+                return JD_,MJD_
+            return JD_,MJD_
         
-        if self.n == re.sub(r'[^\d]+',"",self.n):
+        if self.n == re.sub(r'\D+',"",self.n):
             JD,MJD = ce2jd(int(self.n),int(self.y),int(self.r))
         else:
-            n_new = -int(re.sub(r'[^\d]+',"",self.n))
+            n_new = -int(re.sub(r'\D+',"",self.n))
             JD,MJD = ce2jd(n_new,int(self.y),int(self.r))
         
         NOONJD = math.ceil(JD)
@@ -332,8 +242,8 @@ class ZiWeidoushu(object):
         riGan_num = 1+(NOONJD-1)%10
         riZhi_num = 1+(NOONJD+1)%12
 
-        riGan,riGanwuXing,ruGanyinYang = tianGan_dict[riGan_num]
-        riZhi,riZhiyinYang,riZhiwuXing,ruZhishengXiao = diZhi_dict[riZhi_num]
+        riGan,riGanwuXing,ruGanyinYang = TIAN_GAN_DICT[riGan_num]
+        riZhi,riZhiyinYang,riZhiwuXing,ruZhishengXiao = DI_ZHI_DICT[riZhi_num]
         
         
 
@@ -343,9 +253,9 @@ class ZiWeidoushu(object):
         
         #print(JD,NOONJD)
 
-        shiChen,shiChenyinYang,shiChenwuXing,shiChenshengXiao = shiChen_dict[int(self.s)]
+        shiChen,shiChenyinYang,shiChenwuXing,shiChenshengXiao = SHI_CHEN_DICT[int(self.s)]
 
-        shiGan,shiGanwuXing,shiGanyinYang = tianGan_dict[((riGan_num*12 + Zhi_dict[shiChen])-1)%10]
+        shiGan,shiGanwuXing,shiGanyinYang = TIAN_GAN_DICT[((riGan_num*12 + ZHI_DICT_NUM[shiChen])-1)%10]
 
 
         

@@ -3,15 +3,15 @@
 
 a = Analysis(
     ['LightweightNotepad.py'],
-    pathex=[],
-    binaries=[('C:/Users/Administrator/AppData/Local/Programs/Python/Python312/Lib/site-packages/torch_directml/DirectML.dll', 'torch_directml')],
-    datas=[],
+    pathex=['D:\\LightweightNotepad'],
+    binaries=[(r'D:\LightweightNotepad\venv\Lib\site-packages\torch_directml\DirectML.dll', 'torch_directml')],
+    datas=[('D:\\LightweightNotepad\\LightweightNotepad\\icon\\main_icon.ico', 'icon')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    noarchive=False,
+    noarchive=True,
     optimize=0,
 )
 pyz = PYZ(a.pure)
@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='Lightweight_text_editor',
+    name='LightweightNotepad',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -32,7 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['D:\\桌面\\Lightweight_notepad\\aaa.ico'],
+    icon=['D:\\LightweightNotepad\\LightweightNotepad\\icon\\main_icon.ico'],
 )
 coll = COLLECT(
     exe,
@@ -41,5 +41,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='Lightweight_text_editor',
+    name='LightweightNotepad',
 )

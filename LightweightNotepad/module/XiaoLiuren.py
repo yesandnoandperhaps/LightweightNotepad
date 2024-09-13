@@ -1,7 +1,7 @@
 import decimal
-import random
-import os
 import math
+import os
+import random
 
 p = os.path.dirname(__file__)
 data_file_path = os.path.join(p, "data")
