@@ -1,16 +1,9 @@
 import decimal
 import math
-import os
 import random
 
-p = os.path.dirname(__file__)
-data_file_path = os.path.join(p, "data")
-g_path = os.path.join(data_file_path,"g")
-l_path = os.path.join(data_file_path, "l")
-m_path = os.path.join(data_file_path, "m")
-q_path = os.path.join(data_file_path, "q")
-u_path = os.path.join(data_file_path, "u")
-v_path = os.path.join(data_file_path, "v")
+from function.ProjectVariables import l_path, m_path, q_path, u_path, v_path
+
 "l->m->q"
 def load(path):
     try:

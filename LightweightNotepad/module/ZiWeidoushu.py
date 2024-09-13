@@ -1,14 +1,11 @@
 import math
-import os
 import re
 
 from lunar_python import LunarMonth
 
 from function.GregorianCalendarLunar import GregorianCalendarToLunar
-
-from function.ProjectVariables import ZHI_DICT_NUM,TIAN_GAN_DICT,DI_ZHI_DICT,YUE_GAN_DICT,YUE_ZHI_DICT,SHI_CHEN_DICT
-
-p = os.path.dirname(__file__)
+from function.ProjectVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
+    SHI_CHEN_DICT, s_path, t_path
 
 
 # noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection
@@ -290,10 +287,6 @@ class ZiWeidoushu(object):
                     return yes_runYue
             else:
                 return Lunar_month
-        
-
-        s_path = p + "\\" + "s"
-        t_path = p + "\\" + "t"
 
         def load_down_box2():
             try:

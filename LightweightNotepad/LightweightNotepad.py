@@ -24,8 +24,11 @@ from ttkbootstrap.constants import *
 from ttkbootstrap.tooltip import ToolTip
 
 from function import JsonFile
+from function.ProjectVariables import UTC_TIME, a_path, b_path, c_path, d_path, e_path, f_path, h_path, i_path, j_path, \
+    k_path, l_path, m_path, n_path, p_path, q_path, r_path, s_path, t_path, u_path, v_path, w_path, x_path, y_path, \
+    z_path, aa_path, ab_path, w_root2_c_var_2_path, icon_path, data_file_path
 from module import ZiWeidoushu, XiaoLiuren, LinearRegression
-from function.ProjectVariables import UTC_TIME
+
 
 class CustomToolTip(ToolTip):
     def update_text(self, text):
@@ -117,32 +120,6 @@ def var3_num_w_4_3_s():
     t_save(ab_path, var3_num_w_4_3)
 
 #关于小六壬###分割线
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-class NewX:
-    def __init__(self):
-        self.w_4_1_path = os.path.join(data_file_path, "w_4_1_path")
-
-    @staticmethod
-    def qi_gua_fangshi():
-        window_ = ttk.Toplevel()
-        window_.title("小六壬-起卦")
-        window_.iconbitmap(icon_path)
-
-
-    @staticmethod
-    def down_box_save_1(w_4_1_path,down_box):
-        with open(w_4_1_path, 'w', encoding='utf-8') as file:
-            file.write(str(down_box.get()))
-
-    @staticmethod
-    def w_4_3_load(w_4_1_path):
-        try:
-            with open(w_4_1_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except FileNotFoundError:
-            pass
-        except Exception as e:
-            messagebox.showerror("错误", f"发生错误: {e}")
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def x():
@@ -7481,39 +7458,6 @@ def sever():
     window.mainloop()
 
 if __name__ == '__main__':
-    p = os.path.dirname(__file__)
-    data_file_path = os.path.join(p, "data")
-    icon_file_path = os.path.join(p, "icon")
-    os.makedirs(data_file_path, exist_ok=True)
-    a_path = os.path.join(data_file_path, "a")
-    b_path = os.path.join(data_file_path, "b")
-    c_path = os.path.join(data_file_path, "c")
-    d_path = os.path.join(data_file_path, "d")
-    e_path = os.path.join(data_file_path, "e")
-    f_path = os.path.join(data_file_path, "f")
-    h_path = os.path.join(data_file_path, "h")
-    i_path = os.path.join(data_file_path, "i")
-    j_path = os.path.join(data_file_path, "j")
-    k_path = os.path.join(data_file_path, "k")
-    l_path = os.path.join(data_file_path, "l")
-    m_path = os.path.join(data_file_path, "m")
-    n_path = os.path.join(data_file_path, "n")
-    o_path = os.path.join(data_file_path, "o")
-    p_path = os.path.join(data_file_path, "p")
-    q_path = os.path.join(data_file_path, "q")
-    r_path = os.path.join(data_file_path, "r")
-    s_path = os.path.join(data_file_path,"s")
-    t_path = os.path.join(data_file_path,"t")
-    u_path = os.path.join(data_file_path,"u")
-    v_path = os.path.join(data_file_path,"v")
-    w_path = os.path.join(data_file_path,"w")
-    x_path = os.path.join(data_file_path,"x")
-    y_path = os.path.join(data_file_path,"y")
-    z_path = os.path.join(data_file_path,"z")
-    aa_path = os.path.join(data_file_path,"aa")
-    ab_path = os.path.join(data_file_path,"ab")
-    w_root2_c_var_2_path = os.path.join(data_file_path, "w_root2_c_var_2_path")
-    icon_path = os.path.join(icon_file_path, "main_icon.ico")
     v = int(t_load(c_path) or 0)
     v2 = int(t_load(d_path) or 1)
     v3 = int(t_load(e_path) or 0)
