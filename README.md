@@ -1,12 +1,6 @@
 ## sum-up总结
-
 软件目前还有许多需要补全，请等待
-目前，小六壬已经完成70%，紫微斗数10%
-目前，支持基本的图片操作，并且会在下一个版本实现线性回归模块的大量内容
-
-The software still has a lot to be completed, please wait!
-At present, 70% of Xiao Liu Nun has been completed, and 10% of Zi Wei Dou Shu.
-Currently, basic image manipulation is supported, and a lot of the linear regression module will be implemented in the next release
+The software still has a lot of catching up to do, so please wait!
 
 ## Current Usage & Support使用方法与支持
 
