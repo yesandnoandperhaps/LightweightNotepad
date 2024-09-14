@@ -16,13 +16,13 @@ from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
+import function.ProjectCapabilityVariables
 from ProjectFunctions import t_save, save, t_load, var_save
 from function import JsonFile
+from function.ProjectDictionaryVariables import UTC_TIME
 from function.ProjectPathVariables import A_PATH, B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
     W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
-from function.ProjectDictionaryVariables import UTC_TIME
-from function.ProjectCapabilityVariables import FONT_STYLE
 from window_module import NewXiaoLiuRenWindow
 from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
 from window_module.PictureWindow import picture
@@ -1074,6 +1074,7 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("轻量记事本")
     root.iconbitmap(ICON_PATH)
+    FONT_STYLE,v2,v3,v4 = function.ProjectCapabilityVariables.font_set()
     t_size = 0
     t_divide_up = 0
     circular_num = 31457280
