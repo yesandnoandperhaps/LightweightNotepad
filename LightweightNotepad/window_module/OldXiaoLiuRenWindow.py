@@ -7,7 +7,7 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from ProjectFunctions import t_save, t_load
+from function.ProjectFunctions import t_save, t_load
 from function.ProjectPathVariables import N_PATH, P_PATH, Q_PATH, U_PATH, V_PATH, ICON_PATH
 from module import XiaoLiuRen as XiaoLiuren
 
