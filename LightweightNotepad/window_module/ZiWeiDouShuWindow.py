@@ -1,38 +1,19 @@
-import ctypes
 import datetime
-import idlelib.colorizer as idc
-import idlelib.percolator as idp
-import json
-import os
 import re
-import shutil
-import threading
 import tkinter as tk
-import tkinter.font as tk_font
 from datetime import datetime
-from tkinter import filedialog, messagebox, colorchooser
-from tkinter.ttk import Separator
+from tkinter import messagebox
 
-import dateutil.tz
-import numpy as np
-import pystray
 import ttkbootstrap as ttk
-import windnd
-from PIL import Image, ImageTk
-from pystray import MenuItem, Menu
-from ttkbootstrap.constants import *
-from ttkbootstrap.tooltip import ToolTip
 
-from ProjectFunctions import t_save, save, t_load, var_save
-from function import JsonFile
-from function.ProjectVariables import UTC_TIME, A_PATH, B_PATH, C_PATH, D_PATH, E_PATH, F_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Y_PATH, \
-    Z_PATH, AA_PATH, AB_PATH, W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
-from module import ZiWeiDouShu, LinearRegression
-from window_module import NewXiaoLiuRenWindow, OldXiaoLiuRenWindow
+from ProjectFunctions import t_load
+from function.ProjectVariables import R_PATH, ICON_PATH
+from module import ZiWeiDouShu
+from module.ZiWeiDouShu import ZiWeiDouShu
+
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-def z():
+def z(root_main,font_style):
     t = str(t_load(R_PATH) or "横排样式")
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
@@ -64,7 +45,7 @@ def z():
                 if not (0 < int(r___) <= 24):
                     messagebox.showerror("错误", message="错误的日期", parent=window)
                 else:
-                    ziwei = ZiWeidoushu.ZiWeidoushu(r, r_, r__, r___)
+                    ziwei = ZiWeiDouShu(r, r_, r__, r___)
                     nianGan,nianGanwuXing,nianGanyinYang\
         ,nianZhi,nianZhiwuXing,nianZhiyinYang,nianZhishengXiao\
             ,yueGan,yueGanwuXing,yueGanyinYang\
@@ -3543,7 +3524,7 @@ def z():
 
     match t:
         case "横排样式":
-            window = ttk.Toplevel(str(root))
+            window = ttk.Toplevel(str(root_main))
             window.title("紫微斗数")
             window.iconbitmap(ICON_PATH)
             text1 = tk.Label(window,text="年:")
@@ -3578,7 +3559,7 @@ def z():
             entry4.bind('<Shift_R>', lambda event: z_judge())
             combobox.bind('<Shift_R>', lambda event: z_judge())
         case "竖排样式":
-            window = ttk.Toplevel(str(root))
+            window = ttk.Toplevel(str(root_main))
             window.title("紫微斗数")
             window.iconbitmap(ICON_PATH)
             text1 = tk.Label(window,text="年:")

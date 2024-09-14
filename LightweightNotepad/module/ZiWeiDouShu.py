@@ -9,7 +9,7 @@ from function.ProjectVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, 
 
 
 # noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection
-class ZiWeidoushu(object):
+class ZiWeiDouShu:
     def __init__(self, n,y,r,s):
         self.n = n
         self.y = y
