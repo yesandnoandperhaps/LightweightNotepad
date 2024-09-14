@@ -7,13 +7,13 @@ import ttkbootstrap as ttk
 from PIL import Image, ImageTk
 from ttkbootstrap.constants import *
 
-from ProjectFunctions import t_load
+from function.ProjectFunctions import t_load
 from function.ProjectPathVariables import Z_PATH, AA_PATH, AB_PATH, ICON_PATH
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 class SpriteSheetMaker(tk.Toplevel):
-    def __init__(self,icon):
+    def __init__(self,icon=None):
         super().__init__()
         self.icon = icon
         self.title("精灵图制作")

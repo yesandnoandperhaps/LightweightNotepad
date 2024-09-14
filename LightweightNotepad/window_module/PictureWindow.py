@@ -517,7 +517,7 @@ def picture(root_main,icon):
                                                parent=window__)
 
     def sprites():
-        SpriteSheetMaker()
+        SpriteSheetMaker(icon)
 
     window_ = ttk.Toplevel(root_main)
     window_.title("图片操作")

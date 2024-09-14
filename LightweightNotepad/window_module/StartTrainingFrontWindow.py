@@ -1,13 +1,11 @@
 import idlelib.colorizer as idc
 import idlelib.percolator as idp
 import tkinter as tk
-import function
 from tkinter import messagebox
 from tkinter.ttk import Separator
-
 import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
-
+from function import ProjectCapabilityVariables
 from function.ProjectPathVariables import ICON_PATH
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,DuplicatedCode
@@ -15,7 +13,7 @@ class StartTrainingFrontWindow:
     def __init__(self, window, combo5, combo4, temp_list_2, temp_list):
         self.temp_list = temp_list
         self.whether_save = False
-        self.FONT_STYLE = function.ProjectCapabilityVariables.font_set()
+        self.FONT_STYLE = ProjectCapabilityVariables.font_set()
         if not temp_list_2:
             result = messagebox.askyesno("线性回归", "请等待-本次计算将不会保存模型，是否需要进行计算后预测",
                                          parent=window)

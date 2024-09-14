@@ -9,7 +9,6 @@ import ttkbootstrap as ttk
 from function.ProjectFunctions import t_load
 from function.ProjectPathVariables import R_PATH, ICON_PATH
 from module import ZiWeiDouShu
-from module.ZiWeiDouShu import ZiWeiDouShu
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
