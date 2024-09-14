@@ -23,62 +23,22 @@ from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 from ttkbootstrap.tooltip import ToolTip
 
+from ProjectFunctions import t_save, save, t_load, var_save
 from function import JsonFile
-from function.ProjectVariables import UTC_TIME, a_path, b_path, c_path, d_path, e_path, f_path, h_path, i_path, j_path, \
-    k_path, l_path, m_path, n_path, p_path, q_path, r_path, s_path, t_path, u_path, v_path, w_path, x_path, y_path, \
-    z_path, aa_path, ab_path, w_root2_c_var_2_path, icon_path, data_file_path
-from module import ZiWeidoushu, XiaoLiuren, LinearRegression
+from function.ProjectVariables import UTC_TIME, A_PATH, B_PATH, C_PATH, D_PATH, E_PATH, F_PATH, H_PATH, I_PATH, J_PATH, \
+    K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Y_PATH, \
+    Z_PATH, AA_PATH, AB_PATH, W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
+from module import ZiWeidoushu, LinearRegression
+from window_module import NewX, OldX
 
 
 class CustomToolTip(ToolTip):
     def update_text(self, text):
         self.text = text
 
-def save(theme):
-    with open(b_path, 'w',encoding='utf-8') as file:
-        file.write(theme)
-    with open(c_path, 'w',encoding='utf-8') as file:
-        file.write(str(v))
-    with open(d_path,"w",encoding='utf-8') as file:
-        file.write(str(v2))
-    with open(e_path,"w",encoding='utf-8') as file:
-        file.write(str(v3))
-    with open(f_path,"w",encoding='utf-8') as file:
-        file.write(str(v4))
-    with open(l_path,"w",encoding='utf-8') as file:
-        file.write(str(v5))
-    with open(m_path,"w",encoding='utf-8') as file:
-        file.write(str(v6))
-    with open(h_path,"w",encoding='utf-8') as file:
-        file.write(combobox1.get())
-    with open(i_path,"w",encoding='utf-8') as file:
-        file.write(combobox2.get())
-    with open(j_path,"w",encoding="utf-8") as file:
-        file.write(combobox0.get())
-    with open(k_path,"w",encoding="utf-8") as file:
-        file.write(combobox3.get())
-
-def t_save(path,text_path):
-    with open(path,"w",encoding='utf-8') as file:
-        file.write(str(text_path))
-
-def var_save(path,text_path):
-    with open(path,"w",encoding='utf-8') as file:
-        text_path += 1
-        file.write(str(text_path))
-
-def t_load(path):
-    try:
-        with open(path,"r",encoding='utf-8') as file:
-            return file.read()
-    except FileNotFoundError:
-        pass
-    except Exception as e:
-        messagebox.showerror("错误", f"发生错误: {e}")
-
 def load_theme():
     try:
-        with open(b_path, 'r',encoding='utf-8') as file:
+        with open(B_PATH, 'r', encoding='utf-8') as file:
             return file.read().strip()
     except FileNotFoundError:
         return None
@@ -101,1369 +61,20 @@ def s5():
 def s6():
     global v6
     v6 = v6+1
-def wv_1():
-    global num_wv1
-    num_wv1 = num_wv1 + 1
-    t_save(n_path,num_wv1)
 def var_num_w_4_3_s():
     global var_num_w_4_3
     var_num_w_4_3 += 1
-    t_save(z_path, var_num_w_4_3)
+    t_save(Z_PATH, var_num_w_4_3)
 def var2_num_w_4_3_s():
     global var2_num_w_4_3
     var2_num_w_4_3 += 1
-    t_save(aa_path, var2_num_w_4_3)
+    t_save(AA_PATH, var2_num_w_4_3)
 
 def var3_num_w_4_3_s():
     global var3_num_w_4_3
     var3_num_w_4_3 += 1
-    t_save(ab_path, var3_num_w_4_3)
+    t_save(AB_PATH, var3_num_w_4_3)
 
-#关于小六壬###分割线
-
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def x():
-    window = ttk.Toplevel(str(root))
-    window.title("小六壬")
-    window.iconbitmap(icon_path)
-    def loop_output2():
-
-        file_path_csv = filedialog.asksaveasfilename(parent=window, defaultextension=".csv",
-                                                 filetypes=[("csv-utf-8", "*.csv")])
-
-        def entry2_():
-            icon.notify("循环过程中不可加入新循环\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2__():
-            icon.notify("循环过程中不可做出任何改变\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2___():
-            icon.notify("不可关闭该循环过程\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2_2():
-            window.destroy()
-            x()
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def t_loop_output_x():
-            
-            def loop_output_x():
-                def recover():
-                    text_widget.delete(1.0, END)
-                    text_widget.insert(tk.END,"已完成循环")
-                    entry2.pack_forget()
-                    text2.pack_forget()
-                    entry.pack(padx=5,pady=5,side='right')
-                    entry.config(font=font_style)
-                    text.pack(padx=5,pady=5,side='right')
-                    w3.grid_remove()
-                    w.grid()
-                entry_ = entry.get()
-                num = 0
-                entry___ = re.findall('[^0-9]', entry_)
-
-                match entry___:
-                    case []:
-                        text_widget.insert(tk.END,"已循环次数：0")
-                        loop_t_rule_num = int(t_load(p_path) or 1)
-                        loop_t_rule_num2 = int(t_load(q_path) or 2)
-                        buffer = []
-
-                        match loop_t_rule_num:
-                            case 0:
-                                match loop_t_rule_num2:
-                                    case 1:
-                                        while True:
-                                            if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
-                                                    file.write(''.join(buffer))
-                                                recover()
-                                                break
-                                            buffer.append(XiaoLiuren.numgua2_1())
-                                            num = num + 1
-                                            if num%200 == 0:
-                                                text_widget.delete(1.6, END)
-                                                text_widget.insert(tk.END,"{}".format(num))
-                                    case 0:
-                                        while True:
-                                            if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
-                                                    file.write(''.join(buffer))
-                                                recover()
-                                                break
-                                            buffer.append(XiaoLiuren.numgua2_0())
-                                            num = num + 1
-                                            if num%200 == 0:
-                                                text_widget.delete(1.6, END)
-                                                text_widget.insert(tk.END,"{}".format(num))
-                                    case 2:
-                                        while True:
-                                            if num == int(entry_):
-                                                with open(file_path_csv, 'a+',encoding='utf-8') as file:
-                                                    file.write(''.join(buffer))
-                                                recover()
-                                                break
-                                            buffer.append(XiaoLiuren.numgua2_2())
-                                            num = num + 1
-                                            if num%200 == 0:
-                                                text_widget.delete(1.6, END)
-                                                text_widget.insert(tk.END,"{}".format(num))
-                            case 1:
-                                while True:
-                                    if num == int(entry_):
-                                        with open(file_path_csv, 'a+',encoding='utf-8') as file:
-                                            file.write(''.join(buffer))
-                                        recover()
-                                        break
-                                    buffer.append(XiaoLiuren.numgua2_3())
-                                    num = num + 1
-                                    if num%200 == 0:
-                                        text_widget.delete(1.6, END)
-                                        text_widget.insert(tk.END,"{}".format(num))
-                            case 2:
-                                while True:
-                                    if num == int(entry_):
-                                        with open(file_path_csv, 'a+',encoding='utf-8') as file:
-                                            file.write(''.join(buffer))
-                                        recover()
-                                        break
-                                    buffer.append(XiaoLiuren.numgua2_4())
-                                    num = num + 1
-                                    if num%200 == 0:
-                                        text_widget.delete(1.6, END)
-                                        text_widget.insert(tk.END,"{}".format(num))
-                                        
-                    case _:
-                        messagebox.showerror("错误", message="请只输入整数",parent=window)
-                        entry2.pack_forget()
-                        text2.pack_forget()
-                        entry.pack(padx=5,pady=5,side='right')
-                        entry.config(font=font_style)
-                        text.pack(padx=5,pady=5,side='right')
-                        w3.grid_remove()
-                        w.grid()
-
-            # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-            def x_x():
-                def entry2_2_1():
-                    window_x.destroy()
-                    entry2_2()
-                def entry_row_name_():
-                    if entry_row_name.get():
-                        try:
-                            with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                file.write("{}\n".format(entry_row_name.get()))
-                            window_x.destroy()
-                            window.wm_attributes('-disabled', 0)
-                            window.wm_attributes('-topmost', 1)
-                            window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=loop_output_x)
-                            thread.start()
-                        except Exception as e:
-                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
-                            entry2_2_1()
-                    else:
-                        messagebox.showerror("错误", f"必须有列名",parent=window_x)
-                window_x = ttk.Toplevel()
-                window_x.title("小六壬")
-                window_x.iconbitmap(icon_path)
-                window_x.protocol("WM_DELETE_WINDOW", entry2___)
-                window_x.wm_attributes('-topmost', 1)
-                window.wm_attributes('-disabled', 1)
-                text = ttk.Label(window_x, text="列名：")
-                text.pack(padx=5,pady=5,side="left")
-                entry_row_name = ttk.Entry(window_x)
-                entry_row_name.pack(padx=5,pady=5,side="right")
-                entry_row_name.insert(tk.END,"吉值")
-                entry_row_name.bind('<Return>', lambda event: entry_row_name_())
-                entry_row_name.bind('<Shift_L>', lambda event: entry2_2_1())
-
-            # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-            def x_x_():
-
-                def entry2_2_1():
-                    window_x.destroy()
-                    entry2_2()
-
-                def entry_row_name_():
-                    if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
-                        try:
-                            with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                            window_x.destroy()
-                            window.wm_attributes('-disabled', 0)
-                            window.wm_attributes('-topmost', 1)
-                            window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=loop_output_x)
-                            thread.start()
-                        except Exception as e:
-                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
-                            entry2_2_1()
-                    else:
-                        messagebox.showerror("错误", f"必须有列名",parent=window_x)
-
-                window_x = ttk.Toplevel()
-                window_x.title("小六壬")
-                window_x.iconbitmap(icon_path)
-                window_x.protocol("WM_DELETE_WINDOW", entry2___)
-                window_x.wm_attributes('-topmost', 1)
-                window.wm_attributes('-disabled', 1)
-                text = ttk.Label(window_x, text="列名一")
-                text.grid(row=0,column=0,padx=5,pady=5)
-                text2 = ttk.Label(window_x, text="列名二")
-                text2.grid(row=0,column=1,padx=5,pady=5)
-                text3 = ttk.Label(window_x, text="列名三")
-                text3.grid(row=0,column=2,padx=5,pady=5)
-                text4 = ttk.Label(window_x, text="列名四")
-                text4.grid(row=0,column=3,padx=5,pady=5)
-                entry_row_name = ttk.Entry(window_x)
-                entry_row_name.grid(row=1,column=0,padx=5,pady=5)
-                entry_row_name2 = ttk.Entry(window_x)
-                entry_row_name2.grid(row=1,column=1,padx=5,pady=5)
-                entry_row_name3 = ttk.Entry(window_x)
-                entry_row_name3.grid(row=1,column=2,padx=5,pady=5)
-                entry_row_name4 = ttk.Entry(window_x)
-                entry_row_name4.grid(row=1,column=3,padx=5,pady=5)
-                entry_row_name.insert(tk.END,"天宫")
-                entry_row_name2.insert(tk.END,"地宫")
-                entry_row_name3.insert(tk.END,"人宫")
-                entry_row_name4.insert(tk.END,"吉值")
-                entry_row_name.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name2.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name3.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name4.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name.bind('<Return>', lambda event: entry_row_name2.focus_set())
-                entry_row_name2.bind('<Return>', lambda event: entry_row_name3.focus_set())
-                entry_row_name3.bind('<Return>', lambda event: entry_row_name4.focus_set())
-                entry_row_name4.bind('<Return>', lambda event: entry_row_name.focus_set())
-                entry_row_name.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name2.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name3.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name4.bind('<Shift_L>', lambda event: entry2_2_1())
-
-            # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-            def x_x__():
-
-                def combobox_save():
-                    with open(u_path,"w",encoding='utf-8') as file:
-                        file.write(str(combobox.get()))
-
-                def combobox_load():
-                    try:
-                        with open(u_path, 'r',encoding='utf-8') as file:
-                            return file.read()
-                    except FileNotFoundError:
-                        pass
-
-                t = str(combobox_load() or "顺序数据【空亡定为6】")
-
-                def entry2_2_1():
-                    window_x.destroy()
-                    entry2_2()
-
-                # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-                def entry_row_name_():
-
-                    t = str(combobox_load() or "顺序数据【空亡定为6】")
-
-                    # noinspection PyShadowingNames
-                    def x_x__x():
-
-                        def entry2_2_2():
-                            window_x_.destroy()
-                            entry2_2()
-
-                        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-                        def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
-                                                                                         entry_row_name2_.get(),
-                                                                                         entry_row_name3_.get(),
-                                                                                         entry_row_name4_.get(),
-                                                                                         entry_row_name5_.get(),
-                                                                                         entry_row_name6_.get(),
-                                                                                         entry_row_name7_.get(),
-                                                                                         entry_row_name8_.get(),
-                                                                                         entry_row_name9_.get(),
-                                                                                         entry_row_name10_.get()
-                                                                                         ))
-                            window_x_.destroy()
-                            window.wm_attributes('-disabled', 0)
-                            window.wm_attributes('-topmost', 1)
-                            window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=loop_output_x)
-                            thread.start()
-
-                        window_x_ = ttk.Toplevel()
-                        window_x_.title("小六壬")
-                        window_x_.iconbitmap(icon_path)
-                        window_x_.protocol("WM_DELETE_WINDOW", entry2___)
-                        window_x_.wm_attributes('-topmost', 1)
-                        window.wm_attributes('-disabled', 1)
-                        text_ = ttk.Label(window_x_, text="列名一")
-                        text2_ = ttk.Label(window_x_, text="列名二")
-                        text3_ = ttk.Label(window_x_, text="列名三")
-                        text4_ = ttk.Label(window_x_, text="列名四")
-                        text5_ = ttk.Label(window_x_, text="列名五")
-                        text6_ = ttk.Label(window_x_, text="列名六")
-                        text7_ = ttk.Label(window_x_, text="列名七")
-                        text8_ = ttk.Label(window_x_, text="列名八")
-                        text9_ = ttk.Label(window_x_, text="列名九")
-                        text10_ = ttk.Label(window_x_, text="列名十")
-                        entry_row_name_ = ttk.Entry(window_x_)
-                        entry_row_name2_ = ttk.Entry(window_x_)
-                        entry_row_name3_ = ttk.Entry(window_x_)
-                        entry_row_name4_ = ttk.Entry(window_x_)
-                        entry_row_name5_ = ttk.Entry(window_x_)
-                        entry_row_name6_ = ttk.Entry(window_x_)
-                        entry_row_name7_ = ttk.Entry(window_x_)
-                        entry_row_name8_ = ttk.Entry(window_x_)
-                        entry_row_name9_ = ttk.Entry(window_x_)
-                        entry_row_name10_ = ttk.Entry(window_x_)
-                        text_.grid(row=0,column=0,padx=5,pady=5)
-                        text2_.grid(row=0,column=1,padx=5,pady=5)
-                        text3_.grid(row=0,column=2,padx=5,pady=5)
-                        text4_.grid(row=2,column=0,padx=5,pady=5)
-                        text5_.grid(row=2,column=1,padx=5,pady=5)
-                        text6_.grid(row=2,column=2,padx=5,pady=5)
-                        text7_.grid(row=4,column=0,padx=5,pady=5)
-                        text8_.grid(row=4,column=1,padx=5,pady=5)
-                        text9_.grid(row=4,column=2,padx=5,pady=5)
-                        text10_.grid(row=6,column=0,padx=5,pady=5)
-                        entry_row_name_.grid(row=1,column=0,padx=5,pady=5)
-                        entry_row_name2_.grid(row=1,column=1,padx=5,pady=5)
-                        entry_row_name3_.grid(row=1,column=2,padx=5,pady=5)
-                        entry_row_name4_.grid(row=3,column=0,padx=5,pady=5)
-                        entry_row_name5_.grid(row=3,column=1,padx=5,pady=5)
-                        entry_row_name6_.grid(row=3,column=2,padx=5,pady=5)
-                        entry_row_name7_.grid(row=5,column=0,padx=5,pady=5)
-                        entry_row_name8_.grid(row=5,column=1,padx=5,pady=5)
-                        entry_row_name9_.grid(row=5,column=2,padx=5,pady=5)
-                        entry_row_name10_.grid(row=7,column=0,padx=5,pady=5)
-                        entry_row_name_.insert(tk.END,entry_row_name.get()+"(1)")
-                        entry_row_name2_.insert(tk.END,entry_row_name.get()+"(2)")
-                        entry_row_name3_.insert(tk.END,entry_row_name.get()+"(3)")
-                        entry_row_name4_.insert(tk.END,entry_row_name2.get()+"(1)")
-                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"(2)")
-                        entry_row_name6_.insert(tk.END,entry_row_name2.get()+"(3)")
-                        entry_row_name7_.insert(tk.END,entry_row_name3.get()+"(1)")
-                        entry_row_name8_.insert(tk.END,entry_row_name3.get()+"(2)")
-                        entry_row_name9_.insert(tk.END,entry_row_name3.get()+"(3)")
-                        entry_row_name10_.insert(tk.END,entry_row_name4.get())
-                        entry_row_name_.bind('<Return>', lambda event: entry_row_name2_.focus_set())
-                        entry_row_name2_.bind('<Return>', lambda event: entry_row_name3_.focus_set())
-                        entry_row_name3_.bind('<Return>', lambda event: entry_row_name4_.focus_set())
-                        entry_row_name4_.bind('<Return>', lambda event: entry_row_name5_.focus_set())
-                        entry_row_name5_.bind('<Return>', lambda event: entry_row_name6_.focus_set())
-                        entry_row_name6_.bind('<Return>', lambda event: entry_row_name7_.focus_set())
-                        entry_row_name7_.bind('<Return>', lambda event: entry_row_name8_.focus_set())
-                        entry_row_name8_.bind('<Return>', lambda event: entry_row_name9_.focus_set())
-                        entry_row_name9_.bind('<Return>', lambda event: entry_row_name10_.focus_set())
-                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name_.focus_set())
-                        entry_row_name_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name2_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name3_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name4_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name5_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name6_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name7_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name8_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name9_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name10_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name2_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name3_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name4_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name5_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name6_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name7_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name8_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name9_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name10_.bind('<Shift_R>', lambda event: entry_row_name__())
-
-                    # noinspection PyShadowingNames
-                    def x_x__x_():
-                        def entry2_2_2():
-                            window_x_.destroy()
-                            entry2_2()
-
-                        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-                        def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
-                                                                                         entry_row_name2_.get(),
-                                                                                         entry_row_name3_.get(),
-                                                                                         entry_row_name4_.get(),
-                                                                                         entry_row_name5_.get(),
-                                                                                         entry_row_name6_.get(),
-                                                                                         entry_row_name7_.get(),
-                                                                                         entry_row_name8_.get(),
-                                                                                         entry_row_name9_.get(),
-                                                                                         entry_row_name10_.get(),
-                                                                                         entry_row_name11_.get(),
-                                                                                         entry_row_name12_.get(),
-                                                                                         entry_row_name13_.get(),
-                                                                                         entry_row_name14_.get(),
-                                                                                         entry_row_name15_.get(),
-                                                                                         entry_row_name16_.get()
-                                                                                         ))
-                            window_x_.destroy()
-                            window.wm_attributes('-disabled', 0)
-                            window.wm_attributes('-topmost', 1)
-                            window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=loop_output_x)
-                            thread.start()
-                        window_x_ = ttk.Toplevel()
-                        window_x_.title("小六壬")
-                        window_x_.iconbitmap(icon_path)
-                        window_x_.protocol("WM_DELETE_WINDOW", entry2___)
-                        window_x_.wm_attributes('-topmost', 1)
-                        window.wm_attributes('-disabled', 1)
-                        text_ = ttk.Label(window_x_, text="列名一【顺序数据】")
-                        text2_ = ttk.Label(window_x_, text="列名二【顺序数据】")
-                        text3_ = ttk.Label(window_x_, text="列名三【顺序数据】")
-                        text4_ = ttk.Label(window_x_, text="列名四【值数据】")
-                        text5_ = ttk.Label(window_x_, text="列名五【值数据】")
-                        text6_ = ttk.Label(window_x_, text="列名六【值数据】")
-                        text7_ = ttk.Label(window_x_, text="列名七【详细值数据】")
-                        text8_ = ttk.Label(window_x_, text="列名八【详细值数据】")
-                        text9_ = ttk.Label(window_x_, text="列名九【详细值数据】")
-                        text10_ = ttk.Label(window_x_, text="列名十【详细值数据】")
-                        text11_ = ttk.Label(window_x_, text="列名十一【详细值数据】")
-                        text12_ = ttk.Label(window_x_, text="列名十二【详细值数据】")
-                        text13_ = ttk.Label(window_x_, text="列名十三【详细值数据】")
-                        text14_ = ttk.Label(window_x_, text="列名十四【详细值数据】")
-                        text15_ = ttk.Label(window_x_, text="列名十五【详细值数据】")
-                        text16_ = ttk.Label(window_x_, text="列名十六【吉值】")
-
-                        entry_row_name_ = ttk.Entry(window_x_)
-                        entry_row_name2_ = ttk.Entry(window_x_)
-                        entry_row_name3_ = ttk.Entry(window_x_)
-                        entry_row_name4_ = ttk.Entry(window_x_)
-                        entry_row_name5_ = ttk.Entry(window_x_)
-                        entry_row_name6_ = ttk.Entry(window_x_)
-                        entry_row_name7_ = ttk.Entry(window_x_)
-                        entry_row_name8_ = ttk.Entry(window_x_)
-                        entry_row_name9_ = ttk.Entry(window_x_)
-                        entry_row_name10_ = ttk.Entry(window_x_)
-                        entry_row_name11_ = ttk.Entry(window_x_)
-                        entry_row_name12_ = ttk.Entry(window_x_)
-                        entry_row_name13_ = ttk.Entry(window_x_)
-                        entry_row_name14_ = ttk.Entry(window_x_)
-                        entry_row_name15_ = ttk.Entry(window_x_)
-                        entry_row_name16_ = ttk.Entry(window_x_)
-
-
-                        text_.grid(row=0,column=0,padx=5,pady=5)
-                        text2_.grid(row=0,column=1,padx=5,pady=5)
-                        text3_.grid(row=0,column=2,padx=5,pady=5)
-                        text4_.grid(row=2,column=0,padx=5,pady=5)
-                        text5_.grid(row=2,column=1,padx=5,pady=5)
-                        text6_.grid(row=2,column=2,padx=5,pady=5)
-                        text7_.grid(row=4,column=0,padx=5,pady=5)
-                        text8_.grid(row=4,column=1,padx=5,pady=5)
-                        text9_.grid(row=4,column=2,padx=5,pady=5)
-                        text10_.grid(row=6,column=0,padx=5,pady=5)
-                        text11_.grid(row=6,column=1,padx=5,pady=5)
-                        text12_.grid(row=6,column=2,padx=5,pady=5)
-                        text13_.grid(row=8,column=0,padx=5,pady=5)
-                        text14_.grid(row=8,column=1,padx=5,pady=5)
-                        text15_.grid(row=8,column=2,padx=5,pady=5)
-                        text16_.grid(row=10,column=0,padx=5,pady=5)
-
-                        entry_row_name_.grid(row=1,column=0,padx=5,pady=5)
-                        entry_row_name2_.grid(row=1,column=1,padx=5,pady=5)
-                        entry_row_name3_.grid(row=1,column=2,padx=5,pady=5)
-                        entry_row_name4_.grid(row=3,column=0,padx=5,pady=5)
-                        entry_row_name5_.grid(row=3,column=1,padx=5,pady=5)
-                        entry_row_name6_.grid(row=3,column=2,padx=5,pady=5)
-                        entry_row_name7_.grid(row=5,column=0,padx=5,pady=5)
-                        entry_row_name8_.grid(row=5,column=1,padx=5,pady=5)
-                        entry_row_name9_.grid(row=5,column=2,padx=5,pady=5)
-                        entry_row_name10_.grid(row=7,column=0,padx=5,pady=5)
-                        entry_row_name11_.grid(row=7,column=1,padx=5,pady=5)
-                        entry_row_name12_.grid(row=7,column=2,padx=5,pady=5)
-                        entry_row_name13_.grid(row=9,column=0,padx=5,pady=5)
-                        entry_row_name14_.grid(row=9,column=1,padx=5,pady=5)
-                        entry_row_name15_.grid(row=9,column=2,padx=5,pady=5)
-                        entry_row_name16_.grid(row=11,column=0,padx=5,pady=5)
-
-                        entry_row_name_.insert(tk.END,entry_row_name.get()+"【顺序数据】")
-                        entry_row_name2_.insert(tk.END,entry_row_name2.get()+"【顺序数据】")
-                        entry_row_name3_.insert(tk.END,entry_row_name3.get()+"【顺序数据】")
-
-                        entry_row_name4_.insert(tk.END,entry_row_name.get()+"【值数据】")
-                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"【值数据】")
-                        entry_row_name6_.insert(tk.END,entry_row_name3.get()+"【值数据】")
-
-                        entry_row_name7_.insert(tk.END,entry_row_name.get()+"(1)【详细值数据】")
-                        entry_row_name8_.insert(tk.END,entry_row_name.get()+"(2)【详细值数据】")
-                        entry_row_name9_.insert(tk.END,entry_row_name.get()+"(3)【详细值数据】")
-                        entry_row_name10_.insert(tk.END,entry_row_name2.get()+"(1)【详细值数据】")
-                        entry_row_name11_.insert(tk.END,entry_row_name2.get()+"(2)【详细值数据】")
-                        entry_row_name12_.insert(tk.END,entry_row_name2.get()+"(3)【详细值数据】")
-                        entry_row_name13_.insert(tk.END,entry_row_name3.get()+"(1)【详细值数据】")
-                        entry_row_name14_.insert(tk.END,entry_row_name3.get()+"(2)【详细值数据】")
-                        entry_row_name15_.insert(tk.END,entry_row_name3.get()+"(3)【详细值数据】")
-
-                        entry_row_name16_.insert(tk.END,entry_row_name4.get())
-
-                        entry_row_name_.bind('<Return>', lambda event: entry_row_name2_.focus_set())
-                        entry_row_name2_.bind('<Return>', lambda event: entry_row_name3_.focus_set())
-                        entry_row_name3_.bind('<Return>', lambda event: entry_row_name4_.focus_set())
-                        entry_row_name4_.bind('<Return>', lambda event: entry_row_name5_.focus_set())
-                        entry_row_name5_.bind('<Return>', lambda event: entry_row_name6_.focus_set())
-                        entry_row_name6_.bind('<Return>', lambda event: entry_row_name7_.focus_set())
-                        entry_row_name7_.bind('<Return>', lambda event: entry_row_name8_.focus_set())
-                        entry_row_name8_.bind('<Return>', lambda event: entry_row_name9_.focus_set())
-                        entry_row_name9_.bind('<Return>', lambda event: entry_row_name10_.focus_set())
-                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name11_.focus_set())
-                        entry_row_name11_.bind('<Return>', lambda event: entry_row_name12_.focus_set())
-                        entry_row_name12_.bind('<Return>', lambda event: entry_row_name13_.focus_set())
-                        entry_row_name13_.bind('<Return>', lambda event: entry_row_name14_.focus_set())
-                        entry_row_name14_.bind('<Return>', lambda event: entry_row_name15_.focus_set())
-                        entry_row_name15_.bind('<Return>', lambda event: entry_row_name16_.focus_set())
-                        entry_row_name16_.bind('<Return>', lambda event: entry_row_name_.focus_set())
-                        entry_row_name_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name2_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name3_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name4_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name5_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name6_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name7_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name8_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name9_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name10_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name11_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name12_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name13_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name14_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name15_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name16_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name2_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name3_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name4_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name5_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name6_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name7_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name8_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name9_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name10_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name11_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name12_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name13_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name14_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name15_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name16_.bind('<Shift_R>', lambda event: entry_row_name__())
-
-                    # noinspection PyShadowingNames
-                    def x_x__x__():
-                        def entry2_2_2():
-                            window_x_.destroy()
-                            entry2_2()
-
-                        # noinspection PyShadowingNames
-                        def entry_row_name__():
-                            with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n'.format(entry_row_name_.get(),
-                                                                                         entry_row_name2_.get(),
-                                                                                         entry_row_name3_.get(),
-                                                                                         entry_row_name4_.get(),
-                                                                                         entry_row_name5_.get(),
-                                                                                         entry_row_name6_.get(),
-                                                                                         entry_row_name7_.get(),
-                                                                                         entry_row_name8_.get(),
-                                                                                         entry_row_name9_.get(),
-                                                                                         entry_row_name10_.get(),
-                                                                                         entry_row_name11_.get(),
-                                                                                         entry_row_name12_.get(),
-                                                                                         entry_row_name13_.get(),
-                                                                                         entry_row_name14_.get(),
-                                                                                         entry_row_name15_.get(),
-                                                                                         entry_row_name16_.get()
-                                                                                         ))
-                            window_x_.destroy()
-                            window.wm_attributes('-disabled', 0)
-                            window.wm_attributes('-topmost', 1)
-                            window.wm_attributes('-topmost', 0)
-                            thread = threading.Thread(target=loop_output_x)
-                            thread.start()
-                        window_x_ = ttk.Toplevel()
-                        window_x_.title("小六壬")
-                        window_x_.iconbitmap(icon_path)
-                        window_x_.protocol("WM_DELETE_WINDOW", entry2___)
-                        window_x_.wm_attributes('-topmost', 1)
-                        window.wm_attributes('-disabled', 1)
-                        text_  = ttk.Label(window_x_, text="列名一【顺序数据】【空亡定为6】")
-                        text2_ = ttk.Label(window_x_, text="列名二【顺序数据】【空亡定为6】")
-                        text3_ = ttk.Label(window_x_, text="列名三【顺序数据】【空亡定为6】")
-                        text4_ = ttk.Label(window_x_, text="列名四【顺序数据】【空亡定为0】")
-                        text5_ = ttk.Label(window_x_, text="列名五【顺序数据】【空亡定为0】")
-                        text6_ = ttk.Label(window_x_, text="列名六【顺序数据】【空亡定为0】")
-                        text7_ = ttk.Label(window_x_, text="列名七【值数据】")
-                        text8_ = ttk.Label(window_x_, text="列名八【值数据】")
-                        text9_ = ttk.Label(window_x_, text="列名九【值数据】")
-                        text10_ = ttk.Label(window_x_, text="列名十【详细值数据】")
-                        text11_ = ttk.Label(window_x_, text="列名十一【详细值数据】")
-                        text12_ = ttk.Label(window_x_, text="列名十二【详细值数据】")
-                        text13_ = ttk.Label(window_x_, text="列名十三【详细值数据】")
-                        text14_ = ttk.Label(window_x_, text="列名十四【详细值数据】")
-                        text15_ = ttk.Label(window_x_, text="列名十五【详细值数据】")
-                        text16_ = ttk.Label(window_x_, text="列名十六【详细值数据】")
-                        text17_ = ttk.Label(window_x_, text="列名十七【详细值数据】")
-                        text18_ = ttk.Label(window_x_, text="列名十八【详细值数据】")
-                        text19_ = ttk.Label(window_x_, text="列名十九【吉值】")
-
-                        entry_row_name_ = ttk.Entry(window_x_)
-                        entry_row_name2_ = ttk.Entry(window_x_)
-                        entry_row_name3_ = ttk.Entry(window_x_)
-                        entry_row_name4_ = ttk.Entry(window_x_)
-                        entry_row_name5_ = ttk.Entry(window_x_)
-                        entry_row_name6_ = ttk.Entry(window_x_)
-                        entry_row_name7_ = ttk.Entry(window_x_)
-                        entry_row_name8_ = ttk.Entry(window_x_)
-                        entry_row_name9_ = ttk.Entry(window_x_)
-                        entry_row_name10_ = ttk.Entry(window_x_)
-                        entry_row_name11_ = ttk.Entry(window_x_)
-                        entry_row_name12_ = ttk.Entry(window_x_)
-                        entry_row_name13_ = ttk.Entry(window_x_)
-                        entry_row_name14_ = ttk.Entry(window_x_)
-                        entry_row_name15_ = ttk.Entry(window_x_)
-                        entry_row_name16_ = ttk.Entry(window_x_)
-                        entry_row_name17_ = ttk.Entry(window_x_)
-                        entry_row_name18_ = ttk.Entry(window_x_)
-                        entry_row_name19_ = ttk.Entry(window_x_)
-
-
-                        text_.grid(row=0,column=0,padx=5,pady=5)
-                        text2_.grid(row=0,column=1,padx=5,pady=5)
-                        text3_.grid(row=0,column=2,padx=5,pady=5)
-                        text4_.grid(row=2,column=0,padx=5,pady=5)
-                        text5_.grid(row=2,column=1,padx=5,pady=5)
-                        text6_.grid(row=2,column=2,padx=5,pady=5)
-                        text7_.grid(row=4,column=0,padx=5,pady=5)
-                        text8_.grid(row=4,column=1,padx=5,pady=5)
-                        text9_.grid(row=4,column=2,padx=5,pady=5)
-                        text10_.grid(row=6,column=0,padx=5,pady=5)
-                        text11_.grid(row=6,column=1,padx=5,pady=5)
-                        text12_.grid(row=6,column=2,padx=5,pady=5)
-                        text13_.grid(row=8,column=0,padx=5,pady=5)
-                        text14_.grid(row=8,column=1,padx=5,pady=5)
-                        text15_.grid(row=8,column=2,padx=5,pady=5)
-                        text16_.grid(row=10,column=0,padx=5,pady=5)
-                        text17_.grid(row=10,column=1,padx=5,pady=5)
-                        text18_.grid(row=10,column=2,padx=5,pady=5)
-                        text19_.grid(row=12,column=0,padx=5,pady=5)
-
-                        entry_row_name_.grid(row=1,column=0,padx=5,pady=5)
-                        entry_row_name2_.grid(row=1,column=1,padx=5,pady=5)
-                        entry_row_name3_.grid(row=1,column=2,padx=5,pady=5)
-                        entry_row_name4_.grid(row=3,column=0,padx=5,pady=5)
-                        entry_row_name5_.grid(row=3,column=1,padx=5,pady=5)
-                        entry_row_name6_.grid(row=3,column=2,padx=5,pady=5)
-                        entry_row_name7_.grid(row=5,column=0,padx=5,pady=5)
-                        entry_row_name8_.grid(row=5,column=1,padx=5,pady=5)
-                        entry_row_name9_.grid(row=5,column=2,padx=5,pady=5)
-                        entry_row_name10_.grid(row=7,column=0,padx=5,pady=5)
-                        entry_row_name11_.grid(row=7,column=1,padx=5,pady=5)
-                        entry_row_name12_.grid(row=7,column=2,padx=5,pady=5)
-                        entry_row_name13_.grid(row=9,column=0,padx=5,pady=5)
-                        entry_row_name14_.grid(row=9,column=1,padx=5,pady=5)
-                        entry_row_name15_.grid(row=9,column=2,padx=5,pady=5)
-                        entry_row_name16_.grid(row=11,column=0,padx=5,pady=5)
-                        entry_row_name17_.grid(row=11,column=1,padx=5,pady=5)
-                        entry_row_name18_.grid(row=11,column=2,padx=5,pady=5)
-                        entry_row_name19_.grid(row=13,column=0,padx=5,pady=5)
-
-                        entry_row_name_.insert(tk.END,entry_row_name.get()+"【顺序数据】【空亡定为6】")
-                        entry_row_name2_.insert(tk.END,entry_row_name2.get()+"【顺序数据】【空亡定为6】")
-                        entry_row_name3_.insert(tk.END,entry_row_name3.get()+"【顺序数据】【空亡定为6】")
-
-                        entry_row_name4_.insert(tk.END,entry_row_name.get()+"【顺序数据】【空亡定为0】")
-                        entry_row_name5_.insert(tk.END,entry_row_name2.get()+"【顺序数据】【空亡定为0】")
-                        entry_row_name6_.insert(tk.END,entry_row_name3.get()+"【顺序数据】【空亡定为0】")
-
-                        entry_row_name7_.insert(tk.END,entry_row_name.get()+"【值数据】")
-                        entry_row_name8_.insert(tk.END,entry_row_name2.get()+"【值数据】")
-                        entry_row_name9_.insert(tk.END,entry_row_name3.get()+"【值数据】")
-
-                        entry_row_name10_.insert(tk.END,entry_row_name.get()+"(1)【详细值数据】")
-                        entry_row_name11_.insert(tk.END,entry_row_name.get()+"(2)【详细值数据】")
-                        entry_row_name12_.insert(tk.END,entry_row_name.get()+"(3)【详细值数据】")
-                        entry_row_name13_.insert(tk.END,entry_row_name2.get()+"(1)【详细值数据】")
-                        entry_row_name14_.insert(tk.END,entry_row_name2.get()+"(2)【详细值数据】")
-                        entry_row_name15_.insert(tk.END,entry_row_name2.get()+"(3)【详细值数据】")
-                        entry_row_name16_.insert(tk.END,entry_row_name3.get()+"(1)【详细值数据】")
-                        entry_row_name17_.insert(tk.END,entry_row_name3.get()+"(2)【详细值数据】")
-                        entry_row_name18_.insert(tk.END,entry_row_name3.get()+"(3)【详细值数据】")
-                        entry_row_name19_.insert(tk.END,entry_row_name4.get())
-
-
-
-                        entry_row_name_.bind('<Return>', lambda event: entry_row_name2_.focus_set())
-                        entry_row_name2_.bind('<Return>', lambda event: entry_row_name3_.focus_set())
-                        entry_row_name3_.bind('<Return>', lambda event: entry_row_name4_.focus_set())
-                        entry_row_name4_.bind('<Return>', lambda event: entry_row_name5_.focus_set())
-                        entry_row_name5_.bind('<Return>', lambda event: entry_row_name6_.focus_set())
-                        entry_row_name6_.bind('<Return>', lambda event: entry_row_name7_.focus_set())
-                        entry_row_name7_.bind('<Return>', lambda event: entry_row_name8_.focus_set())
-                        entry_row_name8_.bind('<Return>', lambda event: entry_row_name9_.focus_set())
-                        entry_row_name9_.bind('<Return>', lambda event: entry_row_name10_.focus_set())
-                        entry_row_name10_.bind('<Return>', lambda event: entry_row_name11_.focus_set())
-                        entry_row_name11_.bind('<Return>', lambda event: entry_row_name12_.focus_set())
-                        entry_row_name12_.bind('<Return>', lambda event: entry_row_name13_.focus_set())
-                        entry_row_name13_.bind('<Return>', lambda event: entry_row_name14_.focus_set())
-                        entry_row_name14_.bind('<Return>', lambda event: entry_row_name15_.focus_set())
-                        entry_row_name15_.bind('<Return>', lambda event: entry_row_name16_.focus_set())
-                        entry_row_name16_.bind('<Return>', lambda event: entry_row_name17_.focus_set())
-                        entry_row_name17_.bind('<Return>', lambda event: entry_row_name18_.focus_set())
-                        entry_row_name18_.bind('<Return>', lambda event: entry_row_name19_.focus_set())
-                        entry_row_name19_.bind('<Return>', lambda event: entry_row_name_.focus_set())
-                        entry_row_name_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name2_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name3_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name4_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name5_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name6_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name7_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name8_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name9_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name10_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name11_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name12_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name13_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name14_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name15_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name16_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name17_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name18_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name19_.bind('<Shift_L>', lambda event: entry2_2_2())
-                        entry_row_name_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name2_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name3_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name4_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name5_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name6_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name7_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name8_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name9_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name10_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name11_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name12_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name13_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name14_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name15_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name16_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name17_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name18_.bind('<Shift_R>', lambda event: entry_row_name__())
-                        entry_row_name19_.bind('<Shift_R>', lambda event: entry_row_name__())
-
-
-                    if entry_row_name.get() and entry_row_name2.get() and entry_row_name3.get() and entry_row_name4.get():
-                        try:
-                            match t:
-                                case "顺序数据【空亡定为6】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "顺序数据【空亡定为0】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "值数据":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "详细值数据【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "详细值数据【十列】":
-                                    x_x__x()
-                                    window_x.destroy()
-                                case "全部【空亡定为6】【十六列】":
-                                    x_x__x_()
-                                    window_x.destroy()
-                                case "全部【空亡定为6】【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "全部【空亡定为0】【十六列】":
-                                    x_x__x_()
-                                    window_x.destroy()
-                                case "全部【空亡定为0】【四列】":
-                                    with open(file_path_csv, 'w',encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(),entry_row_name2.get(),entry_row_name3.get(),entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                                case "真全部【十九列】":
-                                    x_x__x__()
-                                    window_x.destroy()
-                                case _:
-                                    with open(file_path_csv, 'w', encoding='utf-8') as file:
-                                        file.write('{},{},{},{}\n'.format(entry_row_name.get(), entry_row_name2.get(),
-                                                                          entry_row_name3.get(), entry_row_name4.get()))
-                                    window_x.destroy()
-                                    window.wm_attributes('-disabled', 0)
-                                    window.wm_attributes('-topmost', 1)
-                                    window.wm_attributes('-topmost', 0)
-                                    thread = threading.Thread(target=loop_output_x)
-                                    thread.start()
-                        except Exception as e:
-                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
-                            entry2_2_1()
-                    else:
-                        icon.notify("必须有列名", "Lightweight text editor")
-
-
-                window_x = ttk.Toplevel()
-                window_x.title("小六壬")
-                window_x.iconbitmap(icon_path)
-                window_x.protocol("WM_DELETE_WINDOW", entry2___)
-                window_x.wm_attributes('-topmost', 1)
-                window.wm_attributes('-disabled', 1)
-                text = ttk.Label(window_x, text="列名一")
-                text.grid(row=0,column=0,padx=5,pady=5)
-                text2 = ttk.Label(window_x, text="列名二")
-                text2.grid(row=0,column=1,padx=5,pady=5)
-                text3 = ttk.Label(window_x, text="列名三")
-                text3.grid(row=0,column=2,padx=5,pady=5)
-                text4 = ttk.Label(window_x, text="列名四")
-                text4.grid(row=0,column=3,padx=5,pady=5)
-                text5 = ttk.Label(window_x, text="输出细节")
-                text5.grid(row=0,column=4,padx=5,pady=5)
-                entry_row_name = ttk.Entry(window_x)
-                entry_row_name.grid(row=1,column=0,padx=5,pady=5)
-                entry_row_name2 = ttk.Entry(window_x)
-                entry_row_name2.grid(row=1,column=1,padx=5,pady=5)
-                entry_row_name3 = ttk.Entry(window_x)
-                entry_row_name3.grid(row=1,column=2,padx=5,pady=5)
-                entry_row_name4 = ttk.Entry(window_x)
-                entry_row_name4.grid(row=1,column=3,padx=5,pady=5)
-
-                combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】", "顺序数据【空亡定为0】",
-                                                                 "值数据","详细值数据【四列】","详细值数据【十列】",
-                                                                 "全部【空亡定为6】【十六列】","全部【空亡定为6】【四列】",
-                                                                 "全部【空亡定为0】【十六列】","全部【空亡定为0】【四列】",
-                                                                 "真全部【十九列】"
-                                                                 ], state="readonly")
-                combobox.grid(row=1,column=4,padx=5,pady=5,ipadx=10)
-                match t:
-                    case "顺序数据【空亡定为6】":
-                        combobox.set("顺序数据【空亡定为6】")
-                    case "顺序数据【空亡定为0】":
-                        combobox.set("顺序数据【空亡定为0】")
-                    case "值数据":
-                        combobox.set("值数据")
-                    case "详细值数据【四列】":
-                        combobox.set("详细值数据【四列】")
-                    case "详细值数据【十列】":
-                        combobox.set("详细值数据【十列】")
-                    case "全部【空亡定为6】【十六列】":
-                        combobox.set("全部【空亡定为6】【十六列】")
-                    case "全部【空亡定为6】【四列】":
-                        combobox.set("全部【空亡定为6】【四列】")
-                    case "全部【空亡定为0】【十六列】":
-                        combobox.set("全部【空亡定为0】【十六列】")
-                    case "全部【空亡定为0】【四列】":
-                        combobox.set("全部【空亡定为0】【四列】")
-                    case "真全部【十九列】":
-                        combobox.set("真全部【十九列】")
-                    case _:
-                        combobox.set("顺序数据【空亡定为6】")
-                        combobox_save()
-                entry_row_name.insert(tk.END,"天宫")
-                entry_row_name2.insert(tk.END,"地宫")
-                entry_row_name3.insert(tk.END,"人宫")
-                entry_row_name4.insert(tk.END,"吉值")
-                entry_row_name.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name2.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name3.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name4.bind('<Shift_R>', lambda event: entry_row_name_())
-                combobox.bind('<Shift_R>', lambda event: entry_row_name_())
-                entry_row_name.bind('<Return>', lambda event: entry_row_name2.focus_set())
-                entry_row_name2.bind('<Return>', lambda event: entry_row_name3.focus_set())
-                entry_row_name3.bind('<Return>', lambda event: entry_row_name4.focus_set())
-                entry_row_name4.bind('<Return>', lambda event: combobox.focus_set())
-                combobox.bind('<Return>', lambda event: entry_row_name.focus_set())
-                entry_row_name.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name2.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name3.bind('<Shift_L>', lambda event: entry2_2_1())
-                entry_row_name4.bind('<Shift_L>', lambda event: entry2_2_1())
-                combobox.bind('<Shift_L>', lambda event: entry2_2_1())
-                combobox.bind("<<ComboboxSelected>>", lambda event: combobox_save())
-
-            check_up_num = int(t_load(p_path) or 1)
-
-
-            if check_up_num == 0:
-                x_x()
-            elif check_up_num == 1:
-                x_x_()
-            elif check_up_num == 2:
-                x_x__()
-
-            window.focus_set()
-            entrynum = entry.get()
-            entry.pack_forget()
-            text.pack_forget()
-            entry2 = tk.Entry(w2)
-            entry2.pack(padx=5,pady=5,side='right')
-            entry2.config(font=font_style)
-            entry2.insert(tk.END,entrynum)
-            entry2.bind('<Return>', lambda event: entry2_())
-            entry2.bind('<Shift_L>', lambda event: entry2_2())
-            text2 = ttk.Label(w2, text="循环次数")
-            text2.pack(padx=5,pady=5,side='right')
-            text_widget.delete(1.0, END)
-            w.grid_remove()
-            w3 = ttk.Frame(window)
-            w3.grid(row=2,column=0,sticky=E)
-
-            if t_rule_num2 == 1:
-                b3 = ttk.Button(w3, text="输出不去尾", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-            elif t_rule_num2 == 0:
-                b3 = ttk.Button(w3, text="输出保留整数", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-            elif t_rule_num2 == 2:
-                b3 = ttk.Button(w3, text="输出保留两位", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-
-            if t_rule_num == 1:
-                b2 = ttk.Button(w3, text="常规文字循环输出", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-            elif t_rule_num == 0:
-                b2 = ttk.Button(w3, text="只循环输出吉值", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-            elif t_rule_num == 2:
-                b2 = ttk.Button(w3, text="常规数据循环输出", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-            elif t_rule_num == 3:
-                icon.notify("选用的方法不适用于该文件", "Lightweight text editor")
-                entry2_2()
-
-            b4 = ttk.Button(w3, text="循环输出csv文件", style=OUTLINE, command=entry2__)
-            b4.pack(padx=5,pady=5,side='right')
-            b1 = ttk.Button(w3, text="循环输出txt文件", style=OUTLINE, command=entry2__)
-            b1.pack(padx=5,pady=5,side='right')
-            Separator(w3, orient=VERTICAL).pack(fill=Y,padx=5,pady=5,side='right')
-            wv1 = ttk.IntVar()
-            if num_wv1 % 2 == 1:
-                wv1.set(1)
-            else:
-                wv1.set(0)
-            consider_checkbutton2 = ttk.Checkbutton(w3, text="本页为首", variable=wv1, command=wv_1, style="round-toggle", state="disabled")
-            consider_checkbutton2.pack(padx=5,pady=5,side='right')
-
-        combo.grid_remove()
-        w2 = ttk.Frame(window)
-        w2.grid(row=0,column=0,sticky=W)
-        entry = tk.Entry(w2)
-        entry.pack(padx=5,pady=5,side='right')
-        entry.config(font=font_style)
-        text = ttk.Label(w2, text="循环次数")
-        text.pack(padx=5,pady=5,side='right')
-        entry.focus_set()
-        entry.bind('<Return>', lambda event: t_loop_output_x())
-        entry.bind('<Shift_L>', lambda event: entry2_2())
-
-    def loop_output():
-        file_path = filedialog.asksaveasfilename(parent=window, defaultextension=".txt",
-                                                 filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
-        def entry2_():
-            icon.notify("循环过程中不可加入新循环\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2__():
-            icon.notify("循环过程中不可做出任何改变\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2___():
-            icon.notify("不可关闭该循环过程\n强制退出循环<右Shift>", "Lightweight text editor")
-        def entry2_2():
-            window.destroy()
-            x()
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def t_loop_output_x():
-
-            # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-            def loop_output_x():
-                def recover():
-                    text_widget.delete(1.0, END)
-                    text_widget.insert(tk.END,"已完成循环")
-                    entry2.pack_forget()
-                    text2.pack_forget()
-                    entry.pack(padx=5,pady=5,side='right')
-                    entry.config(font=font_style)
-                    text.pack(padx=5,pady=5,side='right')
-                    w3.grid_remove()
-                    w.grid()
-                entry_ = entry.get()
-                num = 0
-                entry___ = re.findall('[^0-9]', entry_)
-                match entry___:
-                    case []:
-                        try:
-                            text_widget.insert(tk.END,"已循环次数：0")
-                            t_rule_num = int(t_load(p_path) or 1)
-                            t_rule_num2 = int(t_load(q_path) or 2)
-                            buffer = []
-
-                            match t_rule_num:
-                                case 0:
-                                    match t_rule_num2:
-                                        case 1:
-                                            while True:
-                                                if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as file:
-                                                        file.write(''.join(buffer))
-                                                    recover()
-                                                    break
-                                                buffer.append(XiaoLiuren.numgua2_1())
-                                                num = num + 1
-                                                if num%200 == 0:
-                                                    text_widget.delete(1.6, END)
-                                                    text_widget.insert(tk.END,"{}".format(num))
-                                        case 0:
-                                            while True:
-                                                if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as file:
-                                                        file.write(''.join(buffer))
-                                                    recover()
-                                                    break
-                                                buffer.append(XiaoLiuren.numgua2_0())
-                                                num = num + 1
-                                                if num%200 == 0:
-                                                    text_widget.delete(1.6, END)
-                                                    text_widget.insert(tk.END,"{}".format(num))
-                                        case 2:
-                                            while True:
-                                                if num == int(entry_):
-                                                    with open(file_path, 'a+',encoding='utf-8') as file:
-                                                        file.write(''.join(buffer))
-                                                    recover()
-                                                    break
-                                                buffer.append(XiaoLiuren.numgua2_2())
-                                                num = num + 1
-                                                if num%200 == 0:
-                                                    text_widget.delete(1.6, END)
-                                                    text_widget.insert(tk.END,"{}".format(num))
-                                case 1:
-                                    while True:
-                                        if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as file:
-                                                file.write(''.join(buffer))
-                                            recover()
-                                            break
-                                        buffer.append(XiaoLiuren.numgua2_3())
-                                        num = num + 1
-                                        if num%200 == 0:
-                                            text_widget.delete(1.6, END)
-                                            text_widget.insert(tk.END,"{}".format(num))
-                                case 2:
-                                    while True:
-                                        if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as file:
-                                                file.write(''.join(buffer))
-                                            recover()
-                                            break
-                                        buffer.append(XiaoLiuren.numgua2_5())
-                                        num = num + 1
-                                        if num%200 == 0:
-                                            text_widget.delete(1.6, END)
-                                            text_widget.insert(tk.END,"{}".format(num))
-                                case 3:
-                                    while True:
-                                        if num == int(entry_):
-                                            with open(file_path, 'a+',encoding='utf-8') as file:
-                                                file.write(''.join(buffer))
-                                            recover()
-                                            break
-                                        buffer.append(XiaoLiuren.numgua())
-                                        num = num + 1
-                                        if num%200 == 0:
-                                            text_widget.delete(1.6, END)
-                                            text_widget.insert(tk.END,"{}".format(num))
-                        except Exception as e:
-                            messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关",parent=window)
-                            entry2_2()
-                    case _:
-                        messagebox.showerror("错误", message="请只输入整数",parent=window)
-                        entry2.pack_forget()
-                        text2.pack_forget()
-                        entry.pack(padx=5,pady=5,side='right')
-                        entry.config(font=font_style)
-                        text.pack(padx=5,pady=5,side='right')
-                        w3.grid_remove()
-                        w.grid()
-
-            # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-            def x1_x():
-
-                def entry2_2_1():
-                    window_x.destroy()
-                    entry2_2()
-
-                def combobox_save():
-                    with open(v_path,"w",encoding='utf-8') as file:
-                        file.write(str(combobox.get()))
-
-                def combobox_load():
-                    try:
-                        with open(v_path, 'r',encoding='utf-8') as file:
-                            return file.read()
-                    except FileNotFoundError:
-                        pass
-
-                # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-                def combobox_():
-                    try:
-                        window_x.destroy()
-                        window.wm_attributes('-disabled', 0)
-                        window.wm_attributes('-topmost', 1)
-                        window.wm_attributes('-topmost', 0)
-                        thread = threading.Thread(target=loop_output_x)
-                        thread.start()
-                    except Exception as e:
-                        messagebox.showerror("错误，已退出循环", f"发生错误: {e}\n可能与文件是否设置有关", parent=window)
-                        entry2_2_1()
-
-                window_x = ttk.Toplevel()
-                window_x.title("小六壬")
-                window_x.iconbitmap(icon_path)
-                window_x.protocol("WM_DELETE_WINDOW", entry2___)
-                window_x.wm_attributes('-topmost', 1)
-                window.wm_attributes('-disabled', 1)
-                text_ = ttk.Label(window_x, text="输出细节")
-                text_.grid(row=0,column=0,padx=5,pady=5)
-                combobox = ttk.Combobox(master=window_x, values=["顺序数据【空亡定为6】", "顺序数据【空亡定为0】", "值数据", "详细值数据【四列】", "详细值数据【十列】"], state="readonly")
-                combobox.grid(row=1,column=0,padx=5,pady=5)
-                t = str(combobox_load() or "顺序数据【空亡定为6】")
-                match t:
-                    case "顺序数据【空亡定为6】":
-                        combobox.set("顺序数据【空亡定为6】")
-                    case "顺序数据【空亡定为0】":
-                        combobox.set("顺序数据【空亡定为0】")
-                    case "值数据":
-                        combobox.set("值数据")
-                    case "详细值数据【四列】":
-                        combobox.set("详细值数据【四列】")
-                    case "详细值数据【十列】":
-                        combobox.set("详细值数据【十列】")
-                    case _:
-                        combobox.set("顺序数据【空亡定为6】")
-                        combobox_save()
-                combobox.bind('<Shift_R>', lambda event: combobox_())
-                window_x.bind('<Shift_R>', lambda event: combobox_())
-                combobox.bind('<Shift_L>', lambda event: entry2_2_1())
-                window_x.bind('<Shift_L>', lambda event: entry2_2_1())
-                combobox.bind("<<ComboboxSelected>>", lambda event: combobox_save())
-
-            window.focus_set()
-            entrynum = entry.get()
-            entry.pack_forget()
-            text.pack_forget()
-            entry2 = tk.Entry(w2)
-            entry2.pack(padx=5,pady=5,side='right')
-            entry2.config(font=font_style)
-            entry2.insert(tk.END,entrynum)
-            entry2.bind('<Return>', lambda event: entry2_())
-            entry2.bind('<Shift_L>', lambda event: entry2_2())
-            text2 = ttk.Label(w2, text="循环次数")
-            text2.pack(padx=5,pady=5,side='right')
-            text_widget.delete(1.0, END)
-            w.grid_remove()
-            w3 = ttk.Frame(window)
-            w3.grid(row=2,column=0,sticky=E)
-            t_rule_num = int(t_load(p_path) or 1)
-
-
-            if t_rule_num2 == 1:
-                b3 = ttk.Button(w3, text="输出不去尾", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-            elif t_rule_num2 == 0:
-                b3 = ttk.Button(w3, text="输出保留整数", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-            elif t_rule_num2 == 2:
-                b3 = ttk.Button(w3, text="输出保留两位", style=OUTLINE, command=entry2__)
-                b3.pack(padx=5,pady=5,side='right')
-
-            if t_rule_num == 1:
-                b2 = ttk.Button(w3, text="常规文字循环输出", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=loop_output_x)
-                thread.start()
-            elif t_rule_num == 0:
-                b2 = ttk.Button(w3, text="只循环输出吉值", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=loop_output_x)
-                thread.start()
-            elif t_rule_num == 2:
-                b2 = ttk.Button(w3, text="常规数据循环输出", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-                x1_x()
-            elif t_rule_num == 3:
-                b2 = ttk.Button(w3, text="旧版循环输出【仅限txt文件】", style=OUTLINE, command=entry2__)
-                b2.pack(padx=5,pady=5,side='right')
-                thread = threading.Thread(target=loop_output_x)
-                thread.start()
-
-            b4 = ttk.Button(w3, text="循环输出csv文件", style=OUTLINE, command=entry2__)
-            b4.pack(padx=5,pady=5,side='right')
-            b1 = ttk.Button(w3, text="循环输出txt文件", style=OUTLINE, command=entry2__)
-            b1.pack(padx=5,pady=5,side='right')
-            Separator(w3, orient=VERTICAL).pack(fill=Y,padx=5,pady=5,side='right')
-            wv1 = ttk.IntVar()
-            if num_wv1 % 2 == 1:
-                wv1.set(1)
-            else:
-                wv1.set(0)
-            consider_checkbutton2 = ttk.Checkbutton(w3, text="本页为首", variable=wv1, command=wv_1, style="round-toggle", state="disabled")
-            consider_checkbutton2.pack(padx=5,pady=5,side='right')
-
-        combo.grid_remove()
-        w2 = ttk.Frame(window)
-        w2.grid(row=0,column=0,sticky=W)
-        entry = tk.Entry(w2)
-        entry.pack(padx=5,pady=5,side='right')
-        entry.config(font=font_style)
-        text = ttk.Label(w2, text="循环次数")
-        text.pack(padx=5,pady=5,side='right')
-        entry.focus_set()
-        entry.bind('<Return>', lambda event: t_loop_output_x())
-        entry.bind('<Shift_L>', lambda event: entry2_2())
-
-
-    def count_b3_3():
-        rule_num = 1
-        b3.config(text="输出不去尾", command=count_b3_1)
-        t_save(q_path, rule_num)
-
-    def count_b3_2():
-        rule_num = 2
-        b3.config(text="输出保留两位", command=count_b3_3)
-        t_save(q_path, rule_num)
-
-    def count_b3_1():
-        rule_num = 0
-        b3.config(text="输出保留整数", command=count_b3_2)
-        t_save(q_path, rule_num)
-
-    def count_b2_4():
-        rule_num = 3
-        b2.config(text="旧版循环输出【仅限txt文件】", command=count_b2_2)
-        t_save(p_path,rule_num)
-
-    def count_b2_3():
-        rule_num = 2
-        b2.config(text="常规数据循环输出", command=count_b2_4)
-        t_save(p_path, rule_num)
-
-    def count_b2_2():
-        rule_num = 1
-        b2.config(text="常规文字循环输出", command=count_b2_1)
-        t_save(p_path, rule_num)
-
-    def count_b2_1():
-        rule_num = 0
-        b2.config(text="只循环输出吉值", command=count_b2_3)
-        t_save(p_path, rule_num)
-
-
-    def generate_and_display():
-        text_widget.delete(1.0, END)
-        if combo.get() == "算一卦":
-            text_widget.insert(tk.END, XiaoLiuren.numgua())
-        if combo.get() == "起卦":
-            pass
-    combo = ttk.Combobox(window, values=["起卦","算一卦"], state="readonly")
-    combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-    combo.bind("<Button-3>", lambda event: generate_and_display())
-    combo.set("起卦")
-
-    def event_t():
-        if down_box.get() == "返回主页":
-            window.destroy()
-            root.deiconify()
-
-    down_box = ttk.Combobox(window, values=["返回主页"], state="readonly")
-    down_box.grid(row=0, column=0, padx=5, pady=5, sticky="e")
-    down_box.bind("<Button-3>", lambda event: event_t())
-    down_box.set("返回主页")
-    scrollbar = ttk.Scrollbar(window, style="round")
-    scrollbar.grid(row=1, column=1, sticky="ns")
-    text_widget = tk.Text(window, wrap="word",
-                          yscrollcommand=scrollbar.set, font=font_style)
-    text_widget.grid(row=1, column=0, sticky="nsew")
-    scrollbar.config(command=text_widget.yview)
-
-    w = ttk.Frame(window)
-    w.grid(row=2,column=0,sticky=E)
-
-    if t_rule_num2 == 1:
-        b3 = ttk.Button(w, text="输出不去尾", style=OUTLINE, command=count_b3_1)
-        b3.pack(padx=5,pady=5,side='right')
-    elif t_rule_num2 == 0:
-        b3 = ttk.Button(w, text="输出保留整数", style=OUTLINE, command=count_b3_2)
-        b3.pack(padx=5,pady=5,side='right')
-    elif t_rule_num2 == 2:
-        b3 = ttk.Button(w, text="输出保留两位", style=OUTLINE, command=count_b3_3)
-        b3.pack(padx=5,pady=5,side='right')
-
-    if t_rule_num == 1:
-        b2 = ttk.Button(w, text="常规文字循环输出", style=OUTLINE, command=count_b2_1)
-        b2.pack(padx=5,pady=5,side='right')
-    elif t_rule_num == 0:
-        b2 = ttk.Button(w, text="只循环输出吉值", style=OUTLINE, command=count_b2_3)
-        b2.pack(padx=5,pady=5,side='right')
-    elif t_rule_num == 2:
-        b2 = ttk.Button(w, text="常规数据循环输出", style=OUTLINE, command=count_b2_4)
-        b2.pack(padx=5,pady=5,side='right')
-    elif t_rule_num == 3:
-        b2 = ttk.Button(w, text="旧版循环输出【仅限txt文件】", style=OUTLINE, command=count_b2_2)
-        b2.pack(padx=5,pady=5,side='right')
-
-    b4 = ttk.Button(w, text="循环输出csv文件", style=OUTLINE, command=loop_output2)
-    b4.pack(padx=5,pady=5,side='right')
-    b1 = ttk.Button(w, text="循环输出txt文件", style=OUTLINE, command=loop_output)
-    b1.pack(padx=5,pady=5,side='right')
-    Separator(w, orient=VERTICAL).pack(fill=Y,padx=5,pady=5,side='right')
-    wv1 = ttk.IntVar()
-    if num_wv1 % 2 == 1:
-        wv1.set(1)
-    else:
-        wv1.set(0)
-    consider_checkbutton2 = ttk.Checkbutton(w, text="本页为首", variable=wv1, command=wv_1, style="round-toggle")
-    consider_checkbutton2.pack(padx=5,pady=5,side='right')
-    window.grid_rowconfigure(1, weight=1)
-    window.grid_columnconfigure(0, weight=1)
-
-    window.mainloop()
 
 ###分割线
 #关于紫微斗数###分割线
@@ -1473,7 +84,7 @@ class SpriteSheetMaker(tk.Toplevel):
         super().__init__()
 
         self.title("精灵图制作")
-        self.iconbitmap(icon_path)
+        self.iconbitmap(ICON_PATH)
         self.images = []
         self.image_labels = []
         self.sprite_sheet = None
@@ -1585,9 +196,9 @@ class SpriteSheetMaker(tk.Toplevel):
 
     def save_spritesheet(self):
         icon.notify("已开始", "Lightweight text editor")
-        var_num_w_4_3 = int(t_load(z_path) or 1)
-        var2_num_w_4_3 = int(t_load(aa_path) or 0)
-        var3_num_w_4_3 = int(t_load(ab_path) or 0)
+        var_num_w_4_3 = int(t_load(Z_PATH) or 1)
+        var2_num_w_4_3 = int(t_load(AA_PATH) or 0)
+        var3_num_w_4_3 = int(t_load(AB_PATH) or 0)
 
         if self.sprite_sheet:
             file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG文件", "*.png")])
@@ -1613,8 +224,8 @@ class SpriteSheetMaker(tk.Toplevel):
 
     def generate_html_css(self, sprite_path):
         try:
-            var2_num_w_4_3 = int(t_load(aa_path) or 0)
-            var3_num_w_4_3 = int(t_load(ab_path) or 0)
+            var2_num_w_4_3 = int(t_load(AA_PATH) or 0)
+            var3_num_w_4_3 = int(t_load(AB_PATH) or 0)
             sprite_name = os.path.basename(sprite_path)
             sprite_folder = os.path.dirname(sprite_path)
 
@@ -1706,7 +317,7 @@ class StartTrainingFrontWindow:
     def lambda_lr_window(self):
         window___ = ttk.Toplevel()
         window___.title("线性回归-LambdaLR-编写函数")
-        window___.iconbitmap(icon_path)
+        window___.iconbitmap(ICON_PATH)
         scrollbar = ttk.Scrollbar(window___, style="round")
         scrollbar.grid(row=1, column=1, sticky="ns")
         text_widget = tk.Text(window___, wrap="word",
@@ -1736,7 +347,7 @@ def lr_lambda(epoch):
     def pytorch_window():
         window___ = ttk.Toplevel()
         window___.title("线性回归-参数")
-        window___.iconbitmap(icon_path)
+        window___.iconbitmap(ICON_PATH)
         f0 = ttk.Frame(window___)
         f1 = ttk.Frame(window___)
         f2 = ttk.Frame(window___)
@@ -1910,7 +521,7 @@ CyclicLR中max_momentum在每个周期的最高点时，动量上升到 max_mome
 def gadget():
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
     def z():
-        t = str(t_load(r_path) or "横排样式")
+        t = str(t_load(R_PATH) or "横排样式")
 
         # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
         def z_judge():
@@ -1982,7 +593,7 @@ def gadget():
                             }
                             window_z = ttk.Toplevel()
                             window_z.title("轻量记事本-小工具-紫微斗数-三合派")
-                            window_z.iconbitmap(icon_path)
+                            window_z.iconbitmap(ICON_PATH)
                             w = ttk.Frame(window_z)
                             w.grid(row=0,column=0,padx=10,pady=10)
                             w2 = ttk.Frame(window_z)
@@ -5422,7 +4033,7 @@ def gadget():
             case "横排样式":
                 window = ttk.Toplevel(str(root))
                 window.title("紫微斗数")
-                window.iconbitmap(icon_path)
+                window.iconbitmap(ICON_PATH)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
                 text2 = tk.Label(window,text="月:")
@@ -5457,7 +4068,7 @@ def gadget():
             case "竖排样式":
                 window = ttk.Toplevel(str(root))
                 window.title("紫微斗数")
-                window.iconbitmap(icon_path)
+                window.iconbitmap(ICON_PATH)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
                 text2 = tk.Label(window,text="月:")
@@ -5492,8 +4103,8 @@ def gadget():
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
     def regression():
-        list_language_path = os.path.join(data_file_path, "regression-list-language-path")
-        regression_data_path = os.path.join(data_file_path, "regression_data.json")
+        list_language_path = os.path.join(DATA_FILE_PATH, "regression-list-language-path")
+        regression_data_path = os.path.join(DATA_FILE_PATH, "regression_data.json")
         temp_list = []
         temp_list_2 = []
         selected_index = 0
@@ -5726,7 +4337,7 @@ def gadget():
 
         window_ = ttk.Toplevel()
         window_.title("线性回归")
-        window_.iconbitmap(icon_path)
+        window_.iconbitmap(ICON_PATH)
 
         menu_bar = tk.Menu(window_)
         window_.config(menu=menu_bar)
@@ -5973,14 +4584,14 @@ def gadget():
 
             def root_w_4_3_load():
                 try:
-                    with open(w_path, 'r',encoding='utf-8') as file:
+                    with open(W_PATH, 'r', encoding='utf-8') as file:
                         return file.read()
                 except FileNotFoundError:
                     pass
 
             def root_w_4_3_load_2():
                 try:
-                    with open(x_path, 'r',encoding='utf-8') as file:
+                    with open(X_PATH, 'r', encoding='utf-8') as file:
                         return file.read()
                 except FileNotFoundError:
                     pass
@@ -6257,7 +4868,7 @@ def gadget():
 
             window__ = ttk.Toplevel(str(window_))
             window__.title("颜色转换")
-            window__.iconbitmap(icon_path)
+            window__.iconbitmap(ICON_PATH)
             window__.bind("<Shift_R>", lambda event: exit_win())
 
             f = ttk.Frame(window__)
@@ -6404,7 +5015,7 @@ def gadget():
 
             window__ = ttk.Toplevel(str(window_))
             window__.title("格式转换")
-            window__.iconbitmap(icon_path)
+            window__.iconbitmap(ICON_PATH)
             window__.bind("<Shift_R>", lambda event: exit_win())
 
             def f_image():
@@ -6445,12 +5056,12 @@ def gadget():
                 thread_png.start()
 
             def down_box_save_1():
-                    with open(y_path, 'w',encoding='utf-8') as file:
+                    with open(Y_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box.get()))
 
             def w_4_3_load():
                     try:
-                        with open(y_path, 'r',encoding='utf-8') as file:
+                        with open(Y_PATH, 'r', encoding='utf-8') as file:
                             return file.read()
                     except FileNotFoundError:
                         pass
@@ -6471,7 +5082,7 @@ def gadget():
 
         window_ = ttk.Toplevel()
         window_.title("图片操作")
-        window_.iconbitmap(icon_path)
+        window_.iconbitmap(ICON_PATH)
         wb1 = ttk.Button(window_, text="颜色转换", style=OUTLINE, command=color)
         wb1.grid(column=0,row=0,padx=10,pady=10)
         wb2 = ttk.Button(window_, text="格式转换", style=OUTLINE, command=format_)
@@ -6482,8 +5093,8 @@ def gadget():
 
     window = ttk.Toplevel(str(root))
     window.title("轻量记事本-小工具")
-    window.iconbitmap(icon_path)
-    b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=x)
+    window.iconbitmap(ICON_PATH)
+    b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: OldX.x(root, icon, font_style))
     b1.grid(column=0,row=0,padx=10,pady=10)
     b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=z)
     b2.grid(column=1,row=0,padx=10,pady=10)
@@ -6503,7 +5114,7 @@ def set_window():
     window = ttk.Toplevel()
     window.resizable(None,None)
     window.title("轻量记事本-设置")
-    window.iconbitmap(icon_path)
+    window.iconbitmap(ICON_PATH)
 
     # noinspection PyBroadException
     def window_close():
@@ -6535,7 +5146,7 @@ def set_window():
             p3=v4%2
             window_close_()
             if p1+p2+p3==1:
-                save(theme_cbo.get())
+                save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
             else:
                 messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
 
@@ -6603,7 +5214,7 @@ def set_window():
 
     def w_root2():
 
-        var2 = int(t_load(w_root2_c_var_2_path) or 0)
+        var2 = int(t_load(W_ROOT2_C_VAR_2_PATH) or 0)
 
         w_2 = ttk.Frame(window)
         w_2.grid(row=2,column=0,sticky=W)
@@ -6624,7 +5235,7 @@ def set_window():
             consider_var_2.set(1)
         else:
             consider_var_2.set(0)
-        consider_checkbutton_2 = ttk.Checkbutton(w_2, text="用户选择为主", variable=consider_var_2, command=lambda:var_save(w_root2_c_var_2_path,var2),style="round-toggle")
+        consider_checkbutton_2 = ttk.Checkbutton(w_2, text="用户选择为主", variable=consider_var_2, command=lambda:var_save(W_ROOT2_C_VAR_2_PATH, var2), style="round-toggle")
         consider_checkbutton_2.grid(column=2, row=0, padx=10, pady=10)
 
     w_root2()
@@ -6682,27 +5293,27 @@ def set_window():
                     combobox1.set(_size_)
                 case _:
                     combobox1.set("70MB")
-                    save(theme_cbo.get())
+                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
 
             match divide_up:
                 case "等于大文件定义" | "5MB" | "10MB" | "15MB" | "30MB":
                     combobox2.set(divide_up)
                 case _:
                     combobox2.set("70MB")
-                    save(theme_cbo.get())
+                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
 
             match onandoff:
                 case "开启" | "关闭":
                     combobox0.set(onandoff)
                 case "关闭":
                     combobox0.set("开启")
-                    save(theme_cbo.get())
+                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
 
             match circular:
                 case "5MB" | "10MB" | "30MB" | "50MB" | "70MB" | "128MB" | "256MB" | "512MB":
                     combobox3.set(circular)
                 case _:
-                    save(theme_cbo.get())
+                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
         combobox()
 
     w_root3()
@@ -6759,23 +5370,23 @@ def set_window():
             def w_4_3_():
 
                 def down_box_save_1():
-                    with open(w_path, 'w',encoding='utf-8') as file:
+                    with open(W_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box.get()))
 
                 def down_box_save_2():
-                    with open(x_path, 'w',encoding='utf-8') as file:
+                    with open(X_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box2.get()))
 
                 def w_4_3_load():
                     try:
-                        with open(w_path, 'r',encoding='utf-8') as file:
+                        with open(W_PATH, 'r', encoding='utf-8') as file:
                             return file.read()
                     except FileNotFoundError:
                         pass
 
                 def w_4_3_load_2():
                     try:
-                        with open(x_path, 'r',encoding='utf-8') as file:
+                        with open(X_PATH, 'r', encoding='utf-8') as file:
                             return file.read()
                     except FileNotFoundError:
                         pass
@@ -6802,9 +5413,9 @@ def set_window():
                         down_box2.set("RGBA")
                         down_box_save_2()
 
-                var_num_w_4_3 = int(t_load(z_path) or 1)
-                var2_num_w_4_3 = int(t_load(aa_path) or 0)
-                var3_num_w_4_3 = int(t_load(ab_path) or 0)
+                var_num_w_4_3 = int(t_load(Z_PATH) or 1)
+                var2_num_w_4_3 = int(t_load(AA_PATH) or 0)
+                var3_num_w_4_3 = int(t_load(AB_PATH) or 0)
 
                 w_4_3_var = ttk.IntVar()
                 if var_num_w_4_3 % 2 == 1:
@@ -6834,22 +5445,22 @@ def set_window():
             def w_4_2_():
 
                 def event_t():
-                    with open(r_path, 'w',encoding='utf-8') as file:
+                    with open(R_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box.get()))
                     w_root5()
 
                 def down_box2_save():
-                    with open(s_path, 'w',encoding='utf-8') as file:
+                    with open(S_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box2.get()))
 
                 def down_box3_save():
-                    with open(t_path, 'w',encoding='utf-8') as file:
+                    with open(T_PATH, 'w', encoding='utf-8') as file:
                         file.write(str(down_box3.get()))
 
                 down_box = ttk.Combobox(w_4_2, values=["横排样式", "竖排样式", "自定义样式【未完成】"], state="readonly")
                 down_box.grid(row=0, column=1, padx=5, pady=5)
                 down_box.bind("<<ComboboxSelected>>", lambda event: event_t())
-                t = str(t_load(r_path) or "横排样式")
+                t = str(t_load(R_PATH) or "横排样式")
                 match t:
                     case "横排样式" | "竖排样式":
                         down_box.set(t)
@@ -6860,7 +5471,7 @@ def set_window():
                 down_box2 = ttk.Combobox(w_4_2, values=["作本月", "作下月", "月中为界"], state="readonly")
                 down_box2.grid(row=1, column=1, padx=5, pady=5)
                 down_box2.bind("<<ComboboxSelected>>", lambda event: down_box2_save())
-                t2 = str(t_load(s_path) or "作下月")
+                t2 = str(t_load(S_PATH) or "作下月")
                 match t2:
                     case "作下月" | "作本月" | "月中为界":
                         down_box2.set(t2)
@@ -6871,7 +5482,7 @@ def set_window():
                 down_box3 = ttk.Combobox(w_4_2, values=["子时视明日", "子时视本日", "子时中而分界"], state="readonly")
                 down_box3.grid(row=2, column=1, padx=5, pady=5)
                 down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
-                t3 = str(t_load(t_path) or "子时视明日")
+                t3 = str(t_load(T_PATH) or "子时视明日")
                 match t3:
                     case "子时视明日" | "子时视本日" | "子时中而分界":
                         down_box3.set(t3)
@@ -6914,7 +5525,7 @@ def set_window():
                 "起卦方式": 0,
             }
 
-            xlr_data_path = os.path.join(data_file_path, "xiao_liu_ren_data.json")
+            xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
             xlr_json = JsonFile.File.dict_load(xlr_data_path, xlr_data)
 
             w_4_1_v_0 = ["新历","农历","道历"]
@@ -6926,7 +5537,7 @@ def set_window():
                 now = datetime.now(local_timezone)
                 offset = now.strftime('%z')
                 formatted_offset = f"UTC{offset[:3]}:{offset[3:]}"
-                var2 = int(t_load(w_root2_c_var_2_path) or 0)
+                var2 = int(t_load(W_ROOT2_C_VAR_2_PATH) or 0)
                 if xlr_json[2] != UTC_TIME.index(formatted_offset):
                     if var2 % 2 == 1:
                         down_box_2.set(UTC_TIME[int(xlr_json[2])])
@@ -6996,14 +5607,14 @@ def set_window():
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
     def w_root5():
 
-        t = str(t_load(r_path) or "横排样式")
+        t = str(t_load(R_PATH) or "横排样式")
 
         def w_root5_window1_():
                 w_root5_window1 = ttk.Toplevel()
                 child_windows.append(w_root5_window1)
                 w_root5_window1.resizable(None,None)
                 w_root5_window1.title("轻量记事本-界面示例")
-                w_root5_window1.iconbitmap(icon_path)
+                w_root5_window1.iconbitmap(ICON_PATH)
                 text = tk.Label(w_root5_window1,text="年:")
                 text.grid(column=0,row=0,padx=5,pady=5)
                 text = tk.Label(w_root5_window1,text="月:")
@@ -7030,7 +5641,7 @@ def set_window():
                 child_windows.append(w_root5_window2)
                 w_root5_window2.resizable(None,None)
                 w_root5_window2.title("轻量记事本-界面示例")
-                w_root5_window2.iconbitmap(icon_path)
+                w_root5_window2.iconbitmap(ICON_PATH)
                 text2_2 = tk.Label(w_root5_window2,text="年:")
                 text2_2.grid(column=0,row=0,padx=5,pady=5)
                 text3_2 = tk.Label(w_root5_window2,text="月:")
@@ -7145,7 +5756,7 @@ def two_window():
     if not window2:
         window2 = tk.Toplevel()
         window2.title("查找与替换")
-        window2.iconbitmap(icon_path)
+        window2.iconbitmap(ICON_PATH)
         window2.resizable( width=False, height=False )
         window2.wm_attributes("-topmost", True)
         lbl = ttk.Label(window2, text="查找:")
@@ -7181,12 +5792,12 @@ def save_2():
         file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
             ("Text files", "*.txt"), ("All files", "*.*")])
 
-        with open(a_path, 'w',encoding='utf-8') as file:
+        with open(A_PATH, 'w', encoding='utf-8') as file:
              lines = text_widget.get("1.0","end")
              file.writelines(lines)
 
         if file_path:
-            shutil.copy(a_path, file_path)
+            shutil.copy(A_PATH, file_path)
 
     thread = threading.Thread(target=save_2t)
     thread.start()
@@ -7202,7 +5813,7 @@ def read(filename, msg):
                 file.seek(index * t_divide_up)
                 data = file.read(t_divide_up)
                 if not data:
-                    folder = os.path.join(data_file_path, "text-temp")
+                    folder = os.path.join(DATA_FILE_PATH, "text-temp")
                     try:
                         os.mkdir("text-temp")
                     except:
@@ -7256,7 +5867,7 @@ def save_ff():
 
      # noinspection PyBroadException,PyShadowingNames
      def save_tt():
-         folder = os.path.join(data_file_path, "text-temp")
+         folder = os.path.join(DATA_FILE_PATH, "text-temp")
          filename_ = os.path.join(folder, f'{filename}')
          index = 0
          while True:
@@ -7287,7 +5898,7 @@ def save_ff():
     window4 = tk.Toplevel(root)
     window4.title("保存")
     window4.resizable(None, None)
-    window4.iconbitmap(icon_path)
+    window4.iconbitmap(ICON_PATH)
     window4.minsize(400, 50)
     window4.maxsize(400, 50)
     window4.wm_attributes("-topmost", True)
@@ -7318,7 +5929,7 @@ def save_t():
                 icon.notify("文件已成功保存", "Lightweight text editor")
         else:
             if index_ ==  1:
-                folder = os.path.join(data_file_path, "text-temp")
+                folder = os.path.join(DATA_FILE_PATH, "text-temp")
                 folder_t = (folder + "\\" + f'{filename}_{index}')
                 with open(folder_t, 'w',encoding='utf-8') as file:
                     lines = text_widget.get("1.0","end")
@@ -7370,7 +5981,7 @@ def i(files):
         window3 = tk.Toplevel(root)
         window3.title("导入")
         window3.resizable(None, None)
-        window3.iconbitmap(icon_path)
+        window3.iconbitmap(ICON_PATH)
         window3.minsize(400, 50)
         window3.maxsize(400, 50)
         window3.wm_attributes("-topmost", True)
@@ -7394,7 +6005,7 @@ def next_page():
     if index_ ==  1:
         try:
          index += 1
-         folder = os.path.join(data_file_path, "text-temp")
+         folder = os.path.join(DATA_FILE_PATH, "text-temp")
          folder_t = (folder + "\\" + f'{filename}_{index}')
          with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
@@ -7403,7 +6014,7 @@ def next_page():
         except:
             messagebox.showerror("错误", message="已经是尾页",parent=root)
             index -= 1
-            folder = os.path.join(data_file_path, "text-temp")
+            folder = os.path.join(DATA_FILE_PATH, "text-temp")
             folder_t = (folder + "\\" + f'{filename}_{index}')
             with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
@@ -7419,7 +6030,7 @@ def return_page():
     if index_ ==  1:
         try:
          index -= 1
-         folder = os.path.join(data_file_path, "text-temp")
+         folder = os.path.join(DATA_FILE_PATH, "text-temp")
          folder_t = (folder + "\\" + f'{filename}_{index}')
          with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
@@ -7428,7 +6039,7 @@ def return_page():
         except:
             messagebox.showerror("错误", message="已经是首页",parent=root)
             index += 1
-            folder = os.path.join(data_file_path, "text-temp")
+            folder = os.path.join(DATA_FILE_PATH, "text-temp")
             folder_t = (folder + "\\" + f'{filename}_{index}')
             with open(folder_t, 'r',encoding='utf-8') as file:
              text_widget.delete('1.0', tk.END)
@@ -7442,7 +6053,7 @@ def sever():
     window = tk.Toplevel(root)
     window.title("分离控制")
     window.resizable(None, None)
-    window.iconbitmap(icon_path)
+    window.iconbitmap(ICON_PATH)
     window.minsize(400, 50)
     window.maxsize(400, 50)
     sever_window_b2 = ttk.Button(window, text="下一页", style="link", command=next_page)
@@ -7458,29 +6069,27 @@ def sever():
     window.mainloop()
 
 if __name__ == '__main__':
-    v = int(t_load(c_path) or 0)
-    v2 = int(t_load(d_path) or 1)
-    v3 = int(t_load(e_path) or 0)
-    v4 = int(t_load(f_path) or 0)
-    v5 = int(t_load(l_path) or 0)
-    v6 = int(t_load(m_path) or 0)
-    num_wv1 = int(t_load(n_path) or 0)
-    var_num_w_4_3 = int(t_load(z_path) or 1)
-    var2_num_w_4_3 = int(t_load(aa_path) or 0)
-    var3_num_w_4_3 = int(t_load(ab_path) or 0)
-    _size_ = (t_load(h_path) or "70MB")
-    divide_up = (t_load(i_path) or "等于大文件定义")
+    v = int(t_load(C_PATH) or 0)
+    v2 = int(t_load(D_PATH) or 1)
+    v3 = int(t_load(E_PATH) or 0)
+    v4 = int(t_load(F_PATH) or 0)
+    v5 = int(t_load(L_PATH) or 0)
+    v6 = int(t_load(M_PATH) or 0)
+    num_wv1 = int(t_load(N_PATH) or 0)
+    var_num_w_4_3 = int(t_load(Z_PATH) or 1)
+    var2_num_w_4_3 = int(t_load(AA_PATH) or 0)
+    var3_num_w_4_3 = int(t_load(AB_PATH) or 0)
+    _size_ = (t_load(H_PATH) or "70MB")
+    divide_up = (t_load(I_PATH) or "等于大文件定义")
     # noinspection SpellCheckingInspection
-    onandoff = (t_load(j_path) or "开启")
-    circular = (t_load(k_path) or "30MB")
-    t_rule_num = int(t_load(p_path) or 1)
-    t_rule_num2 = int(t_load(q_path) or 2)
+    onandoff = (t_load(J_PATH) or "开启")
+    circular = (t_load(K_PATH) or "30MB")
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
-    image = Image.open(icon_path)
+    image = Image.open(ICON_PATH)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)
     root = tk.Tk()
     root.title("轻量记事本")
-    root.iconbitmap(icon_path)
+    root.iconbitmap(ICON_PATH)
     font_style1 = tk_font.Font(family="宋体", size=12)
     font_style2 = tk_font.Font(family="等线", size=12)
     font_style3 = tk_font.Font(family="黑体", size=12)
@@ -7569,17 +6178,19 @@ if __name__ == '__main__':
     index_ = 0
 
     action_map = {
-        1: lambda: (root.withdraw(), x()),    }
+        1: lambda: (root.withdraw(), OldX.x(root,icon,font_style)),    }
 
     action_map.get(num_wv1 % 2, lambda: None)()
 
     try:
         if v % 2 == 1:
             text_widget.delete('1.0', tk.END)
-            with open(a_path, 'r',encoding='utf-8') as f_:
+            with open(A_PATH, 'r', encoding='utf-8') as f_:
                 data = f_.read()
                 text_widget.insert(tk.END, data)
     except Exception as error:
         messagebox.showerror("错误", f"发生错误: {error}")
+
+    NewX = NewX.NewX(root)
 
     root.mainloop()

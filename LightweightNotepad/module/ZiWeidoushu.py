@@ -5,7 +5,7 @@ from lunar_python import LunarMonth
 
 from function.GregorianCalendarLunar import GregorianCalendarToLunar
 from function.ProjectVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
-    SHI_CHEN_DICT, s_path, t_path
+    SHI_CHEN_DICT, S_PATH, T_PATH
 
 
 # noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection
@@ -290,14 +290,14 @@ class ZiWeidoushu(object):
 
         def load_down_box2():
             try:
-                with open(s_path, 'r',encoding='utf-8') as f:
+                with open(S_PATH, 'r', encoding='utf-8') as f:
                     return f.read()
             except FileNotFoundError:
                 pass
 
         def load_down_box3():
             try:
-                with open(t_path, 'r',encoding='utf-8') as f:
+                with open(T_PATH, 'r', encoding='utf-8') as f:
                     return f.read()
             except FileNotFoundError:
                 pass

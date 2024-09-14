@@ -2,7 +2,7 @@ import decimal
 import math
 import random
 
-from function.ProjectVariables import l_path, m_path, q_path, u_path, v_path
+from function.ProjectVariables import L_PATH, M_PATH, Q_PATH, U_PATH, V_PATH
 
 "l->m->q"
 def load(path):
@@ -13,7 +13,7 @@ def load(path):
         pass
 def load_decimal():
     try:
-        with open(q_path, 'r',encoding='utf-8') as f:
+        with open(Q_PATH, 'r', encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         pass
@@ -24,8 +24,8 @@ def combobox_load(path):
     except FileNotFoundError:
         pass
 
-v5 = int(load(l_path) or 0)
-v6 = int(load(m_path) or 0)
+v5 = int(load(L_PATH) or 0)
+v6 = int(load(M_PATH) or 0)
 
 class T:
     
@@ -728,7 +728,7 @@ def numgua2_4():
             match vc6:
                 case 0:
                     t_rule_num2 = int(load_decimal() or 2)
-                    t_ = str(combobox_load(u_path) or "顺序数据【空亡定为6】")
+                    t_ = str(combobox_load(U_PATH) or "顺序数据【空亡定为6】")
                     match t_:
                         case "顺序数据【空亡定为6】":
                             match t_rule_num2:
@@ -1101,7 +1101,7 @@ def numgua2_5():
             match vc6:
                 case 0:
                     t_rule_num2 = int(load_decimal() or 2)
-                    t_ = str(combobox_load(v_path) or "顺序数据【空亡定为6】")
+                    t_ = str(combobox_load(V_PATH) or "顺序数据【空亡定为6】")
                     match t_:
                         case "顺序数据【空亡定为6】":
                             match t_rule_num2:
