@@ -4,8 +4,9 @@ import re
 from lunar_python import LunarMonth
 
 from function.GregorianCalendarLunar import GregorianCalendarToLunar
-from function.ProjectVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
-    SHI_CHEN_DICT, S_PATH, T_PATH
+from function.ProjectDictionaryVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
+    SHI_CHEN_DICT
+from function.ProjectPathVariables import S_PATH, T_PATH
 
 
 # noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection

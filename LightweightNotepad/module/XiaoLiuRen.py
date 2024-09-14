@@ -2,7 +2,7 @@ import decimal
 import math
 import random
 
-from function.ProjectVariables import L_PATH, M_PATH, Q_PATH, U_PATH, V_PATH
+from function.ProjectPathVariables import L_PATH, M_PATH, Q_PATH, U_PATH, V_PATH
 
 "l->m->q"
 def load(path):

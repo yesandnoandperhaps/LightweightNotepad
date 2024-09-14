@@ -7,7 +7,8 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.tooltip import ToolTip
 
-from function.ProjectVariables import ICON_PATH, FONT_STYLE
+from function.ProjectPathVariables import ICON_PATH
+from function.ProjectCapabilityVariables import FONT_STYLE
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,DuplicatedCode

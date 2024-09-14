@@ -2,7 +2,7 @@ import os
 from tkinter import messagebox
 import ttkbootstrap as ttk
 
-from function.ProjectVariables import DATA_FILE_PATH,ICON_PATH
+from function.ProjectPathVariables import DATA_FILE_PATH,ICON_PATH
 
 
 class NewX:

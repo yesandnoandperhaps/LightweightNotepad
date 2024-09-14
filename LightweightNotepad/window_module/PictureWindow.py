@@ -9,7 +9,7 @@ import ttkbootstrap as ttk
 from PIL import Image
 from ttkbootstrap.constants import *
 from window_module.SpriteSheetMakerWindow import SpriteSheetMaker
-from function.ProjectVariables import W_PATH, X_PATH, Y_PATH, \
+from function.ProjectPathVariables import W_PATH, X_PATH, Y_PATH, \
     ICON_PATH
 
 

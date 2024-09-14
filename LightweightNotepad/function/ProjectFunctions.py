@@ -1,6 +1,6 @@
 from tkinter import messagebox
 
-from function.ProjectVariables import B_PATH, C_PATH, D_PATH, E_PATH, F_PATH, L_PATH, M_PATH, H_PATH, I_PATH, J_PATH, \
+from function.ProjectPathVariables import B_PATH, C_PATH, D_PATH, E_PATH, F_PATH, L_PATH, M_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH
 
 
