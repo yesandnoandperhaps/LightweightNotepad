@@ -1,41 +1,31 @@
 import ctypes
 import datetime
-import idlelib.colorizer as idc
-import idlelib.percolator as idp
-import json
 import os
-import re
 import shutil
 import threading
 import tkinter as tk
-import tkinter.font as tk_font
 from datetime import datetime
-from tkinter import filedialog, messagebox, colorchooser
+from tkinter import filedialog, messagebox
 from tkinter.ttk import Separator
 
 import dateutil.tz
-import numpy as np
 import pystray
 import ttkbootstrap as ttk
 import windnd
-from PIL import Image, ImageTk
+from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
-from ttkbootstrap.tooltip import ToolTip
 
 from ProjectFunctions import t_save, save, t_load, var_save
 from function import JsonFile
-from function.ProjectVariables import UTC_TIME, A_PATH, B_PATH, C_PATH, D_PATH, E_PATH, F_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Y_PATH, \
-    Z_PATH, AA_PATH, AB_PATH, W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
-from module import LinearRegression
+from function.ProjectVariables import UTC_TIME, A_PATH, B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
+    K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, FONT_STYLE, \
+    W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
 from window_module import NewXiaoLiuRenWindow
 from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
+from window_module.PictureWindow import picture
+from window_module.RegressionWindow import regression
 
-
-class CustomToolTip(ToolTip):
-    def update_text(self, text):
-        self.text = text
 
 def load_theme():
     try:
@@ -81,717 +71,7 @@ def var3_num_w_4_3_s():
 #关于紫微斗数###分割线
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-class StartTrainingFrontWindow:
-    def __init__(self,window,combo5,combo4,temp_list_2,temp_list):
-        self.temp_list = temp_list
-        self.whether_save = False
-        if not temp_list_2:
-            result = messagebox.askyesno("线性回归", "请等待-本次计算将不会保存模型，是否需要进行计算后预测",parent=window)
-            if result:
-                self.whether_save = True
-                if combo5.get() == "CPU":
-                    pass
-                else:
-                    if combo4.get() == "LambdaLR":
-                        self.lambda_lr_window()
-                    elif combo4.get() == "None":
-                        pass
-                    else:
-                        self.pytorch_window()
-            else:
-                self.whether_save = False
-
-    @staticmethod
-    def lambda_lr_window_(code_input, window):
-        try:
-            user_code = code_input.get("1.0", tk.END)
-            local_vars = {}
-            exec(user_code, globals(), local_vars)
-            if 'lr_lambda' not in local_vars:
-                messagebox.showerror("错误", "未定义lr_lambda",parent=window)
-                return
-            # noinspection PyUnusedLocal
-            lr_lambda = local_vars['lr_lambda']
-        except Exception as e:
-            messagebox.showerror("错误", str(e),parent=window)
-
-    def lambda_lr_window(self):
-        window___ = ttk.Toplevel()
-        window___.title("线性回归-LambdaLR-编写函数")
-        window___.iconbitmap(ICON_PATH)
-        scrollbar = ttk.Scrollbar(window___, style="round")
-        scrollbar.grid(row=1, column=1, sticky="ns")
-        text_widget = tk.Text(window___, wrap="word",
-                              yscrollcommand=scrollbar.set, font=font_style)
-        text_widget.grid(row=1, column=0, sticky="nsew")
-        text_widget.bind('<Shift_R>', lambda event: self.lambda_lr_window_(text_widget, window___))
-        idc.color_config(text_widget)
-        scrollbar.config(command=text_widget.yview)
-        default_code = \
-"""#自定义Py代码
-#必须要存在def lr_lambda(epoch)
-#基本教程：
-#*乘号，**幂
-#\\是整除-向下取整，\是除
-#return是返回关键字，这是必须的
-#epoch是模型训练数
-#<Shift-R>下一步
-def lr_lambda(epoch):
-    return 0.5 ** (epoch // 5)
-"""
-        text_widget.insert(tk.END, default_code)
-        p = idp.Percolator(text_widget)
-        d = idc.ColorDelegator()
-        p.insertfilter(d)
-
-    @staticmethod
-    def pytorch_window():
-        window___ = ttk.Toplevel()
-        window___.title("线性回归-参数")
-        window___.iconbitmap(ICON_PATH)
-        f0 = ttk.Frame(window___)
-        f1 = ttk.Frame(window___)
-        f2 = ttk.Frame(window___)
-        f3 = ttk.Frame(window___)
-        text_0_x_0 = ttk.Label(f0,text="动量")
-        text_0_x_1 = ttk.Label(f0,text="动量衰减")
-        text_0_x_2 = ttk.Label(f0,text="权重衰减")
-        text_0_x_3 = ttk.Label(f0,text="Nesterov动量")
-        text_0_x_4 = ttk.Label(f0, text="绘制损失值")
-
-        text_0_x_e_0 = ttk.Entry(f0)
-        text_0_x_e_1 = ttk.Entry(f0)
-        text_0_x_e_2 = ttk.Entry(f0)
-        text_0_x_e_3 = ttk.Combobox(f0,values=["True","False"] ,state="readonly")
-        text_0_x_e_4 = ttk.Combobox(f0, values=["True", "False"], state="readonly")
-
-        sep0 = Separator(window___, orient='horizontal')
-
-        text_1_x_0 = ttk.Label(f1,text="开始值")
-        # noinspection PyUnusedLocal
-        text_1_x_1 = ttk.Label(f1,text="绘制学习率")
-        text_1_x_2 = ttk.Label(f1,text="因子")
-        text_1_x_4 = ttk.Label(f1,text="衰减周期")
-        text_1_x_5 = ttk.Label(f1,text="恢复周期")
-        text_1_x_6 = ttk.Label(f1,text="开始学习率")
-        text_1_x_7 = ttk.Label(f1,text="结束学习率")
-        text_1_x_8 = ttk.Label(f1,text="衰减率为1时循环次数")
-        text_1_x_9 = ttk.Label(f1, text="多项式的幂")
-        text_1_x_10 = ttk.Label(f1,text="最大迭代次数")
-        text_1_x_11 = ttk.Label(f2,text="最小学习率")
-        text_1_x_12 = ttk.Label(f2,text="最大学习率")
-        text_1_x_13 = ttk.Label(f2, text="递增周期中训练迭代次数")
-        text_1_x_14 = ttk.Label(f2,text="递增递减变化策略")
-        text_1_x_15 = ttk.Label(f2,text="scale_fn")
-        text_1_x_16 = ttk.Label(f2,text="scale_mode")
-        text_1_x_17 = ttk.Label(f2,text="cycle_momentum")
-        text_1_x_18 = ttk.Label(f2,text="每次循环中动量上限")
-        text_1_x_19 = ttk.Label(f2,text="每次循环中动量下限")
-        # noinspection PyUnusedLocal
-        text_1_x_20 = ttk.Label(f3,text="串联方式数")
-
-        # noinspection PyUnusedLocal
-        def tool_tip():
-            text_1_x_2_text =\
-'''适用于
-MultiplicativeLR中将乘法因子应用到前一个训练次数的LR来调整学习速率
-StepLR、MultiStepLR、ExponentialLR中学习率衰减的乘法因子，默认值：0.1
-ConstantLR中factor默认值：1/3
-ConstantLR中gamma，exp_range模式下，控制学习率随周期的指数衰减，默认值: 1.0
-'''
-            text_1_x_4_text = \
-'''适用于
-StepLR中step_size，每到达一定step_size，学习率乘以乘法因子
-MultiStepLR中milestones，输入需要是列表，形如10,20,30
-MultiStepLR中例如：当训练次数达10，将学习率乘以乘法因子->当训练次数达20，将学习率乘以乘法因子
-MultiStepLR中当训练数达到30之后，若无定义，学习率不变
-'''
-            text_1_x_5_text = \
-'''适用于
-ConstantLR中total_iters，达到total_iters时，每一次训练加一次total_iters，学习率将返回成原设定学习率
-ConstantLR中total_iters轮内将学习率乘以常数因子
-LinearLR中线性改变每个参数组的学习率，直到训练次数达到预定义的值total_iters
-'''
-            text_1_x_6_text = \
-'''适用于
-LinearLR中start_factor，在开始时，学习率的值，默认值：1/3"
-'''
-            text_1_x_11_text = \
-'''适用于
-CosineAnnealingLR中eta_min，最小学习率值
-CyclicLR中base_lr，学习率最小值，也就是学习率在循环过程中能够达到的最小值
-'''
-            text_1_x_12_text = \
-'''适用于
-CyclicLR中max_lr，学习率最大值，也就是学习率在循环过程中能够达到的最大值
-'''
-            text_1_x_13_text = \
-'''适用于
-CyclicLR中step_size_up，在一个周期内，学习率从 base_lr 增加到 max_lr 所需的步数，默认值：2000
-'''
-            text_1_x_14_text = \
-'''适用于
-CyclicLR中mode，决定学习率变化的模式
-CyclicLR中mode可选：
-1.triangular: 学习率在 base_lr 和 max_lr 之间以线性方式上升和下降
-2.triangular2: 与 'triangular' 类似，但每个周期 max_lr 减半
-3.exp_range: 学习率按照指数方式衰减
-默认值:triangular
-'''
-            text_1_x_15_text = \
-'''适用于
-CyclicLR中scale_fn，自定义衰减策略，若指定，则忽略mode
-'''
-            text_1_x_16_text = \
-'''适用于
-CyclicLR中scale_mode，决定在exp_range模式下如何应用 gamma 进行学习率缩放
-CyclicLR中scale_mode可选:
-1.cycle: gamma 在每个周期末进行缩放
-2.iterations: gamma 在每次迭代后进行缩放
-默认值:cycle
-'''
-            text_1_x_17_text = \
-'''适用于
-CyclicLR中cycle_momentum，决定是否在学习率循环时调整动量
-CyclicLR中cycle_momentum可选:
-1.True: 当学习率增加时，动量减少；学习率减少时，动量增加
-2.False: False
-'''
-            text_1_x_18_text = \
-'''适用于
-CyclicLR中base_momentum，动量的最低值，也就是动量在循环过程中能够达到的最小值
-CyclicLR中base_momentum在每个周期的最低点时，动量降低到 base_momentum
-默认值: 若 cycle_momentum 为 True，必须指定
-'''
-            text_1_x_19_text = \
-'''适用于
-CyclicLR中max_momentum，动量的最高值，也就是动量在循环过程中能够达到的最大值
-CyclicLR中max_momentum在每个周期的最高点时，动量上升到 max_momentum。
-默认值: 若 cycle_momentum 为 True，必须指定
-'''
-            ToolTip(text_1_x_0,text="学习率调节器在何时开始\n若为1，从头开始\n若不输入，默认为1")
-            ToolTip(text_1_x_2, text=text_1_x_2_text)
-            ToolTip(text_1_x_4,text=text_1_x_4_text)
-            ToolTip(text_1_x_5,text=text_1_x_5_text)
-            ToolTip(text_1_x_6,text=text_1_x_6_text)
-            ToolTip(text_1_x_7,text="适用于\nLinearLR中end_factor，在结束时，学习率的值，默认值：1.0")
-            ToolTip(text_1_x_8,text="适用于\nLinearLR中学习率衰减率变为end_factor时的训练次数，默认值：5")
-            ToolTip(text_1_x_9,text="适用于\nPolynomialLR中power，多项式的幂，默认值：1.0")
-            ToolTip(text_1_x_10,text="适用于\nCosineAnnealingLR中T_max，最大迭代次数")
-            ToolTip(text_1_x_11,text=text_1_x_11_text)
-            ToolTip(text_1_x_12,text=text_1_x_12_text)
-            ToolTip(text_1_x_13,text=text_1_x_13_text)
-            ToolTip(text_1_x_14,text=text_1_x_14_text)
-            ToolTip(text_1_x_15,text=text_1_x_15_text)
-            ToolTip(text_1_x_16,text=text_1_x_16_text)
-            ToolTip(text_1_x_17, text=text_1_x_17_text)
-            ToolTip(text_1_x_18, text=text_1_x_18_text)
-            ToolTip(text_1_x_19, text=text_1_x_19_text)
-
-
-        menu_bar = tk.Menu(window___)
-        window___.config(menu=menu_bar)
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="上一步", menu=file_menu)
-        menu_bar.add_command(label="下一步",command=lambda: ())
-
-        def grid():
-            f0.grid(column=0, row=0,padx=10,pady=10)
-            f3.grid(column=1, row=0,padx=10,pady=10)
-            f1.grid(column=0, row=1,padx=10,pady=10)
-            f2.grid(column=1, row=1,padx=10,pady=10)
-            sep0.grid(column=0, row=2, pady=30, columnspan=1)
-            text_0_x_0.grid(column=0, row=0,padx=10,pady=10)
-            text_0_x_1.grid(column=0, row=1, padx=10, pady=10)
-            text_0_x_2.grid(column=0, row=2, padx=10, pady=10)
-            text_0_x_3.grid(column=0, row=3, padx=10, pady=10)
-            text_0_x_4.grid(column=0, row=4, padx=10, pady=10)
-            text_0_x_e_0.grid(column=1, row=0,padx=10,pady=10)
-            text_0_x_e_1.grid(column=1, row=1,padx=10,pady=10)
-            text_0_x_e_2.grid(column=1, row=2,padx=10,pady=10)
-            text_0_x_e_3.grid(column=1, row=3,padx=10,pady=10)
-            text_0_x_e_4.grid(column=1, row=4,padx=10,pady=10)
-
-        grid()
-        
-    @staticmethod
-    def simple_window():
-        pass
-
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def gadget():
-
-    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-    def regression():
-        list_language_path = os.path.join(DATA_FILE_PATH, "regression-list-language-path")
-        regression_data_path = os.path.join(DATA_FILE_PATH, "regression_data.json")
-        temp_list = []
-        temp_list_2 = []
-        selected_index = 0
-        selected_index_2 = 0
-        selected_index_3 = 0
-        combo4_text = 0
-        combo5_text = 0
-        language = "英"
-        regression_data = {
-            "特征缩放":"0",
-            "损失函数":"0",
-            "优化方法":"0",
-            "学习率调度器":"0",
-            "使用硬件":"0"
-        }
-
-        def regression_data_save():
-            with open(regression_data_path, 'w', encoding='utf-8') as file:
-                json.dump(regression_data, file, indent=4)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def regression_data_load():
-            nonlocal selected_index,selected_index_2,selected_index_3,combo4_text,combo5_text
-
-            if not os.path.exists(regression_data_path):
-                regression_data_save()
-            else:
-                try:
-                    with open(regression_data_path, 'r', encoding='utf-8') as file:
-                        data = json.load(file)
-                        selected_index = int(data["特征缩放"])
-                        selected_index_2 = int(data["损失函数"])
-                        selected_index_3 = int(data["优化方法"])
-                        combo4_text = int(data["学习率调度器"])
-                        combo5_text = int(data["使用硬件"])
-                except Exception as e:
-                    messagebox.showerror("错误", f"发生错误: {e}")
-                    regression_data_save()
-
-        regression_data_load()
-
-        def list_language_save_path():
-            with open(list_language_path, 'w', encoding='utf-8') as file:
-                file.write(language)
-
-        def list_language_load_path():
-            try:
-                with open(list_language_path, 'r', encoding='utf-8') as file:
-                    return file.read()
-            except FileNotFoundError:
-                    return None
-
-        def csv_path():
-            data_path = filedialog.askopenfilename(parent=window_, defaultextension="d",
-                                               filetypes=[("csv-utf-8", "*.csv")])
-            if data_path:
-                temp_list.clear()
-                temp_list.append(data_path)
-                text_1_0.delete(0, END)
-                ToolTip(wb1, text=f"已导入数据{data_path}")
-                text_1_0.insert(END, data_path)
-            else:
-                pass
-
-        def csv_save_path():
-            data_path = filedialog.asksaveasfilename(parent=window_,defaultextension=".joblib",filetypes=[("Joblib files", "*.joblib")])
-            temp_list_2.clear()
-            temp_list_2.append(data_path)
-            text_1_1.delete(0, END)
-            ToolTip(wb2, text=f"已定义保存数据位置{data_path}")
-            text_1_1.insert(END, data_path)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal,PyShadowingBuiltins
-        def test_input(input):
-            if re.match(r'^\d+,\d+$|^\d+，\d+$', input):
-                if temp_list:
-                    input_columns = LinearRegression.FeatureScaling.extract_columns(input)
-                    data = LinearRegression.FeatureScaling.load_data(temp_list[0], input_columns)
-                    messagebox.showinfo("测试", message=f"特征数据列：{data.columns.tolist()}\n特征数量：{len(data.columns.tolist())}", parent=window_)
-                else:
-                    messagebox.showerror("错误", message="错误，没有文件", parent=window_)
-            elif input == "":
-                messagebox.showerror("错误", message="错误，未输入值\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为特征：0,2\n2.获取二列的数据为特征：2,2\n3.获取第二列到第三列的数据为特征：1,2", parent=window_)
-            else:
-                messagebox.showerror("错误", message="输入错误，请勿输入不形如0,0的输入值\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为特征：0,2\n2.获取二列的数据为特征：2,2\n3.获取第二列到第三列的数据为特征：1,2", parent=window_)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def test_output(output):
-            if re.match(r'^\d+,\d+$|^\d+，\d+$', output):
-                if temp_list:
-                    input_columns = LinearRegression.FeatureScaling.extract_columns(output)
-                    data = LinearRegression.FeatureScaling.load_data(temp_list[0], input_columns)
-                    messagebox.showinfo("测试", message=f"目标数据列：{data.columns.tolist()}\n目标数量：{len(data.columns.tolist())}", parent=window_)
-                else:
-                    messagebox.showerror("错误", message="错误，没有文件", parent=window_)
-            elif output == "":
-                messagebox.showerror("错误", message="错误，未输入值\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为目标：0,2\n2.获取二列的数据为目标：2,2\n3.获取第二列到第三列的数据为目标：1,2", parent=window_)
-            else:
-                messagebox.showerror("错误", message="输入错误，请勿输入不形如0,0的输入值\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为目标：0,2\n2.获取二列的数据为目标：2,2\n3.获取第二列到第三列的数据为目标：1,2", parent=window_)
-
-        def update_language(lang):
-            nonlocal language, selected_index,selected_index_2,selected_index_3
-            if language == "英":
-                list_ = ["min-max_normalization",
-                     "mean_normalization",
-                     "max_abs_normalization",
-                     "z-score_normalization",
-                     "robust_standardization"]
-
-                list_2 = ["mean_squared_error",
-                          "mean_absolute_error",
-                          "huber_loss"]
-
-                list_3 = ["batch_GD",
-                          "stochastic_GD",
-                          "mini-batch_GD"]
-
-
-            else:
-                list_ = ["最大最小值归一化",
-                     "均值归一化",
-                     "最大绝对值归一化",
-                     "Z-Score标准化",
-                     "稳健标准化"]
-
-                list_2 = ["均方误差",
-                          "绝对误差",
-                          "Huber损失"]
-
-                list_3 = ["批量梯度下降",
-                          "随机梯度下降",
-                          "小批量梯度下降"]
-
-            selected_index = list_.index(combo.get())
-            selected_index_2 = list_2.index(combo2.get())
-            selected_index_3 = list_3.index(combo3.get())
-
-            language = lang
-            list_language_save_path()
-            update_combo_list()
-            update_combo_2_list()
-            update_combo_3_list()
-
-        def update_combo_list():
-            options = {
-                "英": ["min-max_normalization",
-                   "mean_normalization",
-                   "max_abs_normalization",
-                   "z-score_normalization",
-                   "robust_standardization"],
-                "中": ["最大最小值归一化",
-                   "均值归一化",
-                   "最大绝对值归一化",
-                   "Z-Score标准化",
-                   "稳健标准化"]
-            }
-
-            new_values = options.get(language, options["英"])
-
-            combo.config(values=new_values)
-            combo.set(new_values[selected_index])
-
-        def update_combo_2_list():
-            options = {
-                "英": ["mean_squared_error",
-                      "mean_absolute_error",
-                      "huber_loss"],
-
-                "中": ["均方误差",
-                      "绝对误差",
-                      "Huber损失"
-                   ]
-                   }
-
-            new_values = options.get(language, options["英"])
-            combo2.config(values=new_values)
-            combo2.set(new_values[selected_index_2])
-
-        def update_combo_3_list():
-            options = {
-                "英": ["batch_GD",
-                       "stochastic_GD",
-                       "mini-batch_GD",
-                       #"Adam",
-                       #"RMSprop",
-                       #"Adagrad",
-                       #"AdamW",
-                       #"NAdam",
-                       #"Adadelta"
-                       ],
-
-                "中": ["批量梯度下降",
-                       "随机梯度下降",
-                       "小批量梯度下降"]
-                   }
-            new_values = options.get(language, options["英"])
-            combo3.config(values=new_values)
-            combo3.set(new_values[selected_index_3])
-
-        def update_combo_4_list():
-            list_4 = [
-                "None",
-                "LambdaLR",
-                "StepLR",
-                "MultiStepLR",
-                "ExponentialLR",
-                "CosineAnnealingLR",
-                "ReduceLROnPlateau",
-                "CyclicLR",
-                "OneCycleLR",
-                "CosineAnnealingWarmRestarts",
-                "PolynomialLR",
-                "ConstantLR",
-                "ChainedScheduler",
-                "SequentialLR"
-                ]
-            combo4.config(values=list_4)
-            combo4.set(list_4[combo4_text])
-
-        def update_combo_5_list():
-            list_5 = [
-                "GPU",
-                "CPU",
-                "强制CPU操作Pytorch"
-            ]
-            combo5.config(values=list_5)
-            combo5.set(list_5[combo5_text])
-
-        language = list_language_load_path() or "英"
-
-        window_ = ttk.Toplevel()
-        window_.title("线性回归")
-        window_.iconbitmap(ICON_PATH)
-
-        menu_bar = tk.Menu(window_)
-        window_.config(menu=menu_bar)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def whether_path(temp_list):
-            if not temp_list:
-                messagebox.showinfo("测试", message="没有数据文件", parent=window_)
-            else:
-                StartTrainingFrontWindow(window_, combo5, combo4, temp_list_2, temp_list)
-
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="语言", menu=file_menu)
-        menu_bar.add_cascade(label="使用模型", menu=file_menu)
-        menu_bar.add_command(label="开始训练", command=lambda: whether_path(temp_list))
-        file_menu.add_command(label="中文", command=lambda: update_language("中"))
-        file_menu.add_command(label="英文", command=lambda: update_language("英"))
-
-        f0 = ttk.Frame(window_)
-        f0.grid(row=0, column=0, sticky='w')
-        f1 = ttk.Frame(window_)
-        f1.grid(row=0,column=1, sticky='nw')
-
-        wb1 = ttk.Button(f0, text="导入文件", style="link", command=csv_path)
-        wb2 = ttk.Button(f0, text="保存模型", style="link", command=csv_save_path)
-        text_1_0 = ttk.Entry(f0)
-        text_1_0.insert(END, "没有文件")
-        text_1_1 = ttk.Entry(f0)
-        text_1_1.insert(END, "没有位置")
-        ToolTip(wb1, text="需导入数据用于模型训练")
-        ToolTip(wb2, text="若为空，将不保存模型")
-        text_0_x_0 = ttk.Label(f1, text="特征数据")
-        text_0_x_1 = ttk.Label(f1, text="目标数据")
-        text_0_x_e_0 = ttk.Entry(f1)
-        text_0_x_e_1 = ttk.Entry(f1)
-        text_0_x_e_0_wb0 = ttk.Button(f1, text="测试特征数据位置", style="link", command=lambda: test_input(text_0_x_e_0.get()))
-        text_0_x_e_1_wb0 = ttk.Button(f1, text="测试目标数据位置", style="link", command=lambda: test_output(text_0_x_e_1.get()))
-
-        text_0 = ttk.Label(f0, text="特征缩放")
-        text_2 = ttk.Label(f0, text="损失函数")
-        text_3 = ttk.Label(f0, text="优化方法")
-        text_4 = ttk.Label(f0, text="学习率调度器【未完成】")
-        text_5 = ttk.Label(f0, text="学习率")
-        text_6 = ttk.Label(f0, text="训练次数")
-        text_7 = ttk.Label(f0, text="使用硬件")
-
-        combo = ttk.Combobox(f0, state="readonly")
-        combo2 = ttk.Combobox(f0, state="readonly")
-        combo3 = ttk.Combobox(f0, state="readonly")
-        combo4 = ttk.Combobox(f0, state="readonly")
-        text_e = ttk.Entry(f0)
-        text_e_1 = ttk.Entry(f0)
-        combo5 = ttk.Combobox(f0, state="readonly")
-
-        def f0_grid():
-            text_1_0.grid(column=1, row=0, padx=10, pady=10)
-            wb1.grid(column=0, row=0, padx=10, pady=10)
-            text_1_1.grid(column=1, row=1, padx=10, pady=10)
-            wb2.grid(column=0, row=1, padx=10, pady=10)
-            text_0.grid(row=2, column=0, padx=10, pady=10)
-            combo.grid(row=2, column=1, padx=10, pady=10)
-            text_2.grid(column=0, row=3, padx=10, pady=10)
-            combo2.grid(row=3, column=1, padx=10, pady=10)
-            text_3.grid(column=0, row=4, padx=10, pady=10)
-            combo3.grid(row=4, column=1, padx=10, pady=10)
-            text_4.grid(column=0, row=5, padx=10, pady=10)
-            combo4.grid(row=5, column=1, padx=10, pady=10)
-            text_5.grid(column=0, row=6, padx=10, pady=10)
-            text_e.grid(row=6, column=1, padx=10, pady=10)
-            text_6.grid(column=0, row=7, padx=10, pady=10)
-            text_e_1.grid(row=7, column=1, padx=10, pady=10)
-            text_7.grid(column=0, row=8, padx=10, pady=10)
-            combo5.grid(column=1, row=8, padx=10, pady=10)
-
-        def f1_grid():
-            text_0_x_0.grid(column=0, row=0, padx=10, pady=10)
-            text_0_x_1.grid(column=0, row=1, padx=10, pady=10)
-            text_0_x_e_0.grid(column=1, row=0, padx=10, pady=10)
-            text_0_x_e_1.grid(column=1, row=1, padx=10, pady=10)
-            text_0_x_e_0_wb0.grid(column=2, row=0, pady=10)
-            text_0_x_e_1_wb0.grid(column=2, row=1, pady=10)
-
-        def f1_tool_tip():
-            ToolTip(text_0_x_e_0, text="输入特征数据在csv文件中的位置，若不输入，默认0,0\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为特征：0,2\n2.获取二列的数据为特征：2,2\n3.获取第二列到第三列的数据为特征：1,2")
-            ToolTip(text_0_x_e_1, text="输入目标数据在csv文件中的位置，若不输入，默认1,1\n方法：列数范围,列数范围\n第一列为0，依次类推\n示例：\n1.获取第一列到第三列的数据为目标：0,2\n2.获取二列的数据为目标：2,2\n3.获取第二列到第三列的数据为目标：1,2")
-
-        f0_grid()
-        f1_grid()
-        f1_tool_tip()
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def change_tooltip_text():
-            match combo.get():
-                case "最大最小值归一化"|"min-max_normalization":
-                    text_ = '将数据缩放到 [0, 1]范围'
-                    regression_data["特征缩放"] = "0"
-                case "均值归一化"|"mean_normalization":
-                    text_ = '将数据缩放到  [-1, 1]范围'
-                    regression_data["特征缩放"] = "1"
-                case "最大绝对值归一化"|"max_abs_normalization":
-                    text_ = '将数据缩放到 [-1, 1] 范围内，但保留了数据的稀疏性'
-                    regression_data["特征缩放"] = "2"
-                case "Z-Score标准化"|"z-score_normalization":
-                    text_ = '将数据转化为标准正态分布'
-                    regression_data["特征缩放"] = "3"
-                case "稳健标准化"|"robust_standardization":
-                    text_ = '对异常值具有较好的鲁棒性，不易受极端值的影响'
-                    regression_data["特征缩放"] = "4"
-
-            regression_data_save()
-            ToolTip(combo, text=text_)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def change_tooltip_text_2():
-            match combo2.get():
-                case "均方误差"|"mean_squared_error":
-                    text_ = "对大误差敏感"
-                    regression_data["损失函数"] = "0"
-                case "绝对误差"|"mean_absolute_error":
-                    text_ = "对异常值鲁棒"
-                    regression_data["损失函数"] = "1"
-                case "Huber损失":
-                    text_ = "均方误差和绝对误差之间"
-                    regression_data["损失函数"] = "2"
-                case "huber_loss":
-                    text_ = "MSE和MAE之间"
-                    regression_data["损失函数"] = "3"
-
-            regression_data_save()
-            ToolTip(combo2, text=text_)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def change_tooltip_text_3():
-            match combo3.get():
-                case "批量梯度下降"|"batch_GD":
-                    text_ ='一定能够得到全局最优解\n训练样本过多时很慢'
-                    regression_data["梯度下降"] = "0"
-                case "随机梯度下降"|"stochastic_GD":
-                    text_ = "准确度下降\n可能会收敛到局部最优"
-                    regression_data["梯度下降"] = "1"
-                case "小批量梯度下降"|"mini-batch_GD":
-                    text_ = "每次迭代使用batch_size个样本来对参数进行更新\n减小收敛所需要的迭代次数"
-                    regression_data["梯度下降"] = "2"
-
-            regression_data_save()
-            ToolTip(combo3, text=text_)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def change_tooltip_text_4():
-            match combo4.get():
-                case "None":
-                    text_ ='使用固定的学习率'
-                    regression_data["学习率调度器"] = "0"
-                case "LambdaLR":
-                    text_ = "根据用户定义的函数对学习率进行更改"
-                    regression_data["学习率调度器"] = "1"
-                case "StepLR":
-                    text_ = "每隔一定的epoch数将学习率乘以一个预定的衰减因子"
-                    regression_data["学习率调度器"] = "2"
-                case "MultiStepLR":
-                    text_ = "在预定的epoch列表中每次到达时将学习率乘以一个预定的衰减因子"
-                    regression_data["学习率调度器"] = "3"
-                case "ExponentialLR":
-                    text_ = "每个epoch将学习率按照一个固定的指数衰减"
-                    regression_data["学习率调度器"] = "4"
-                case "CosineAnnealingLR":
-                    text_ = "学习率在训练期间根据余弦曲线衰减"
-                    regression_data["学习率调度器"] = "5"
-                case "ReduceLROnPlateau":
-                    text_ = "当指标停止改进时减少学习率"
-                    regression_data["学习率调度器"] = "6"
-                case "CyclicLR":
-                    text_ = "学习率在两个边界之间循环变化"
-                    regression_data["学习率调度器"] = "7"
-                case "OneCycleLR":
-                    text_ = "在单个周期内调整学习率，以适应较大的学习率"
-                    regression_data["学习率调度器"] = "8"
-                case "CosineAnnealingWarmRestarts":
-                    text_ = "使用余弦退火和周期性重启来调整学习率"
-                    regression_data["学习率调度器"] = "9"
-                case "PolynomialLR":
-                    text_ = "使用多项式衰减的方式调整学习率"
-                    regression_data["学习率调度器"] = "10"
-                case "ConstantLR":
-                    text_ = "在预定的steps数内保持学习率不变"
-                    regression_data["学习率调度器"] = "11"
-                case "ChainedScheduler":
-                    text_ = "按顺序连接多个调度器"
-                    regression_data["学习率调度器"] = "12"
-                case "SequentialLR":
-                    text_ = "将多种衰减方式以串联的方式进行组合"
-                    regression_data["学习率调度器"] = "13"
-
-            regression_data_save()
-            ToolTip(combo4, text=text_)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-        def change_tooltip_text_5():
-            match combo5.get():
-                case "GPU":
-                    text_ = '若用户设备不支持CUDA，将使用DirectML\nDirectML时可能会有不支持的方法，导致返回cpu进行\n使用Pytorch库\n若用户设备都不支持，将返回cpu进行\n返回cpu进行将使用scikit-learn库'
-                    regression_data["使用硬件"] = "0"
-                case "CPU":
-                    text_ = '若使用cpu将只需要数据，其它值不需填写\n使用scikit-learn库'
-                    regression_data["使用硬件"] = "1"
-                case "强制CPU操作Pytorch":
-                    text_ = '这将强制使用cpu\n使用Pytorch库'
-                    regression_data["使用硬件"] = "2"
-
-            regression_data_save()
-            ToolTip(combo5, text=text_)
-
-        def combo_():
-            combo.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text())
-            update_combo_list()
-
-            combo2.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_2())
-            update_combo_2_list()
-
-            combo3.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_3())
-            update_combo_3_list()
-
-            combo4.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_4())
-            update_combo_4_list()
-
-            combo5.bind("<<ComboboxSelected>>", lambda event: change_tooltip_text_5())
-            update_combo_5_list()
-
-        combo_()
-        change_tooltip_text()
-        change_tooltip_text_2()
-        change_tooltip_text_3()
-        change_tooltip_text_4()
-        change_tooltip_text_5()
 
     def triangle():
         pass
@@ -799,11 +79,11 @@ def gadget():
     window = ttk.Toplevel(str(root))
     window.title("轻量记事本-小工具")
     window.iconbitmap(ICON_PATH)
-    b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, icon, font_style))
+    b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, icon, FONT_STYLE))
     b1.grid(column=0,row=0,padx=10,pady=10)
-    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, font_style))
+    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, FONT_STYLE))
     b2.grid(column=1,row=0,padx=10,pady=10)
-    b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=regression)
+    b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
     b3.grid(column=2,row=0,padx=10,pady=10)
     b4 = ttk.Button(window, text="三角形计算", style=OUTLINE, command=triangle)
     b4.grid(column=3,row=0,padx=10,pady=10)
@@ -1775,9 +1055,6 @@ def sever():
 
 if __name__ == '__main__':
     v = int(t_load(C_PATH) or 0)
-    v2 = int(t_load(D_PATH) or 1)
-    v3 = int(t_load(E_PATH) or 0)
-    v4 = int(t_load(F_PATH) or 0)
     v5 = int(t_load(L_PATH) or 0)
     v6 = int(t_load(M_PATH) or 0)
     num_wv1 = int(t_load(N_PATH) or 0)
@@ -1795,10 +1072,6 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("轻量记事本")
     root.iconbitmap(ICON_PATH)
-    font_style1 = tk_font.Font(family="宋体", size=12)
-    font_style2 = tk_font.Font(family="等线", size=12)
-    font_style3 = tk_font.Font(family="黑体", size=12)
-    font_style = None
     t_size = 0
     t_divide_up = 0
     circular_num = 31457280
@@ -1816,12 +1089,6 @@ if __name__ == '__main__':
         "30MB": 31457280,
         "等于大文件定义": None
     }
-    if v2 % 2 == 1:
-        font_style = font_style1
-    elif v3 % 2 == 1:
-        font_style = font_style2
-    elif v4 % 2 == 1:
-        font_style = font_style3
 
     if _size_ in size_map:
         t_size = size_map[_size_]
@@ -1856,7 +1123,7 @@ if __name__ == '__main__':
     scrollbar = ttk.Scrollbar(root, style="round")
     scrollbar.grid(row=1, column=1, sticky="ns")
     text_widget = tk.Text(root, wrap="word",
-                          yscrollcommand=scrollbar.set, font=font_style)
+                          yscrollcommand=scrollbar.set, font=FONT_STYLE)
     text_widget.grid(row=1, column=0, sticky="nsew")
     text_widget.tag_configure("found", background="yellow")
     t=text_widget.get("1.0",tk.END)
@@ -1883,7 +1150,7 @@ if __name__ == '__main__':
     index_ = 0
 
     action_map = {
-        1: lambda: (root.withdraw(), xiao_liu_ren_window(root, icon, font_style)),    }
+        1: lambda: (root.withdraw(), xiao_liu_ren_window(root, icon, FONT_STYLE)),    }
 
     action_map.get(num_wv1 % 2, lambda: None)()
 
