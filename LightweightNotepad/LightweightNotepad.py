@@ -25,6 +25,7 @@ from function.ProjectPathVariables import A_PATH, B_PATH, C_PATH, H_PATH, I_PATH
     W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
 from window_module import NewXiaoLiuRenWindow
 from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
+from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 from window_module.PictureWindow import picture
 from window_module.RegressionWindow import regression
 
@@ -83,13 +84,13 @@ def gadget():
     window.iconbitmap(ICON_PATH)
     b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, icon, FONT_STYLE))
     b1.grid(column=0,row=0,padx=10,pady=10)
-    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, FONT_STYLE))
+    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, FONT_STYLE))
     b2.grid(column=1,row=0,padx=10,pady=10)
     b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
     b3.grid(column=2,row=0,padx=10,pady=10)
     b4 = ttk.Button(window, text="三角形计算", style=OUTLINE, command=triangle)
     b4.grid(column=3,row=0,padx=10,pady=10)
-    b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=picture)
+    b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=lambda: picture(root, icon))
     b5.grid(column=4,row=0,padx=10,pady=10)
 ###分割线
 

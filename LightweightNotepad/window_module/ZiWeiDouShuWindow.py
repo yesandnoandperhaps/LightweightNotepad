@@ -13,7 +13,7 @@ from module.ZiWeiDouShu import ZiWeiDouShu
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
-def z(root_main,font_style):
+def zi_wei_dou_shu_window(root_main,font_style):
     t = str(t_load(R_PATH) or "横排样式")
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
