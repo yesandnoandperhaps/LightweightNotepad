@@ -17,9 +17,9 @@ from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
 import function.ProjectCapabilityVariables
-from function.ProjectFunctions import t_save, save, t_load, var_save
+from function.ProjectFunctions import t_save, save, t_load, var_save, utc
 from function import JsonFile
-from function.ProjectDictionaryVariables import UTC_TIME
+from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
 from function.ProjectPathVariables import A_PATH, B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
     W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
@@ -506,37 +506,18 @@ def set_window():
         # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
         def w_4_1_():
 
-            xlr_data = {
-                "起卦历法": 0,
-                "起卦时间": 0,
-                "起卦时区": 0,
-                "起卦方式": 0,
-            }
-
             xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
-            xlr_json = JsonFile.File.dict_load(xlr_data_path, xlr_data)
+            xlr_json = JsonFile.File.dict_load(xlr_data_path, XLR_DATA)
 
             w_4_1_v_0 = ["新历","农历","道历"]
             w_4_1_v_1 = ["时区","平太阳时","真太阳时"]
             w_4_1_v_3 = ["时起卦", "随机数起卦", "五行起卦", "八卦起卦", "八卦五行起卦"]
 
-            def utc():
-                local_timezone = dateutil.tz.tzlocal()
-                now = datetime.now(local_timezone)
-                offset = now.strftime('%z')
-                formatted_offset = f"UTC{offset[:3]}:{offset[3:]}"
-                var2 = int(t_load(W_ROOT2_C_VAR_2_PATH) or 0)
-                if xlr_json[2] != UTC_TIME.index(formatted_offset):
-                    if var2 % 2 == 1:
-                        down_box_2.set(UTC_TIME[int(xlr_json[2])])
-                    else:
-                        down_box_2.set(UTC_TIME[UTC_TIME.index(formatted_offset)])
-                        xlr_json[2] = UTC_TIME.index(formatted_offset)
-                        JsonFile.File.dict_save(xlr_data_path, xlr_json.file_dict)
-                else:
-                    down_box_2.set(UTC_TIME[UTC_TIME.index(formatted_offset)])
+            def set_down_box():
+
                 down_box_0.set(w_4_1_v_0[xlr_json[0]])
                 down_box_1.set(w_4_1_v_1[xlr_json[1]])
+                down_box_2.set(utc())
                 down_box_3.set(w_4_1_v_3[xlr_json[3]])
 
             def modify_xlr_json():
@@ -572,7 +553,7 @@ def set_window():
             down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
             down_box_3.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            messagebox.showerror("错误", message=f"{xlr_json}", parent=w_4) if isinstance(xlr_json,Exception) else utc()
+            messagebox.showerror("错误", message=f"{xlr_json}", parent=w_4) if isinstance(xlr_json,Exception) else set_down_box()
 
             w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
 

@@ -1,29 +1,15 @@
 import os
 from tkinter import messagebox
 import ttkbootstrap as ttk
-
+from function.JsonFile import File
 from function.ProjectPathVariables import DATA_FILE_PATH,ICON_PATH
+from function.ProjectDictionaryVariables import XLR_DATA
 
 
 class NewX:
     def __init__(self,root_main):
-        self.w_4_1_path = os.path.join(DATA_FILE_PATH, "w_4_1_path")
+        self.xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
+        xlr_json = File.dict_load(self.xlr_data_path, XLR_DATA)
         window = ttk.Toplevel(root_main)
         window.title("小六壬-起卦")
         window.iconbitmap(ICON_PATH)
-
-
-    @staticmethod
-    def down_box_save_1(w_4_1_path,down_box):
-        with open(w_4_1_path, 'w', encoding='utf-8') as file:
-            file.write(str(down_box.get()))
-
-    @staticmethod
-    def w_4_3_load(w_4_1_path):
-        try:
-            with open(w_4_1_path, 'r', encoding='utf-8') as file:
-                return file.read()
-        except FileNotFoundError:
-            pass
-        except Exception as e:
-            messagebox.showerror("错误", f"发生错误: {e}")
