@@ -3,7 +3,7 @@ import re
 from lunar_python import Solar
 from function.GregorianCalendarLunar import GregorianCalendarToLunar
 from function.ProjectFunctions import utc
-from function.ExtendedTao import ExtendedTao
+from function.ProjectDictionaryVariables import SHI_CHEN_DICT
 
 class Calendar:
     def __init__(self,xlr_json_list):
@@ -32,11 +32,9 @@ class Calendar:
 
     @staticmethod
     def taoism_calendar():
-        converted_time, lunar_year, lunar_month, lunar_day, all_lunar = Calendar.chinese_calendar()
-        extended_tao = ExtendedTao.fromYmd(lunar_year, lunar_month, lunar_day)
-        print(f"ExtendedTao object: {extended_tao}")
-        print(f"Methods available: {dir(extended_tao)}")
-        return extended_tao.to_numeric_string()
+        converted_time, lunar_year, lunar_month, lunar_day,lunar_hour, all_lunar = Calendar.chinese_calendar()
+        dao_year = converted_time.year + 2698
+        return dao_year, lunar_month, lunar_day, lunar_hour
 
 
 class ChineseCalendar:
@@ -58,6 +56,7 @@ class ChineseCalendar:
         self.lunar_year = lunar_year
         self.lunar_month = lunar_month
         self.lunar_day = lunar_day
+        self.lunar_hour = SHI_CHEN_DICT[self.converted_time.hour]
         self.all_lunar = lunar.toFullString()
 
     @staticmethod
@@ -74,8 +73,8 @@ class ChineseCalendar:
         return to_time
 
     def get_lunar_date(self):
-        return self.converted_time, self.lunar_year, self.lunar_month, self.lunar_day, self.all_lunar
+        return self.converted_time, self.lunar_year, self.lunar_month, self.lunar_day, self.lunar_hour, self.all_lunar
 
-if __name__ == '__main__':
-    p = Calendar(2)
-    print(p.function_selection())
+
+p = Calendar(2)
+print(p.function_selection())
