@@ -16,6 +16,9 @@ class NewX:
         self.time = xlr_json[1]
         self.time_zone = xlr_json[2]
         self.function = xlr_json[3]
+        self.shichen = xlr_json[4]
+        self.runyue = xlr_json[5]
+
         self.root_main = root_main
 
 
@@ -40,7 +43,8 @@ class NewX:
         window = ttk.Toplevel(self.root_main)
         window.title("平太阳时")
         window.iconbitmap(ICON_PATH)
-        text = ttk.Label(window,text="经度")
+        text0 = ttk.Label(window,text="经度")
+        text1 = ttk.Label(window, text="纬度")
         text2 = ttk.Label(window,text="时区")
         text3 = ttk.Label(window,text="日期")
         entry = ttk.Entry(window)
@@ -50,7 +54,7 @@ class NewX:
         pass
 
     def time_qi_gua(self):
-        p = Calendar(self.calendar)
+        p = Calendar(self.calendar,self.shichen,self.runyue)
 
         p0,p1,p2,p3 = p.function_selection()
 

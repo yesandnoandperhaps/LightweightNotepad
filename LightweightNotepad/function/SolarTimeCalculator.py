@@ -2,6 +2,7 @@ import math
 from datetime import datetime, timedelta, timezone
 from pysolar.solar import get_altitude
 
+
 class SolarTimeCalculator:
     def __init__(self, latitude, longitude):
         """
@@ -21,11 +22,16 @@ class SolarTimeCalculator:
 
     def calculate_standard_time(self):
         """
-        计算平太阳时（标准时间），基于当前UTC时间和经度
+        计算平太阳时（标准时间），基于当前UTC时间和经度，精确到分钟
         :return: 标准时间（时区感知的datetime对象）
         """
         utc_time = self.get_current_utc_time()
-        standard_time = utc_time + timedelta(hours=self.longitude / 15)
+
+        # 计算经度对应的分钟偏移
+        longitude_offset_minutes = self.longitude * 4
+
+        # 使用 timedelta 来偏移时间
+        standard_time = utc_time + timedelta(minutes=longitude_offset_minutes)
         return standard_time
 
     def calculate_solar_time(self):
@@ -40,7 +46,8 @@ class SolarTimeCalculator:
         altitude = get_altitude(self.latitude, self.longitude, utc_time)
 
         # 通过太阳的高度角修正标准时间以获得真太阳时
-        solar_time = standard_time + timedelta(minutes=4 * (math.degrees(math.atan2(1, math.tan(math.radians(altitude))))))
+        solar_time = standard_time + timedelta(
+            minutes=4 * (math.degrees(math.atan2(1, math.tan(math.radians(altitude))))))
         return solar_time
 
     def get_solar_times(self):
