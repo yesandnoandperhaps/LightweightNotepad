@@ -1,7 +1,7 @@
 import os
 
 from function.SolarTimeCalculator import SolarTimeCalculator
-from XiaoLiuRenJson import Calendar
+from module.XiaoLiuRenJson import Calendar
 from function.JsonFile import File
 from function.ProjectPathVariables import DATA_FILE_PATH, ICON_PATH
 from function.ProjectDictionaryVariables import XLR_DATA
@@ -15,7 +15,7 @@ class NewX:
         self.calendar = xlr_json[0]
         self.time = xlr_json[1]
         self.time_zone = xlr_json[2]
-        self.function=xlr_json[3]
+        self.function = xlr_json[3]
         self.root_main = root_main
 
 
