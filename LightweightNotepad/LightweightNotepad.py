@@ -21,13 +21,14 @@ from function.ProjectFunctions import t_save, save, t_load, var_save, utc
 from function import JsonFile
 from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
 from function.ProjectPathVariables import A_PATH, B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH, L_PATH, M_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
-    W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH
+    K_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
+    W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH, XLR_DATA_PATH, XLR_JSON
 from window_module import NewXiaoLiuRenWindow
 from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
 from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 from window_module.PictureWindow import picture
 from window_module.RegressionWindow import regression
+from function.CustomToolTip import CustomToolTip as ToolTip
 
 
 def load_theme():
@@ -49,12 +50,6 @@ def s3():
 def s4():
     global v4
     v4 = v4+1
-def s5():
-    global v5
-    v5 = v5+1
-def s6():
-    global v6
-    v6 = v6+1
 def var_num_w_4_3_s():
     global var_num_w_4_3
     var_num_w_4_3 += 1
@@ -134,7 +129,7 @@ def set_window():
             p3=v4%2
             window_close_()
             if p1+p2+p3==1:
-                save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
+                save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
             else:
                 messagebox.showerror("错误", message="不支持多字体或无字体选择",parent=window)
 
@@ -281,27 +276,27 @@ def set_window():
                     combobox1.set(_size_)
                 case _:
                     combobox1.set("70MB")
-                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
+                    save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
 
             match divide_up:
                 case "等于大文件定义" | "5MB" | "10MB" | "15MB" | "30MB":
                     combobox2.set(divide_up)
                 case _:
                     combobox2.set("70MB")
-                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
+                    save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
 
             match onandoff:
                 case "开启" | "关闭":
                     combobox0.set(onandoff)
                 case "关闭":
                     combobox0.set("开启")
-                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
+                    save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
 
             match circular:
                 case "5MB" | "10MB" | "30MB" | "50MB" | "70MB" | "128MB" | "256MB" | "512MB":
                     combobox3.set(circular)
                 case _:
-                    save(theme_cbo.get(),v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3)
+                    save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
         combobox()
 
     w_root3()
@@ -472,7 +467,14 @@ def set_window():
                 down_box3.bind("<<ComboboxSelected>>", lambda event: down_box3_save())
                 t3 = str(t_load(T_PATH) or "子时视明日")
                 match t3:
-                    case "子时视明日" | "子时视本日" | "子时中而分界":
+                    case "子时视明日":
+                        ToolTip(down_box3, text="早子时、晚子时视明日\n新历、农历、道历都会受此项影响")
+                        down_box3.set(t3)
+                    case "子时视本日":
+                        ToolTip(down_box3, text="早子时、晚子时视本日\n新历、农历、道历都会受此项影响")
+                        down_box3.set(t3)
+                    case "子时中而分界":
+                        ToolTip(down_box3, text="早子时视今日，晚子时视明日\n新历、农历、道历都会受此项影响")
                         down_box3.set(t3)
                     case _:
                         down_box3.set("子时视明日")
@@ -483,63 +485,88 @@ def set_window():
             w_4_2_()
 
         lb6 = ttk.Label(w_4, text="小六壬:")
-        lb6.grid(column=0,row=0,padx=10,pady=10,ipadx=5)        
+        lb6.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
 
-        consider_var = ttk.IntVar()
-        if v5 % 2 == 1:
-            consider_var.set(1)
-        else:
-            consider_var.set(0)
-        consider_checkbutton = ttk.Checkbutton(w_4_1, text="使用三宫定义", variable=consider_var, command=s5, style="round-toggle")
-        
-
-        consider_var2 = ttk.IntVar()
-        if v6 % 2 == 1:
-            consider_var2.set(1)
-        else:
-            consider_var2.set(0)
-        consider_checkbutton2 = ttk.Checkbutton(w_4_1, text="不计算吉值", variable=consider_var2, command=s6, style="round-toggle")
-        
-        consider_checkbutton.grid(column=0,row=4,padx=10,pady=10,sticky=W)
-        consider_checkbutton2.grid(column=0,row=5,padx=10,pady=10,sticky=W)
-
-        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
+        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal,DuplicatedCode
         def w_4_1_():
-
-            xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
-            xlr_json = JsonFile.File.dict_load(xlr_data_path, XLR_DATA)
 
             w_4_1_v_0 = ["新历","农历","道历"]
             w_4_1_v_1 = ["时区","平太阳时","真太阳时"]
             w_4_1_v_3 = ["时起卦", "随机数起卦", "五行起卦", "八卦起卦", "八卦五行起卦"]
+            w_4_1_v_4 = ["子时视明日", "子时视本日", "子时中而分界"]
+            w_4_1_v_5 = ["作本月", "作下月", "月中为界"]
+            w_4_1_v_6 = ["关闭","开启"]
+            w_4_1_v_7 = ["开启","关闭"]
+
+            text2_dict = {
+                0: "将调用“起卦时区”中选择的时区",
+                1: "将调用“起卦时区”中选择的时区，后转换成平太阳时",
+                2: "将调用“起卦时区”中选择的时区，后转换成真太阳时"
+            }
+
+            text4_dict = {
+                0: "将调用“起卦时区”中选择的时区",
+                1: "将调用“起卦时区”中选择的时区，后转换成平太阳时",
+                2: "将调用“起卦时区”中选择的时区，后转换成真太阳时"
+            }
+
+            text5_dict = {
+                0: "早子时、晚子时视明日\n新历、农历、道历都会受此项影响",
+                1: "早子时、晚子时视本日\n新历、农历、道历都会受此项影响",
+                2: "早子时视今日，晚子时视明日\n新历、农历、道历都会受此项影响"
+            }
+
+            text6_dict = {
+                0: "此设置仅限农历、道历",
+                1: "此设置仅限农历、道历",
+                2: "此设置仅限农历、道历"
+            }
+
+            def tool_tip_text():
+                text_1 = text2_dict[XLR_JSON[1]]
+                text_4 = text5_dict[XLR_JSON[4]]
+                text_5 = text6_dict[XLR_JSON[5]]
+                ToolTip(down_box_1, text=text_1)
+                ToolTip(down_box_4, text=text_4)
+                ToolTip(down_box_5, text=text_5)
 
             def set_down_box():
 
-                down_box_0.set(w_4_1_v_0[xlr_json[0]])
-                down_box_1.set(w_4_1_v_1[xlr_json[1]])
+                tool_tip_text()
+
+                down_box_0.set(w_4_1_v_0[XLR_JSON[0]])
+                down_box_1.set(w_4_1_v_1[XLR_JSON[1]])
                 down_box_2.set(utc())
-                down_box_3.set(w_4_1_v_3[xlr_json[3]])
+                down_box_3.set(w_4_1_v_3[XLR_JSON[3]])
+                down_box_4.set(w_4_1_v_4[XLR_JSON[4]])
+                down_box_5.set(w_4_1_v_5[XLR_JSON[5]])
+                down_box_6.set(w_4_1_v_6[XLR_JSON[6]])
+                down_box_7.set(w_4_1_v_7[XLR_JSON[7]])
 
             def modify_xlr_json():
-                
-                print(down_box_0.get(),down_box_1.get(),down_box_2.get(),down_box_3.get())
+                XLR_JSON[0] = w_4_1_v_0.index(down_box_0.get())
+                XLR_JSON[1] = w_4_1_v_1.index(down_box_1.get())
+                XLR_JSON[2] = UTC_TIME.index(down_box_2.get())
+                XLR_JSON[3] = w_4_1_v_3.index(down_box_3.get())
+                XLR_JSON[4] = w_4_1_v_4.index(down_box_4.get())
+                XLR_JSON[5] = w_4_1_v_5.index(down_box_5.get())
+                XLR_JSON[6] = w_4_1_v_6.index(down_box_6.get())
+                XLR_JSON[7] = w_4_1_v_7.index(down_box_7.get())
 
-                xlr_json[0] = w_4_1_v_0.index(down_box_0.get())
+                tool_tip_text()
 
-                xlr_json[1] = w_4_1_v_1.index(down_box_1.get())
-
-                xlr_json[2] = UTC_TIME.index(down_box_2.get())
-
-                xlr_json[3] = w_4_1_v_3.index(down_box_3.get())
-
-                JsonFile.File.dict_save(xlr_data_path, xlr_json.file_dict)
+                JsonFile.File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
 
             w_4_1_f_1 = ttk.Frame(w_4_1)
 
-            w_4_1_text_0 = ttk.Label(w_4_1_f_1,text="起卦历法:")
+            w_4_1_text_0 = ttk.Label(w_4_1_f_1, text="起卦历法:")
             w_4_1_text_1 = ttk.Label(w_4_1_f_1, text="起卦时间:")
             w_4_1_text_2 = ttk.Label(w_4_1_f_1, text="起卦时区:")
             w_4_1_text_3 = ttk.Label(w_4_1_f_1, text="起卦方法:")
+            w_4_1_text_4 = ttk.Label(w_4_1_f_1, text="时辰问题:")
+            w_4_1_text_5 = ttk.Label(w_4_1_f_1, text="闰月问题:")
+            w_4_1_text_6 = ttk.Label(w_4_1_f_1, text="计算吉值:")
+            w_4_1_text_7 = ttk.Label(w_4_1_f_1, text="三宫定义:")
 
             down_box_0 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_0, state="readonly")
             down_box_0.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
@@ -553,7 +580,19 @@ def set_window():
             down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
             down_box_3.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            messagebox.showerror("错误", message=f"{xlr_json}", parent=w_4) if isinstance(xlr_json,Exception) else set_down_box()
+            down_box_4 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_4, state="readonly")
+            down_box_4.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_5 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_5, state="readonly")
+            down_box_5.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_6 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_6, state="readonly")
+            down_box_6.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_7 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_7, state="readonly")
+            down_box_7.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
 
             w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
 
@@ -561,10 +600,18 @@ def set_window():
             w_4_1_text_1.grid(row=1, column=0, padx=5, pady=5, sticky=W)
             w_4_1_text_2.grid(row=2, column=0, padx=5, pady=5, sticky=W)
             w_4_1_text_3.grid(row=3, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_4.grid(row=4, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_5.grid(row=5, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_6.grid(row=6, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_7.grid(row=7, column=0, padx=5, pady=5, sticky=W)
             down_box_0.grid(row=0, column=1, padx=5, pady=5, sticky=W)
             down_box_1.grid(row=1, column=1, padx=5, pady=5, sticky=W)
             down_box_2.grid(row=2, column=1, padx=5, pady=5, sticky=W)
             down_box_3.grid(row=3, column=1, padx=5, pady=5, sticky=W)
+            down_box_4.grid(row=4, column=1, padx=5, pady=5, sticky=W)
+            down_box_5.grid(row=5, column=1, padx=5, pady=5, sticky=W)
+            down_box_6.grid(row=6, column=1, padx=5, pady=5, sticky=W)
+            down_box_7.grid(row=7, column=1, padx=5, pady=5, sticky=W)
 
         w_4_1_()
 
@@ -1039,8 +1086,7 @@ def sever():
 
 if __name__ == '__main__':
     v = int(t_load(C_PATH) or 0)
-    v5 = int(t_load(L_PATH) or 0)
-    v6 = int(t_load(M_PATH) or 0)
+
     num_wv1 = int(t_load(N_PATH) or 0)
     var_num_w_4_3 = int(t_load(Z_PATH) or 1)
     var2_num_w_4_3 = int(t_load(AA_PATH) or 0)

@@ -1,5 +1,8 @@
 import os
 
+from function.JsonFile import File
+from function.ProjectDictionaryVariables import XLR_DATA
+
 p_ = os.path.dirname(__file__)
 PATH = os.path.abspath(os.path.join(p_, '..'))
 DATA_FILE_PATH = os.path.join(PATH, "data")
@@ -16,8 +19,6 @@ H_PATH = os.path.join(DATA_FILE_PATH, "h")
 I_PATH = os.path.join(DATA_FILE_PATH, "i")
 J_PATH = os.path.join(DATA_FILE_PATH, "j")
 K_PATH = os.path.join(DATA_FILE_PATH, "k")
-L_PATH = os.path.join(DATA_FILE_PATH, "l")
-M_PATH = os.path.join(DATA_FILE_PATH, "m")
 N_PATH = os.path.join(DATA_FILE_PATH, "n")
 O_PATH = os.path.join(DATA_FILE_PATH, "o")
 P_PATH = os.path.join(DATA_FILE_PATH, "p")
@@ -36,3 +37,4 @@ AB_PATH = os.path.join(DATA_FILE_PATH, "ab")
 W_ROOT2_C_VAR_2_PATH = os.path.join(DATA_FILE_PATH, "w_root2_c_var_2_path")
 ICON_PATH = os.path.join(ICON_FILE_PATH, "main_icon.ico")
 XLR_DATA_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
+XLR_JSON = File.dict_load(XLR_DATA_PATH, XLR_DATA)

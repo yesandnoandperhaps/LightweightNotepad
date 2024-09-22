@@ -2,7 +2,10 @@ import decimal
 import math
 import random
 
-from function.ProjectPathVariables import L_PATH, M_PATH, Q_PATH, U_PATH, V_PATH
+from function.ProjectPathVariables import  Q_PATH, U_PATH, V_PATH, XLR_JSON
+
+v5 = XLR_JSON[7]
+v6 = XLR_JSON[6]
 
 "l->m->q"
 def load(path):
@@ -23,9 +26,6 @@ def combobox_load(path):
             return f.read()
     except FileNotFoundError:
         pass
-
-v5 = int(load(L_PATH) or 0)
-v6 = int(load(M_PATH) or 0)
 
 class T:
     

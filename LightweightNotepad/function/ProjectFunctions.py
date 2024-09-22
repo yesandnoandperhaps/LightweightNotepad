@@ -7,10 +7,10 @@ import dateutil.tz
 from function import JsonFile
 from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
 from function.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH, L_PATH, M_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH
+    K_PATH,  W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON
 
 
-def save(theme,v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3):
+def save(theme,v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3):
     with open(B_PATH, 'w', encoding='utf-8') as file:
         file.write(theme)
     with open(C_PATH, 'w', encoding='utf-8') as file:
@@ -21,10 +21,6 @@ def save(theme,v,v2,v3,v4,v5,v6,combobox1,combobox2,combobox0,combobox3):
         file.write(str(v3))
     with open(F_PATH, "w", encoding='utf-8') as file:
         file.write(str(v4))
-    with open(L_PATH, "w", encoding='utf-8') as file:
-        file.write(str(v5))
-    with open(M_PATH, "w", encoding='utf-8') as file:
-        file.write(str(v6))
     with open(H_PATH, "w", encoding='utf-8') as file:
         file.write(combobox1.get())
     with open(I_PATH, "w", encoding='utf-8') as file:
@@ -51,8 +47,6 @@ def t_load(path):
         pass
     except Exception as e:
         messagebox.showerror("错误", f"发生错误: {e}")
-
-XLR_JSON = JsonFile.File.dict_load(XLR_DATA_PATH, XLR_DATA)
 
 
 def utc():
