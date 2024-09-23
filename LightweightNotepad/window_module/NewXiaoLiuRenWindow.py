@@ -1,15 +1,18 @@
 import os
+import re
+from tkinter import messagebox
 
-from function.SolarTimeCalculator import SolarTimeCalculator
-from module.XiaoLiuRenJson import Calendar
-from function.JsonFile import File
-from function.ProjectPathVariables import DATA_FILE_PATH, ICON_PATH
-from function.ProjectDictionaryVariables import XLR_DATA
 import ttkbootstrap as ttk
+
+from function.JsonFile import File
+from function.ProjectDictionaryVariables import XLR_DATA
+from function.ProjectPathVariables import DATA_FILE_PATH, ICON_PATH
+from module.XiaoLiuRenJson import Calendar
 
 
 class NewX:
     def __init__(self,root_main):
+        self.input_string = None
         self.xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
         xlr_json = File.dict_load(self.xlr_data_path, XLR_DATA)
         self.calendar = xlr_json[0]
@@ -29,8 +32,7 @@ class NewX:
             1:self.flat_solar_time,
             2:self.true_solar_time
         }
-
-
+        time_dict[self.time]()
 
     def time_zone(self):
         choose_dict = {
@@ -45,10 +47,18 @@ class NewX:
         window.iconbitmap(ICON_PATH)
         text0 = ttk.Label(window,text="经度")
         text1 = ttk.Label(window, text="纬度")
-        text2 = ttk.Label(window,text="时区")
-        text3 = ttk.Label(window,text="日期")
-        entry = ttk.Entry(window)
-        entry.grid(column=0, row=0, padx=5, pady=5)
+        entry0 = ttk.Entry(window)
+        entry1 = ttk.Entry(window)
+
+        text0.grid(column=0, row=0, padx=5, pady=5)
+        text1.grid(column=1, row=0, padx=5, pady=5)
+        entry0.grid(column=0, row=1, padx=5, pady=5)
+        entry1.grid(column=1, row=1, padx=5, pady=5)
+        entry0.focus_set()
+        entry0.bind("<Return>", lambda event: entry1.focus_set())
+        entry1.bind("<Return>", lambda event: entry0.focus_set())
+        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
+        entry1.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry1.get(),window))
 
     def true_solar_time(self):
         pass
@@ -58,8 +68,14 @@ class NewX:
 
         p0,p1,p2,p3 = p.function_selection()
 
+    @staticmethod
+    def flat_solar_judge_f(input_string):
+        return bool(re.match(r"^-?\d+\.\d+$", input_string))
 
 
-a = NewX("a")
-
-a.choose()
+    def flat_solar_judge_t(self,input_string,window):
+        tf = self.flat_solar_judge_f(input_string)
+        if tf:
+            pass
+        else:
+            messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39；纬度：39.91\n例2：\n经度：-77.00941797699967；纬度：38.890410702161866", parent=window)
