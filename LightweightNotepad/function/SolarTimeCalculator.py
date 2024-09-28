@@ -1,75 +1,47 @@
 import math
 from datetime import datetime, timedelta, timezone
-from pysolar.solar import get_altitude
+
+from lunar_python.util import SolarUtil
 
 
 class SolarTimeCalculator:
-    def __init__(self, latitude, longitude):
-        """
-        初始化类，接收纬度和经度
-        :param latitude: 纬度
-        :param longitude: 经度
-        """
-        self.latitude = latitude
+    def __init__(self,longitude):
         self.longitude = longitude
+        self.utc_time = self.utc_8()
+        self.f = self.flat_solar_time()
+        self.t = self.true_solar_time()
 
-    def get_current_utc_time(self):
-        """
-        获取当前的UTC时间
-        :return: 当前的UTC时间（时区感知的datetime对象）
-        """
-        return datetime.now(timezone.utc)
+    @staticmethod
+    def utc_8():
+        return datetime.now(timezone.utc) + timedelta(hours=8)
 
-    def calculate_standard_time(self):
-        """
-        计算平太阳时（标准时间），基于当前UTC时间和经度，精确到分钟
-        :return: 标准时间（时区感知的datetime对象）
-        """
-        utc_time = self.get_current_utc_time()
+    def flat_solar_time(self):
+        flat_solar_time_variable = timedelta(minutes=(self.longitude - 120) * 4)
 
-        # 计算经度对应的分钟偏移
-        longitude_offset_minutes = self.longitude * 4
+        flat_solar_time_variable_t = self.utc_time + flat_solar_time_variable
 
-        # 使用 timedelta 来偏移时间
-        standard_time = utc_time + timedelta(minutes=longitude_offset_minutes)
-        return standard_time
+        return flat_solar_time_variable_t
 
-    def calculate_solar_time(self):
-        """
-        计算真太阳时，基于标准时间、太阳的高度角
-        :return: 真太阳时（时区感知的datetime对象）
-        """
-        standard_time = self.calculate_standard_time()
-        utc_time = self.get_current_utc_time()
+    def true_solar_time(self):
 
-        # 使用pysolar库计算太阳的高度角
-        altitude = get_altitude(self.latitude, self.longitude, utc_time)
+        day = SolarUtil.getDaysInYear(self.utc_time.year, self.utc_time.month, self.utc_time.day)
 
-        # 通过太阳的高度角修正标准时间以获得真太阳时
-        solar_time = standard_time + timedelta(
-            minutes=4 * (math.degrees(math.atan2(1, math.tan(math.radians(altitude))))))
-        return solar_time
+        n0 = 79.6764 + 0.2422 * (self.utc_time.year - 1985) - int((self.utc_time.year - 1985) / 4)
 
-    def get_solar_times(self):
-        """
-        返回平太阳时和真太阳时
-        :return: (平太阳时, 真太阳时) - 时区感知的datetime对象
-        """
-        standard_time = self.calculate_standard_time()
-        solar_time = self.calculate_solar_time()
-        return standard_time, solar_time
+        a = 2 * math.pi * (day - n0) / 365.2422
 
+        a2 = a * 2
 
-if __name__ == "__main__":
-    # 输入经纬度
-    latitude = float(input("输入纬度："))
-    longitude = float(input("输入经度："))
+        t = 0.0028 - 1.9857 * math.sin(a) + 9.9059 * math.sin(a2) - 7.0924 * math.cos(a) - 0.6882 * math.cos(a2)
 
-    # 创建SolarTimeCalculator类的实例
-    calculator = SolarTimeCalculator(latitude, longitude)
+        true_solar_time_variable = self.flat_solar_time()
 
-    # 获取平太阳时和真太阳时
-    standard_time, solar_time = calculator.get_solar_times()
+        true_solar_time_variable_t = true_solar_time_variable + timedelta(minutes=t)
 
-    print(f"平太阳时: {standard_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"真太阳时: {solar_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        return true_solar_time_variable_t
+
+    def true_flat_solar_time(self):
+        return self.f, self.t
+
+    def all(self):
+        return self.f, self.t, self.utc_time

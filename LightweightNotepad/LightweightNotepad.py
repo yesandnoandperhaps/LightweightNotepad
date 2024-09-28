@@ -1,14 +1,11 @@
 import ctypes
-import datetime
 import os
 import shutil
 import threading
 import tkinter as tk
-from datetime import datetime
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Separator
 
-import dateutil.tz
 import pystray
 import ttkbootstrap as ttk
 import windnd
@@ -17,18 +14,17 @@ from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
 import function.ProjectCapabilityVariables
-from function.ProjectFunctions import t_save, save, t_load, var_save, utc
 from function import JsonFile
-from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
+from function.CustomToolTip import CustomToolTip as ToolTip
+from function.ProjectDictionaryVariables import UTC_TIME
+from function.ProjectFunctions import t_save, save, t_load, var_save, utc, window_init
 from function.ProjectPathVariables import A_PATH, B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, N_PATH, R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
     W_ROOT2_C_VAR_2_PATH, ICON_PATH, DATA_FILE_PATH, XLR_DATA_PATH, XLR_JSON
-from window_module import NewXiaoLiuRenWindow
 from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
-from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 from window_module.PictureWindow import picture
 from window_module.RegressionWindow import regression
-from function.CustomToolTip import CustomToolTip as ToolTip
+from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 def load_theme():
@@ -75,8 +71,9 @@ def gadget():
         pass
 
     window = ttk.Toplevel(str(root))
-    window.title("轻量记事本-小工具")
-    window.iconbitmap(ICON_PATH)
+    window_init(window, root, "轻量记事本-小工具")
+    window.resizable(None, None)
+
     b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, icon, FONT_STYLE))
     b1.grid(column=0,row=0,padx=10,pady=10)
     b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, FONT_STYLE))
@@ -92,13 +89,12 @@ def gadget():
 #关于设置界面###分割线
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def set_window():
-    child_windows = []
-
-    window = ttk.Toplevel()
+    #child_windows = []
+    window = ttk.Toplevel(str(root))
+    window_init(window,root,"轻量记事本-设置")
     window.resizable(None,None)
-    window.title("轻量记事本-设置")
-    window.iconbitmap(ICON_PATH)
 
+    '''
     # noinspection PyBroadException
     def window_close():
         for win in child_windows:
@@ -115,6 +111,7 @@ def set_window():
                 win.destroy()
             except:
                 pass
+    '''
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
     def w_root1():
@@ -127,7 +124,7 @@ def set_window():
             p1=v2%2
             p2=v3%2
             p3=v4%2
-            window_close_()
+            #window_close_()
             if p1+p2+p3==1:
                 save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
             else:
@@ -148,8 +145,11 @@ def set_window():
         lb2 = ttk.Label(w_, text="选择字体:")
         lb2.grid(column=0,row=1,padx=10,pady=10,ipadx=5)
 
+        '''
         window_button_two = ttk.Button(w_, text="返回", style=OUTLINE, command=window_close)
         window_button_two.grid(column=4,row=0,padx=10,pady=10)
+        '''
+
         window_button = ttk.Button(w_, text="保存当前设置", style=OUTLINE, command=bao_chun)
         window_button.grid(column=3,row=0,padx=10,pady=10)
 
@@ -686,7 +686,6 @@ def set_window():
                 w_root5_window2_()
     '''
 
-    window.protocol("WM_DELETE_WINDOW", window_close)
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)
 
@@ -705,20 +704,20 @@ def on_exit():
 
 
 # noinspection PyPep8Naming
-def 前_下拉框事件():
-        if 下拉框.get() == "保存":
+def Before_drop_down_box_events():
+        if drop_down_box.get() == "保存":
             save_t()
-        elif 下拉框.get() == "设置":
+        elif drop_down_box.get() == "设置":
             set_window()
-        elif 下拉框.get() == "小工具":
+        elif drop_down_box.get() == "小工具":
             gadget()
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def 下拉框事件(event):
+def drop_down_box_event(event):
         x, y = event.x_root, event.y_root
-        if 下拉框.winfo_rootx() < x < 下拉框.winfo_rootx() + 下拉框.winfo_width() and \
-                下拉框.winfo_rooty() < y < 下拉框.winfo_rooty() + 下拉框.winfo_height():
-            前_下拉框事件()
+        if drop_down_box.winfo_rootx() < x < drop_down_box.winfo_rootx() + drop_down_box.winfo_width() and \
+                drop_down_box.winfo_rooty() < y < drop_down_box.winfo_rooty() + drop_down_box.winfo_height():
+            Before_drop_down_box_events()
 
 
 # noinspection PyUnusedLocal
@@ -1016,53 +1015,51 @@ def i(files):
 
 # noinspection PyBroadException,PyGlobalUndefined
 def next_page():
-    global index,index_
-    if index_ ==  1:
-        try:
-         index += 1
-         folder = os.path.join(DATA_FILE_PATH, "text-temp")
-         folder_t = (folder + "\\" + f'{filename}_{index}')
-         with open(folder_t, 'r',encoding='utf-8') as file:
-             text_widget.delete('1.0', tk.END)
-             next_page_text = file.read()
-             text_widget.insert(tk.END, next_page_text)
-        except:
-            messagebox.showerror("错误", message="已经是尾页",parent=root)
-            index -= 1
-            folder = os.path.join(DATA_FILE_PATH, "text-temp")
-            folder_t = (folder + "\\" + f'{filename}_{index}')
-            with open(folder_t, 'r',encoding='utf-8') as file:
-             text_widget.delete('1.0', tk.END)
-             next_page_text = file.read()
-             text_widget.insert(tk.END, next_page_text)
-    else:
-        messagebox.showerror("错误", message="仅限大文件操作",parent=root)
+    global index, index_
+
+    if index_ != 1:
+        messagebox.showerror("错误", message="仅限大文件操作", parent=root)
+        return
+
+    folder = os.path.join(DATA_FILE_PATH, "text-temp")
+    try:
+        index += 1
+        folder_t = os.path.join(folder, f'{filename}_{index}')
+        _update_text_widget(folder_t)
+    except FileNotFoundError:
+        messagebox.showerror("错误", message="已经是尾页", parent=root)
+        index -= 1  # 恢复index为上一页
+    except Exception as e:
+        messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
 
 
 # noinspection PyBroadException
 def return_page():
-    global index,index_
-    if index_ ==  1:
-        try:
-         index -= 1
-         folder = os.path.join(DATA_FILE_PATH, "text-temp")
-         folder_t = (folder + "\\" + f'{filename}_{index}')
-         with open(folder_t, 'r',encoding='utf-8') as file:
-             text_widget.delete('1.0', tk.END)
-             return_page_text = file.read()
-             text_widget.insert(tk.END, return_page_text)
-        except:
-            messagebox.showerror("错误", message="已经是首页",parent=root)
-            index += 1
-            folder = os.path.join(DATA_FILE_PATH, "text-temp")
-            folder_t = (folder + "\\" + f'{filename}_{index}')
-            with open(folder_t, 'r',encoding='utf-8') as file:
-             text_widget.delete('1.0', tk.END)
-             return_page_text = file.read()
-             text_widget.insert(tk.END, return_page_text)
-    else:
-        messagebox.showerror("错误", message="仅限大文件操作",parent=root)
+    global index, index_
 
+    if index_ != 1:
+        messagebox.showerror("错误", message="仅限大文件操作", parent=root)
+        return
+
+    folder = os.path.join(DATA_FILE_PATH, "text-temp")
+    try:
+        index -= 1
+        folder_t = os.path.join(folder, f'{filename}_{index}')
+        _update_text_widget(folder_t)
+    except FileNotFoundError:
+        messagebox.showerror("错误", message="已经是首页", parent=root)
+        index += 1  # 恢复index为下一页
+    except Exception as e:
+        messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
+
+
+def _update_text_widget(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        text_widget.delete('1.0', tk.END)
+        text_widget.insert(tk.END, file.read())
+
+
+# noinspection DuplicatedCode
 def sever():
     w.grid_forget()
     window = tk.Toplevel(root)
@@ -1145,11 +1142,11 @@ if __name__ == '__main__':
     current_theme = load_theme()
     if current_theme in style.theme_names():
         style.theme_use(current_theme)
-    下拉菜单组 = ["保存", "设置","小工具"]
-    下拉框 = ttk.Combobox(root, values=下拉菜单组, state="readonly")
-    下拉框.grid(row=0, column=0, sticky="e",pady=5)
-    下拉框.bind("<Button-3>", 下拉框事件)
-    下拉框.set("保存")
+    drop_down_box = ttk.Combobox(root, values=["保存", "设置", "小工具"], state="readonly")
+    drop_down_box.grid(row=0, column=0, sticky="e", pady=5)
+    drop_down_box.bind("<Button-3>", drop_down_box_event)
+    drop_down_box.set("保存")
+    # noinspection DuplicatedCode
     scrollbar = ttk.Scrollbar(root, style="round")
     scrollbar.grid(row=1, column=1, sticky="ns")
     text_widget = tk.Text(root, wrap="word",
@@ -1162,6 +1159,7 @@ if __name__ == '__main__':
     w.grid(row=2,column=0,sticky=E)
     b1 = ttk.Button(w, text="分离控制", style="link", command=sever)
     b1.pack(padx=5,pady=5,side='left')
+    # noinspection DuplicatedCode
     b2 = ttk.Button(w, text="下一页", style="link", command=next_page)
     b2.pack(padx=5,pady=5,side='right')
     b3 = ttk.Button(w, text="上一页", style="link", command=return_page)

@@ -4,10 +4,12 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
+from function.ProjectFunctions import window_init
 from function.JsonFile import File
 from function.ProjectDictionaryVariables import XLR_DATA
 from function.ProjectPathVariables import DATA_FILE_PATH, ICON_PATH
 from module.XiaoLiuRenJson import Calendar
+from function.SolarTimeCalculator import SolarTimeCalculator
 
 
 class NewX:
@@ -43,22 +45,17 @@ class NewX:
 
     def flat_solar_time(self):
         window = ttk.Toplevel(self.root_main)
-        window.title("平太阳时")
-        window.iconbitmap(ICON_PATH)
+        window_init(window, self.root_main, "平太阳时")
+        window.resizable(False, False)
         text0 = ttk.Label(window,text="经度")
-        text1 = ttk.Label(window, text="纬度")
         entry0 = ttk.Entry(window)
-        entry1 = ttk.Entry(window)
 
         text0.grid(column=0, row=0, padx=5, pady=5)
-        text1.grid(column=1, row=0, padx=5, pady=5)
-        entry0.grid(column=0, row=1, padx=5, pady=5)
-        entry1.grid(column=1, row=1, padx=5, pady=5)
+        entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
         entry0.focus_set()
-        entry0.bind("<Return>", lambda event: entry1.focus_set())
-        entry1.bind("<Return>", lambda event: entry0.focus_set())
-        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
-        entry1.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry1.get(),window))
+        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window,0))
+        entry0.bind('<Shift_L>', lambda event: self.flat_solar_judge_t(entry0.get(),window,1))
+
 
     def true_solar_time(self):
         pass
@@ -69,13 +66,16 @@ class NewX:
         p0,p1,p2,p3 = p.function_selection()
 
     @staticmethod
-    def flat_solar_judge_f(input_string):
-        return bool(re.match(r"^-?\d+\.\d+$", input_string))
+    def solar_judge(input_string):
+        return bool(re.match(r"^-?\d+(\.\d+)?$", input_string))
 
-
-    def flat_solar_judge_t(self,input_string,window):
-        tf = self.flat_solar_judge_f(input_string)
+    def flat_solar_judge_t(self,input_string,window,num):
+        tf = self.solar_judge(input_string)
         if tf:
-            pass
+            if num == 0:
+                a = SolarTimeCalculator(float(input_string))
+                print(a.flat_solar_time())
+            elif num == 1:
+                pass
         else:
-            messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39；纬度：39.91\n例2：\n经度：-77.00941797699967；纬度：38.890410702161866", parent=window)
+            messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)

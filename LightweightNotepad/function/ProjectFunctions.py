@@ -7,7 +7,7 @@ import dateutil.tz
 from function import JsonFile
 from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
 from function.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH,  W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON
+    K_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON, ICON_PATH
 
 
 def save(theme,v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3):
@@ -67,3 +67,19 @@ def utc():
             return utc__
     else:
         return UTC_TIME[UTC_TIME.index(formatted_offset)]
+
+def window_closes(window, root_main):
+    window.destroy()
+    root_main.wm_attributes('-disabled', 0)
+    root_main.wm_attributes('-topmost', 1)
+    root_main.wm_attributes('-topmost', 0)
+
+def window_on(window, root_main):
+    window.wm_attributes('-topmost', 1)
+    root_main.wm_attributes('-disabled', 1)
+
+def window_init(window, root_main, text):
+    window.title(text)
+    window.iconbitmap(ICON_PATH)
+    window.protocol("WM_DELETE_WINDOW", lambda: window_closes(window, root_main))
+    window_on(window, root_main)
