@@ -4,7 +4,7 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from function.ProjectFunctions import window_init
+from function.ProjectFunctions import window_init, window_closes
 from function.JsonFile import File
 from function.ProjectDictionaryVariables import XLR_DATA
 from function.ProjectPathVariables import DATA_FILE_PATH, ICON_PATH
@@ -53,8 +53,8 @@ class NewX:
         text0.grid(column=0, row=0, padx=5, pady=5)
         entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
         entry0.focus_set()
-        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window,0))
-        entry0.bind('<Shift_L>', lambda event: self.flat_solar_judge_t(entry0.get(),window,1))
+        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
+        entry0.bind('<Shift_L>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
 
 
     def true_solar_time(self):
@@ -69,13 +69,11 @@ class NewX:
     def solar_judge(input_string):
         return bool(re.match(r"^-?\d+(\.\d+)?$", input_string))
 
-    def flat_solar_judge_t(self,input_string,window,num):
+    def flat_solar_judge_t(self,input_string,window):
         tf = self.solar_judge(input_string)
         if tf:
-            if num == 0:
-                a = SolarTimeCalculator(float(input_string))
-                print(a.flat_solar_time())
-            elif num == 1:
-                pass
+            a = SolarTimeCalculator(float(input_string))
+            window_closes(window, self.root_main)
+
         else:
             messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)

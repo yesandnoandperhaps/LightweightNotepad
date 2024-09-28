@@ -496,8 +496,9 @@ def set_window():
             w_4_1_v_5 = ["作本月", "作下月", "月中为界"]
             w_4_1_v_6 = ["关闭","开启"]
             w_4_1_v_7 = ["开启","关闭"]
+            w_4_1_v_8 = ["顺首","复首"]
 
-            text2_dict = {
+            text1_dict = {
                 0: "将调用“起卦时区”中选择的时区",
                 1: "将调用“起卦时区”中选择的时区，后转换成平太阳时",
                 2: "将调用“起卦时区”中选择的时区，后转换成真太阳时"
@@ -521,13 +522,21 @@ def set_window():
                 2: "此设置仅限农历、道历"
             }
 
+            text8_dict = {
+                0: "大安为首，天宫，人宫所落位置的下一位为第二、第三首",
+                1: "大安为首，天宫，人宫所落位置为第二、第三首"
+            }
+
             def tool_tip_text():
-                text_1 = text2_dict[XLR_JSON[1]]
+                print("yes")
+                text_1 = text1_dict[XLR_JSON[1]]
                 text_4 = text5_dict[XLR_JSON[4]]
                 text_5 = text6_dict[XLR_JSON[5]]
+                text_8 = text8_dict[XLR_JSON[8]]
                 ToolTip(down_box_1, text=text_1)
                 ToolTip(down_box_4, text=text_4)
                 ToolTip(down_box_5, text=text_5)
+                ToolTip(down_box_8, text=text_8)
 
             def set_down_box():
 
@@ -541,6 +550,7 @@ def set_window():
                 down_box_5.set(w_4_1_v_5[XLR_JSON[5]])
                 down_box_6.set(w_4_1_v_6[XLR_JSON[6]])
                 down_box_7.set(w_4_1_v_7[XLR_JSON[7]])
+                down_box_8.set(w_4_1_v_8[XLR_JSON[8]])
 
             def modify_xlr_json():
                 XLR_JSON[0] = w_4_1_v_0.index(down_box_0.get())
@@ -551,6 +561,7 @@ def set_window():
                 XLR_JSON[5] = w_4_1_v_5.index(down_box_5.get())
                 XLR_JSON[6] = w_4_1_v_6.index(down_box_6.get())
                 XLR_JSON[7] = w_4_1_v_7.index(down_box_7.get())
+                XLR_JSON[8] = w_4_1_v_8.index(down_box_8.get())
 
                 tool_tip_text()
 
@@ -562,6 +573,7 @@ def set_window():
             w_4_1_text_1 = ttk.Label(w_4_1_f_1, text="起卦时间:")
             w_4_1_text_2 = ttk.Label(w_4_1_f_1, text="起卦时区:")
             w_4_1_text_3 = ttk.Label(w_4_1_f_1, text="起卦方法:")
+            w_4_1_text_8 = ttk.Label(w_4_1_f_1, text="起卦算法:")
             w_4_1_text_4 = ttk.Label(w_4_1_f_1, text="时辰问题:")
             w_4_1_text_5 = ttk.Label(w_4_1_f_1, text="闰月问题:")
             w_4_1_text_6 = ttk.Label(w_4_1_f_1, text="计算吉值:")
@@ -591,26 +603,30 @@ def set_window():
             down_box_7 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_7, state="readonly")
             down_box_7.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
+            down_box_8 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_8, state="readonly")
+            down_box_8.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
+            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
             w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
 
             w_4_1_text_0.grid(row=0,column=0,padx=5,pady=5,sticky=W)
             w_4_1_text_1.grid(row=1, column=0, padx=5, pady=5, sticky=W)
             w_4_1_text_2.grid(row=2, column=0, padx=5, pady=5, sticky=W)
             w_4_1_text_3.grid(row=3, column=0, padx=5, pady=5, sticky=W)
-            w_4_1_text_4.grid(row=4, column=0, padx=5, pady=5, sticky=W)
-            w_4_1_text_5.grid(row=5, column=0, padx=5, pady=5, sticky=W)
-            w_4_1_text_6.grid(row=6, column=0, padx=5, pady=5, sticky=W)
-            w_4_1_text_7.grid(row=7, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_8.grid(row=4, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_4.grid(row=5, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_5.grid(row=6, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_6.grid(row=7, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_7.grid(row=8, column=0, padx=5, pady=5, sticky=W)
             down_box_0.grid(row=0, column=1, padx=5, pady=5, sticky=W)
             down_box_1.grid(row=1, column=1, padx=5, pady=5, sticky=W)
             down_box_2.grid(row=2, column=1, padx=5, pady=5, sticky=W)
             down_box_3.grid(row=3, column=1, padx=5, pady=5, sticky=W)
-            down_box_4.grid(row=4, column=1, padx=5, pady=5, sticky=W)
-            down_box_5.grid(row=5, column=1, padx=5, pady=5, sticky=W)
-            down_box_6.grid(row=6, column=1, padx=5, pady=5, sticky=W)
-            down_box_7.grid(row=7, column=1, padx=5, pady=5, sticky=W)
+            down_box_8.grid(row=4, column=1, padx=5, pady=5, sticky=W)
+            down_box_4.grid(row=5, column=1, padx=5, pady=5, sticky=W)
+            down_box_5.grid(row=6, column=1, padx=5, pady=5, sticky=W)
+            down_box_6.grid(row=7, column=1, padx=5, pady=5, sticky=W)
+            down_box_7.grid(row=8, column=1, padx=5, pady=5, sticky=W)
 
         w_4_1_()
 
