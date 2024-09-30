@@ -7,6 +7,7 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+from window_module.OldXiaoLiuRenWindowPatch import LabelManager
 from window_module.NewXiaoLiuRenWindow import NewX
 from function.ProjectFunctions import t_save, t_load
 from function.ProjectPathVariables import N_PATH, P_PATH, Q_PATH, U_PATH, V_PATH, ICON_PATH
@@ -1371,33 +1372,9 @@ def xiao_liu_ren_window(root_main, icon, font_style):
             text_widget.grid_remove()
             scrollbar.grid_remove()
             f.grid()
-
             xlr_num = NewX(window).choose()
-            if xlr_num is not None:
-                # 解包 xlr_num
-                t1, t2, t3, t4, t5, t6, r1, r2, r3, r4, r5, r6, d1, d2, d3, d4, d5, d6 = xlr_num
-
-                # 创建标题标签
-                labels = ["天宫", "人宫", "地宫"]
-                for i, label in enumerate(labels):
-                    ttk.Label(f, text=label, font=font_style).grid(row=i, column=0,padx=5, pady=5)
-
-                # 创建数值标签
-                t_values = [t1, t2, t3, t4, t5, t6]
-                r_values = [r1, r2, r3, r4, r5, r6]
-                d_values = [d1, d2, d3, d4, d5, d6]
-
-                # 放置 t 开头的标签在天宫下面
-                for i, value in enumerate(t_values):
-                    ttk.Label(f, text=value, font=font_style).grid(row=0, column=i + 1,padx=5, pady=5)  # 天宫下的标签
-
-                # 放置 r 开头的标签在人宫下面
-                for i, value in enumerate(r_values):
-                    ttk.Label(f, text=value, font=font_style).grid(row=1, column=i + 1,padx=5, pady=5)  # 人宫下的标签
-
-                # 放置 d 开头的标签在地宫下面
-                for i, value in enumerate(d_values):
-                    ttk.Label(f, text=value, font=font_style).grid(row=2, column=i + 1,padx=5, pady=5)  # 地宫下的标签
+            label_manager = LabelManager(f, font_style)
+            label_manager.create_labels(xlr_num)
 
     combo = ttk.Combobox(window, values=["起卦", "算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")

@@ -62,12 +62,12 @@ class NewX:
                 r1, r2, r3, r4, r5, r6,\
                 d1, d2, d3, d4, d5, d6
 
-    def time_zone_(self):
+    def time_zone_(self,shi=None):
         choose_dict = {
-            0: self.time_qi_gua_,
+            0: self.time_qi_gua_(shi),
         }
 
-        return choose_dict[self.function]()
+        return choose_dict[self.function]
 
     def flat_solar_time(self):
         window = ttk.Toplevel(self.root_main)
@@ -86,8 +86,8 @@ class NewX:
     def true_solar_time(self):
         pass
 
-    def time_qi_gua_(self):
-        p0, p1, p2, p3 = self.time_qi_gua()
+    def time_qi_gua_(self,shi=None):
+        p0, p1, p2, p3 = self.time_qi_gua(shi)
         self.result = XiaoLiuRenNum(p1, p2, p3, self.suanfa).xiao_liu_ren_num()
 
     def time_qi_gua(self, shi=None):
@@ -101,10 +101,8 @@ class NewX:
     def flat_solar_judge_t(self,input_string,window):
         tf = self.solar_judge(input_string)
         if tf:
-            self.time_zone()
             a = SolarTimeCalculator(float(input_string)).flat_solar_time()
             window_closes(window, self.root_main)
-            p0, p1, p2, p3 = self.time_qi_gua(a)
-            self.result = XiaoLiuRenNum(p1, p2, p3, self.suanfa).xiao_liu_ren_num()
+            self.time_zone_(a)
         else:
             messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)
