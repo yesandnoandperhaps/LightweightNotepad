@@ -8,13 +8,17 @@ from function.TimeZoneConversion import TimeZoneConversionT
 
 
 class Calendar:
-    def __init__(self, li_fa, shi_chen, run_yue, shi=None):
+    def __init__(self, li_fa, shi_chen, run_yue,ke=None,shi=None):
         self.li_fa = li_fa
         self.shi_chen_issue = shi_chen
         self.run_yue = run_yue
         self.utc = utc()
         self.convert_time = datetime.now().astimezone().replace()
         self.shi = shi
+        self.ke = ke
+
+        if self.ke is not None:
+            pass
 
         if self.shi is not None:
             self.converted_time = self.shi

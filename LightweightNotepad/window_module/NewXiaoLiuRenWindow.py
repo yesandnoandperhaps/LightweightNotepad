@@ -51,6 +51,7 @@ class NewX:
         }
 
         # 从结果中解包
+        # noinspection PyTupleAssignmentBalance
         t, r, d = self.result
 
         # 获取对应的元组
@@ -65,30 +66,39 @@ class NewX:
     def time_zone_(self,shi=None):
         choose_dict = {
             0: self.time_qi_gua_(shi),
+            1: self.time_qi_gua_2(shi)
         }
 
         return choose_dict[self.function]
 
-    def flat_solar_time(self):
+    def create_solar_time_window(self, title, judge_function,num):
         window = ttk.Toplevel(self.root_main)
-        window_init(window, self.root_main, "平太阳时")
+        window_init(window, self.root_main, title)
         window.resizable(False, False)
-        text0 = ttk.Label(window,text="经度")
+
+        text0 = ttk.Label(window, text="经度")
         entry0 = ttk.Entry(window)
 
         text0.grid(column=0, row=0, padx=5, pady=5)
         entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
         entry0.focus_set()
-        entry0.bind('<Shift_R>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
-        entry0.bind('<Shift_L>', lambda event: self.flat_solar_judge_t(entry0.get(),window))
 
+        # 绑定 Shift 键事件
+        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num))
+        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num))
+
+    def flat_solar_time(self):
+        self.create_solar_time_window("平太阳时", self.flat_solar_judge_t,0)
 
     def true_solar_time(self):
-        pass
+        self.create_solar_time_window("真太阳时", self.flat_solar_judge_t,1)
 
     def time_qi_gua_(self,shi=None):
         p0, p1, p2, p3 = self.time_qi_gua(shi)
         self.result = XiaoLiuRenNum(p1, p2, p3, self.suanfa).xiao_liu_ren_num()
+
+    def time_qi_gua_2(self, shi=None):
+        pass
 
     def time_qi_gua(self, shi=None):
         args = (self.calendar, self.shichen, self.runyue, shi) if shi is not None else (self.calendar, self.shichen, self.runyue)
@@ -98,11 +108,16 @@ class NewX:
     def solar_judge(input_string):
         return bool(re.match(r"^-?\d+(\.\d+)?$", input_string))
 
-    def flat_solar_judge_t(self,input_string,window):
+    def flat_solar_judge_t(self,input_string,window,num=0):
         tf = self.solar_judge(input_string)
         if tf:
-            a = SolarTimeCalculator(float(input_string)).flat_solar_time()
-            window_closes(window, self.root_main)
-            self.time_zone_(a)
+            if num == 0:
+                a = SolarTimeCalculator(float(input_string)).flat_solar_time()
+                window_closes(window, self.root_main)
+                self.time_zone_(a)
+            else:
+                a = SolarTimeCalculator(float(input_string)).true_solar_time()
+                window_closes(window, self.root_main)
+                self.time_zone_(a)
         else:
             messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)
