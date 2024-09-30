@@ -8,15 +8,19 @@ from function.TimeZoneConversion import TimeZoneConversionT
 
 
 class Calendar:
-    def __init__(self, li_fa, shi_chen, run_yue):
+    def __init__(self, li_fa, shi_chen, run_yue, shi=None):
         self.li_fa = li_fa
         self.shi_chen_issue = shi_chen
         self.run_yue = run_yue
         self.utc = utc()
         self.convert_time = datetime.now().astimezone().replace()
+        self.shi = shi
 
-        a = TimeZoneConversionT(self.convert_time, self.utc)
-        self.converted_time = a.get_zone_time()
+        if self.shi is not None:
+            self.converted_time = self.shi
+        else:
+            a = TimeZoneConversionT(self.convert_time, self.utc)
+            self.converted_time = a.get_zone_time()
 
     def function_selection(self):
         function_selection = {
@@ -118,6 +122,6 @@ class ChineseCalendar:
                         self.lunar_year = self.run_yue_month.getYear()
                         self.lunar_month = self.run_yue_month.getMonth()
 
-
-p = Calendar(1,1,1)
-print(p.function_selection())
+if __name__ == '__main__':
+    p = Calendar(1,1,1)
+    print(p.function_selection())

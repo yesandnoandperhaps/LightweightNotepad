@@ -9,6 +9,14 @@ from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
 from function.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON, ICON_PATH
 
+def t_s(v):
+    v+=1
+    return v
+
+def t_s_(v,path):
+    v += 1
+    t_save(path, v)
+    return v
 
 def save(theme,v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3):
     with open(B_PATH, 'w', encoding='utf-8') as file:
@@ -48,6 +56,13 @@ def t_load(path):
     except Exception as e:
         messagebox.showerror("错误", f"发生错误: {e}")
 
+def load_theme():
+    try:
+        with open(B_PATH, 'r', encoding='utf-8') as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        return None
+
 
 def utc():
     def utc_():
@@ -76,6 +91,7 @@ def window_closes(window, root_main):
 
 def window_on(window, root_main):
     window.wm_attributes('-topmost', 1)
+    window.wm_attributes('-topmost', 0)
     root_main.wm_attributes('-disabled', 1)
 
 def window_init(window, root_main, text):

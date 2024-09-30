@@ -32,6 +32,7 @@ def xiao_liu_ren_window(root_main, icon, font_style):
     # noinspection DuplicatedCode
     def loop_output2():
 
+
         file_path_csv = filedialog.asksaveasfilename(parent=window, defaultextension=".csv",
                                                      filetypes=[("csv-utf-8", "*.csv")])
 
@@ -1006,17 +1007,33 @@ def xiao_liu_ren_window(root_main, icon, font_style):
                                                     style="round-toggle", state="disabled")
             consider_checkbutton2.pack(padx=5, pady=5, side='right')
 
-        combo.grid_remove()
-        w2 = ttk.Frame(window)
-        w2.grid(row=0, column=0, sticky=W)
-        entry = tk.Entry(w2)
-        entry.pack(padx=5, pady=5, side='right')
-        entry.config(font=font_style)
-        text = ttk.Label(w2, text="循环次数")
-        text.pack(padx=5, pady=5, side='right')
-        entry.focus_set()
-        entry.bind('<Return>', lambda event: t_loop_output_x())
-        entry.bind('<Shift_L>', lambda event: entry2_2())
+        if f.winfo_viewable():
+            f.grid_remove()
+            text_widget.grid()
+            scrollbar.grid()
+            combo.grid_remove()
+            w2 = ttk.Frame(window)
+            w2.grid(row=0, column=0, sticky=W)
+            entry = tk.Entry(w2)
+            entry.pack(padx=5, pady=5, side='right')
+            entry.config(font=font_style)
+            text = ttk.Label(w2, text="循环次数")
+            text.pack(padx=5, pady=5, side='right')
+            entry.focus_set()
+            entry.bind('<Return>', lambda event: t_loop_output_x())
+            entry.bind('<Shift_L>', lambda event: entry2_2())
+        else:
+            combo.grid_remove()
+            w2 = ttk.Frame(window)
+            w2.grid(row=0, column=0, sticky=W)
+            entry = tk.Entry(w2)
+            entry.pack(padx=5, pady=5, side='right')
+            entry.config(font=font_style)
+            text = ttk.Label(w2, text="循环次数")
+            text.pack(padx=5, pady=5, side='right')
+            entry.focus_set()
+            entry.bind('<Return>', lambda event: t_loop_output_x())
+            entry.bind('<Shift_L>', lambda event: entry2_2())
 
     # noinspection DuplicatedCode
     def loop_output():
@@ -1279,17 +1296,33 @@ def xiao_liu_ren_window(root_main, icon, font_style):
                                                     style="round-toggle", state="disabled")
             consider_checkbutton2.pack(padx=5, pady=5, side='right')
 
-        combo.grid_remove()
-        w2 = ttk.Frame(window)
-        w2.grid(row=0, column=0, sticky=W)
-        entry = tk.Entry(w2)
-        entry.pack(padx=5, pady=5, side='right')
-        entry.config(font=font_style)
-        text = ttk.Label(w2, text="循环次数")
-        text.pack(padx=5, pady=5, side='right')
-        entry.focus_set()
-        entry.bind('<Return>', lambda event: t_loop_output_x())
-        entry.bind('<Shift_L>', lambda event: entry2_2())
+        if f.winfo_viewable():
+            f.grid_remove()
+            text_widget.grid()
+            scrollbar.grid()
+            combo.grid_remove()
+            w2 = ttk.Frame(window)
+            w2.grid(row=0, column=0, sticky=W)
+            entry = tk.Entry(w2)
+            entry.pack(padx=5, pady=5, side='right')
+            entry.config(font=font_style)
+            text = ttk.Label(w2, text="循环次数")
+            text.pack(padx=5, pady=5, side='right')
+            entry.focus_set()
+            entry.bind('<Return>', lambda event: t_loop_output_x())
+            entry.bind('<Shift_L>', lambda event: entry2_2())
+        else:
+            combo.grid_remove()
+            w2 = ttk.Frame(window)
+            w2.grid(row=0, column=0, sticky=W)
+            entry = tk.Entry(w2)
+            entry.pack(padx=5, pady=5, side='right')
+            entry.config(font=font_style)
+            text = ttk.Label(w2, text="循环次数")
+            text.pack(padx=5, pady=5, side='right')
+            entry.focus_set()
+            entry.bind('<Return>', lambda event: t_loop_output_x())
+            entry.bind('<Shift_L>', lambda event: entry2_2())
 
     def count_b3_3():
         rule_num = 1
@@ -1327,12 +1360,45 @@ def xiao_liu_ren_window(root_main, icon, font_style):
         t_save(P_PATH, rule_num)
 
     def generate_and_display():
-        text_widget.delete(1.0, END)
+        text_widget.delete(1.0, tk.END)
+
         if combo.get() == "算一卦":
+            f.grid_remove()
+            text_widget.grid()
+            scrollbar.grid()
             text_widget.insert(tk.END, XiaoLiuren.numgua())
-        if combo.get() == "起卦":
-            new_x = NewX(root_main).choose()
-    
+        elif combo.get() == "起卦":
+            text_widget.grid_remove()
+            scrollbar.grid_remove()
+            f.grid()
+
+            xlr_num = NewX(window).choose()
+            if xlr_num is not None:
+                # 解包 xlr_num
+                t1, t2, t3, t4, t5, t6, r1, r2, r3, r4, r5, r6, d1, d2, d3, d4, d5, d6 = xlr_num
+
+                # 创建标题标签
+                labels = ["天宫", "人宫", "地宫"]
+                for i, label in enumerate(labels):
+                    ttk.Label(f, text=label, font=font_style).grid(row=i, column=0,padx=5, pady=5)
+
+                # 创建数值标签
+                t_values = [t1, t2, t3, t4, t5, t6]
+                r_values = [r1, r2, r3, r4, r5, r6]
+                d_values = [d1, d2, d3, d4, d5, d6]
+
+                # 放置 t 开头的标签在天宫下面
+                for i, value in enumerate(t_values):
+                    ttk.Label(f, text=value, font=font_style).grid(row=0, column=i + 1,padx=5, pady=5)  # 天宫下的标签
+
+                # 放置 r 开头的标签在人宫下面
+                for i, value in enumerate(r_values):
+                    ttk.Label(f, text=value, font=font_style).grid(row=1, column=i + 1,padx=5, pady=5)  # 人宫下的标签
+
+                # 放置 d 开头的标签在地宫下面
+                for i, value in enumerate(d_values):
+                    ttk.Label(f, text=value, font=font_style).grid(row=2, column=i + 1,padx=5, pady=5)  # 地宫下的标签
+
     combo = ttk.Combobox(window, values=["起卦", "算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     combo.bind("<Button-3>", lambda event: generate_and_display())
@@ -1354,6 +1420,10 @@ def xiao_liu_ren_window(root_main, icon, font_style):
                           yscrollcommand=scrollbar.set, font=font_style)
     text_widget.grid(row=1, column=0, sticky="nsew")
     scrollbar.config(command=text_widget.yview)
+
+    f = ttk.Frame(window)
+    f.grid(row=1, column=0, sticky="nsew")
+    f.grid_remove()
 
     w = ttk.Frame(window)
     w.grid(row=2, column=0, sticky=E)

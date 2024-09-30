@@ -8,6 +8,8 @@ import numpy as np
 import ttkbootstrap as ttk
 from PIL import Image
 from ttkbootstrap.constants import *
+
+from function.ProjectFunctions import window_init
 from window_module.SpriteSheetMakerWindow import SpriteSheetMaker
 from function.ProjectPathVariables import W_PATH, X_PATH, Y_PATH, \
     ICON_PATH
@@ -520,8 +522,7 @@ def picture(root_main,icon):
         SpriteSheetMaker(icon)
 
     window_ = ttk.Toplevel(root_main)
-    window_.title("图片操作")
-    window_.iconbitmap(ICON_PATH)
+    window_init(window_, root_main, "图片操作")
     wb1 = ttk.Button(window_, text="颜色转换", style=OUTLINE, command=color)
     wb1.grid(column=0, row=0, padx=10, pady=10)
     wb2 = ttk.Button(window_, text="格式转换", style=OUTLINE, command=format_)
