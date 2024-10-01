@@ -9,9 +9,9 @@ import ttkbootstrap as ttk
 from PIL import Image
 from ttkbootstrap.constants import *
 
-from function.ProjectFunctions import window_init
-from window_module.SpriteSheetMakerWindow import SpriteSheetMaker
-from function.ProjectPathVariables import W_PATH, X_PATH, Y_PATH, \
+from LightweightNotepad.function.ProjectFunctions import window_init
+from LightweightNotepad.window_module.SpriteSheetMakerWindow import SpriteSheetMaker
+from LightweightNotepad.function.ProjectPathVariables import W_PATH, X_PATH, Y_PATH, \
     ICON_PATH
 
 

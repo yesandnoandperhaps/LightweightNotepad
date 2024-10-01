@@ -4,13 +4,13 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from function.JsonFile import File
-from function.ProjectDictionaryVariables import XLR_DATA
-from function.ProjectFunctions import window_init, window_closes
-from function.ProjectPathVariables import DATA_FILE_PATH
-from function.SolarTimeCalculator import SolarTimeCalculator
-from function.XiaoLiuRenNum import XiaoLiuRenNum
-from module.XiaoLiuRenJson import Calendar
+from LightweightNotepad.function.JsonFile import File
+from LightweightNotepad.function.ProjectDictionaryVariables import XLR_DATA
+from LightweightNotepad.function.ProjectFunctions import window_init, window_closes
+from LightweightNotepad.function.ProjectPathVariables import DATA_FILE_PATH
+from LightweightNotepad.function.SolarTimeCalculator import SolarTimeCalculator
+from LightweightNotepad.function.XiaoLiuRenNum import XiaoLiuRenNum
+from LightweightNotepad.module.XiaoLiuRenJson import Calendar
 
 
 class NewX:

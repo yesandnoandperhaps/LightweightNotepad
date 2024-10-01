@@ -7,10 +7,10 @@ from tkinter import filedialog, messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from function.ProjectPathVariables import ICON_PATH, DATA_FILE_PATH
-from function.CustomToolTip import CustomToolTip as ToolTip
-from module import LinearRegression
-from window_module.StartTrainingFrontWindow import StartTrainingFrontWindow
+from LightweightNotepad.function.ProjectPathVariables import ICON_PATH, DATA_FILE_PATH
+from LightweightNotepad.function.CustomToolTip import CustomToolTip as ToolTip
+from LightweightNotepad.module import LinearRegression
+from LightweightNotepad.window_module.StartTrainingFrontWindow import StartTrainingFrontWindow
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal

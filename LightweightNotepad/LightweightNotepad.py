@@ -12,15 +12,15 @@ from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
-import function.ProjectCapabilityVariables
-from function.ProjectFunctions import window_init, load_theme
-from function.ProjectPathVariables import A_PATH, ICON_PATH, DATA_FILE_PATH
-from function.ProjectInitialVariables import t_divide_up, onandoff, num_wv1, v, circular_num
-from window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
-from window_module.PictureWindow import picture
-from window_module.RegressionWindow import regression
-from window_module.SetWindow import set_window
-from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from LightweightNotepad.function.ProjectCapabilityVariables import font_set
+from LightweightNotepad.function.ProjectFunctions import window_init, load_theme
+from LightweightNotepad.function.ProjectPathVariables import A_PATH, ICON_PATH, DATA_FILE_PATH
+from LightweightNotepad.function.ProjectInitialVariables import t_divide_up, onandoff, num_wv1, v, circular_num
+from LightweightNotepad.window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
+from LightweightNotepad.window_module.PictureWindow import picture
+from LightweightNotepad.window_module.RegressionWindow import regression
+from LightweightNotepad.window_module.SetWindow import set_window
+from LightweightNotepad.window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 ###分割线
@@ -443,7 +443,7 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("轻量记事本")
     root.iconbitmap(ICON_PATH)
-    FONT_STYLE, v2, v3, v4 = function.ProjectCapabilityVariables.font_set()
+    FONT_STYLE, v2, v3, v4 = font_set()
     style = ttk.Style()
     current_theme = load_theme()
     if current_theme in style.theme_names():

@@ -2,9 +2,9 @@ from datetime import datetime
 
 from lunar_python import Solar, Lunar, LunarMonth
 
-from function.ProjectDictionaryVariables import SHI_CHEN_DICT
-from function.ProjectFunctions import utc
-from function.TimeZoneConversion import TimeZoneConversionT
+from LightweightNotepad.function.ProjectDictionaryVariables import SHI_CHEN_DICT
+from LightweightNotepad.function.ProjectFunctions import utc
+from LightweightNotepad.function.TimeZoneConversion import TimeZoneConversionT
 
 
 class Calendar:
