@@ -12,15 +12,15 @@ from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
-from LightweightNotepad.function.ProjectCapabilityVariables import font_set
-from LightweightNotepad.function.ProjectFunctions import window_init, load_theme
-from LightweightNotepad.function.ProjectPathVariables import A_PATH, ICON_PATH, DATA_FILE_PATH
-from LightweightNotepad.function.ProjectInitialVariables import t_divide_up, onandoff, num_wv1, v, circular_num
-from LightweightNotepad.window_module.OldXiaoLiuRenWindow import xiao_liu_ren_window
-from LightweightNotepad.window_module.PictureWindow import picture
-from LightweightNotepad.window_module.RegressionWindow import regression
-from LightweightNotepad.window_module.SetWindow import set_window
-from LightweightNotepad.window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from OldXiaoLiuRenWindow import xiao_liu_ren_window
+from PictureWindow import picture
+from ProjectCapabilityVariables import font_set
+from ProjectFunctions import window_init, load_theme
+from ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+from ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+from RegressionWindow import regression
+from SetWindow import set_window
+from ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 ###分割线

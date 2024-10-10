@@ -4,9 +4,9 @@ from tkinter import messagebox
 
 import dateutil.tz
 
-from LightweightNotepad.function import JsonFile
-from LightweightNotepad.function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
-from LightweightNotepad.function.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
+from function import JsonFile
+from function.ProjectDictionaryVariables import UTC_TIME, XLR_DATA
+from function.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON, ICON_PATH
 
 def t_s(v):

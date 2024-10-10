@@ -4,13 +4,13 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from LightweightNotepad.function.JsonFile import File
-from LightweightNotepad.function.ProjectDictionaryVariables import XLR_DATA
-from LightweightNotepad.function.ProjectFunctions import window_init, window_closes
-from LightweightNotepad.function.ProjectPathVariables import DATA_FILE_PATH
-from LightweightNotepad.function.SolarTimeCalculator import SolarTimeCalculator
-from LightweightNotepad.function.XiaoLiuRenNum import XiaoLiuRenNum
-from LightweightNotepad.module.XiaoLiuRenJson import Calendar
+from function.JsonFile import File
+from function.ProjectDictionaryVariables import XLR_DATA
+from function.ProjectFunctions import window_init, window_closes
+from function.ProjectPathVariables import DATA_FILE_PATH
+from function.SolarTimeCalculator import SolarTimeCalculator
+from function.XiaoLiuRenNum import XiaoLiuRenNum
+from module.XiaoLiuRenJson import Calendar
 
 
 class NewX:
@@ -27,6 +27,8 @@ class NewX:
         self.shichen = xlr_json[4]
         self.runyue = xlr_json[5]
         self.suanfa = xlr_json[8]
+        self.shuzhi = xlr_json[9]
+        self.shike = xlr_json[10]
 
         self.root_main = root_main
 
@@ -66,7 +68,7 @@ class NewX:
     def time_zone_(self,shi=None):
         choose_dict = {
             0: self.time_qi_gua_(shi),
-            1: self.time_qi_gua_2(shi)
+            1: self.time_qi_gua_2_(shi)
         }
 
         return choose_dict[self.function]
@@ -95,13 +97,22 @@ class NewX:
 
     def time_qi_gua_(self,shi=None):
         p0, p1, p2, p3 = self.time_qi_gua(shi)
-        self.result = XiaoLiuRenNum(p1, p2, p3, self.suanfa).xiao_liu_ren_num()
+        self.result = XiaoLiuRenNum(p1, p2, p3,
+                                    self.shuzhi,method=self.suanfa).xiao_liu_ren_num()
+
+    def time_qi_gua_2_(self, shi=None):
+        p0, p1, p2, p3 = self.time_qi_gua_2(shi)
+        self.result = XiaoLiuRenNum(p1, p2, p3,
+                                    self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def time_qi_gua_2(self, shi=None):
-        pass
+        args = (self.calendar, self.shichen, self.runyue, shi,self.shike,1) if shi is not None else (
+        self.calendar, self.shichen, self.runyue,None,self.shike,1)
+        return Calendar(*args).function_selection()
 
     def time_qi_gua(self, shi=None):
-        args = (self.calendar, self.shichen, self.runyue, shi) if shi is not None else (self.calendar, self.shichen, self.runyue)
+        args = (self.calendar, self.shichen, self.runyue, shi,self.shike,0) if shi is not None else (
+            self.calendar, self.shichen, self.runyue,None,self.shike,0)
         return Calendar(*args).function_selection()
 
     @staticmethod

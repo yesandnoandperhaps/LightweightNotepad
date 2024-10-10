@@ -1,5 +1,5 @@
-from LightweightNotepad.function.ProjectFunctions import t_load
-from LightweightNotepad.function.ProjectPathVariables import C_PATH, H_PATH, I_PATH, J_PATH, \
+from function.ProjectFunctions import t_load
+from function.ProjectPathVariables import C_PATH, H_PATH, I_PATH, J_PATH, \
     K_PATH, N_PATH, Z_PATH, AA_PATH, AB_PATH, E_PATH, D_PATH, F_PATH
 
 

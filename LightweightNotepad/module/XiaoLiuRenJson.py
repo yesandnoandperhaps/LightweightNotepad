@@ -1,14 +1,23 @@
 from datetime import datetime
 
 from lunar_python import Solar, Lunar, LunarMonth
+from sympy.physics.units import minute
 
-from LightweightNotepad.function.ProjectDictionaryVariables import SHI_CHEN_DICT
-from LightweightNotepad.function.ProjectFunctions import utc
-from LightweightNotepad.function.TimeZoneConversion import TimeZoneConversionT
+from function.ProjectDictionaryVariables import SHI_CHEN_DICT
+from function.ProjectFunctions import utc
+from function.TimeZoneConversion import TimeZoneConversionT
 
+def min_ke(converted_time,ke):
+    minutr = converted_time % 15
+    if minutr == 0:
+        if ke == 0:
+            minutr = 0
+        else:
+            minutr = 1
+    return minutr
 
 class Calendar:
-    def __init__(self, li_fa, shi_chen, run_yue,ke=None,shi=None):
+    def __init__(self, li_fa, shi_chen, run_yue,shi=None,ke=0,function=0):
         self.li_fa = li_fa
         self.shi_chen_issue = shi_chen
         self.run_yue = run_yue
@@ -16,9 +25,7 @@ class Calendar:
         self.convert_time = datetime.now().astimezone().replace()
         self.shi = shi
         self.ke = ke
-
-        if self.ke is not None:
-            pass
+        self.function = function
 
         if self.shi is not None:
             self.converted_time = self.shi
@@ -36,8 +43,8 @@ class Calendar:
         return function_selection[self.li_fa]()
 
     @staticmethod
-    def time_partition(minute,second,d_):
-        if minute <= 59 and second <= 59:
+    def time_partition(minute_, second, d_):
+        if minute_ <= 59 and second <= 59:
             pass
         else:
             d_.next(1)
@@ -54,12 +61,14 @@ class Calendar:
                 pass
             else:
                 self.converted_time = Calendar.time_partition(self.converted_time.minute, self.converted_time.second, d)
-
-        return self.converted_time.year, self.converted_time.month, self.converted_time.day, SHI_CHEN_DICT[self.converted_time.shi_chen_issue]
-
+        if self.function == 0:
+            return self.converted_time.year, self.converted_time.month, self.converted_time.day, SHI_CHEN_DICT[self.converted_time.shi_chen_issue]
+        else:
+            minutr = min_ke(self.converted_time.minute,self.ke)
+            return self.converted_time.day,minutr,self.converted_time.minute,self.converted_time.minute
 
     def chinese_calendar(self):
-        return ChineseCalendar(self.converted_time, self.shi_chen_issue,self.run_yue).get_lunar_date()
+        return ChineseCalendar(self.converted_time, self.shi_chen_issue,self.run_yue,self.ke,self.function).get_lunar_date()
 
     def taoism_calendar(self):
         lunar_year, lunar_month, lunar_day, lunar_hour = self.chinese_calendar()
@@ -68,9 +77,8 @@ class Calendar:
         dao_year = tao.getYear()
         return dao_year, lunar_month, lunar_day, lunar_hour
 
-
 class ChineseCalendar:
-    def __init__(self, current_time, shi_chen, run_yue):
+    def __init__(self, current_time, shi_chen, run_yue,ke_function,function=0):
 
         self.converted_time = current_time
         self.shi_chen = shi_chen
@@ -81,14 +89,25 @@ class ChineseCalendar:
         self.lunar_year = self.d.getYear()
         self.lunar_month = self.d.getMonth()
         self.lunar_day = self.d.getDay()
+        self.lunar_hour = self.d.getHour()
+        self.lunar_min = self.d.getMinute()
+        self.lunar_sec = self.d.getSecond()
+        print(self.lunar_hour,self.lunar_min,self.lunar_sec)
         self.a0 = self.d.getTimeZhi()
         self.run_yue_month = LunarMonth.fromYm(self.lunar_year, self.lunar_month)
         self.judgement_runyue()
         self.judgement_shichen()
+        self.function = function
+        self.ke_function = ke_function
+        self.ke = min_ke(self.lunar_min,self.ke_function)
+
 
 
     def get_lunar_date(self):
-        return self.lunar_year, self.lunar_month, self.lunar_day, self.a0
+        if self.function == 0:
+            return self.lunar_year, self.lunar_month, self.lunar_day, self.a0
+        else:
+            return self.lunar_min,self.lunar_day,self.ke,self.lunar_min
 
     def judgement_shichen(self):
         if self.a0 == "子":
