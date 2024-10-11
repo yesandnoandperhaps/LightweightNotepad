@@ -1373,13 +1373,11 @@ def xiao_liu_ren_window(root_main, icon, font_style):
             scrollbar.grid_remove()
             f.grid()
             xlr_num = NewX(window).choose()
-            label_manager = LabelManager(f, font_style)
-            label_manager.create_labels(xlr_num)
+            LabelManager(f, font_style).create_labels(xlr_num)
 
     combo = ttk.Combobox(window, values=["起卦", "算一卦"], state="readonly")
     combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     combo.bind("<Button-3>", lambda event: generate_and_display())
-    combo.bind("<Button-2>", lambda event: generate_and_display())
     combo.set("起卦")
 
     def event_t():

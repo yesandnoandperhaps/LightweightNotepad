@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from lunar_python import Solar, Lunar, LunarMonth
-from sympy.physics.units import minute
 
 from function.ProjectDictionaryVariables import SHI_CHEN_DICT
 from function.ProjectFunctions import utc
@@ -52,7 +51,7 @@ class Calendar:
 
     def gregorian_calendar(self):
         d = Solar.fromDate(self.converted_time)
-        a0,a1,a2,a3=SHI_CHEN_DICT[self.converted_time.shi_chen_issue]
+        a0,a1,a2,a3=SHI_CHEN_DICT[self.converted_time.hour]
 
         if a0 == "子":
             if self.shi_chen_issue == 0:
@@ -62,20 +61,24 @@ class Calendar:
             else:
                 self.converted_time = Calendar.time_partition(self.converted_time.minute, self.converted_time.second, d)
         if self.function == 0:
-            return self.converted_time.year, self.converted_time.month, self.converted_time.day, SHI_CHEN_DICT[self.converted_time.shi_chen_issue]
+            return self.converted_time.year, self.converted_time.month, self.converted_time.day, SHI_CHEN_DICT[self.converted_time.hour]
         else:
             minutr = min_ke(self.converted_time.minute,self.ke)
-            return self.converted_time.day,minutr,self.converted_time.minute,self.converted_time.minute
+            return self.converted_time.hour,minutr,self.converted_time.minute,self.converted_time.minute
 
     def chinese_calendar(self):
         return ChineseCalendar(self.converted_time, self.shi_chen_issue,self.run_yue,self.ke,self.function).get_lunar_date()
 
     def taoism_calendar(self):
-        lunar_year, lunar_month, lunar_day, lunar_hour = self.chinese_calendar()
-        lunar = Lunar.fromYmd(lunar_year, lunar_month, lunar_day)
-        tao = lunar.getTao()
-        dao_year = tao.getYear()
-        return dao_year, lunar_month, lunar_day, lunar_hour
+        if self.function == 0:
+            lunar_year, lunar_month, lunar_day, lunar_hour = self.chinese_calendar()
+            lunar = Lunar.fromYmd(lunar_year, lunar_month, lunar_day)
+            tao = lunar.getTao()
+            dao_year = tao.getYear()
+            return dao_year, lunar_month, lunar_day, lunar_hour
+        else:
+            lunar_year,lunar_hour, lunar_ke, lunar_min = self.chinese_calendar()
+            return lunar_year,lunar_hour, lunar_ke, lunar_min
 
 class ChineseCalendar:
     def __init__(self, current_time, shi_chen, run_yue,ke_function,function=0):
@@ -92,7 +95,6 @@ class ChineseCalendar:
         self.lunar_hour = self.d.getHour()
         self.lunar_min = self.d.getMinute()
         self.lunar_sec = self.d.getSecond()
-        print(self.lunar_hour,self.lunar_min,self.lunar_sec)
         self.a0 = self.d.getTimeZhi()
         self.run_yue_month = LunarMonth.fromYm(self.lunar_year, self.lunar_month)
         self.judgement_runyue()
@@ -107,7 +109,7 @@ class ChineseCalendar:
         if self.function == 0:
             return self.lunar_year, self.lunar_month, self.lunar_day, self.a0
         else:
-            return self.lunar_min,self.lunar_day,self.ke,self.lunar_min
+            return self.lunar_year,self.lunar_hour,self.ke,self.lunar_min
 
     def judgement_shichen(self):
         if self.a0 == "子":

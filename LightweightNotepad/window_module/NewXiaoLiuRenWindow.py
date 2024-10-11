@@ -29,7 +29,6 @@ class NewX:
         self.suanfa = xlr_json[8]
         self.shuzhi = xlr_json[9]
         self.shike = xlr_json[10]
-
         self.root_main = root_main
 
     def choose(self):
@@ -38,10 +37,11 @@ class NewX:
             1: self.flat_solar_time,
             2: self.true_solar_time
         }
-        time_dict[self.time]()
+
+        (time_dict[self.time]() if self.function in (0, 1) else time_dict[0]())
 
         while self.result is None:
-            self.root_main.update()
+            a = 1
 
         g = {
             1: ("大安", "青龙木", "春季", "东", "寅卯", "事业宫"),
@@ -68,8 +68,10 @@ class NewX:
     def time_zone_(self,shi=None):
         choose_dict = {
             0: self.time_qi_gua_(shi),
-            1: self.time_qi_gua_2_(shi)
+            1: self.time_qi_gua_(shi)
         }
+
+        print(f"NewX:function {self.function}")
 
         return choose_dict[self.function]
 
@@ -95,24 +97,30 @@ class NewX:
     def true_solar_time(self):
         self.create_solar_time_window("真太阳时", self.flat_solar_judge_t,1)
 
-    def time_qi_gua_(self,shi=None):
-        p0, p1, p2, p3 = self.time_qi_gua(shi)
-        self.result = XiaoLiuRenNum(p1, p2, p3,
-                                    self.shuzhi,method=self.suanfa).xiao_liu_ren_num()
+    def time_qi_gua_(self, shi=None):
+        p0 = self.time_qi_gua(shi)
+        print(f"time_qi_gua_ results: p0={p0}")  # Debug print
+        self.result = XiaoLiuRenNum(p0[1], p0[2], p0[3],
+                                    self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def time_qi_gua_2_(self, shi=None):
-        p0, p1, p2, p3 = self.time_qi_gua_2(shi)
-        self.result = XiaoLiuRenNum(p1, p2, p3,
+        p0 = self.time_qi_gua_2(shi)
+        print(f"time_qi_gua_2_ results: p0={p0}")  # Debug print
+        self.result = XiaoLiuRenNum(p0[1], p0[2], p0[3],
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def time_qi_gua_2(self, shi=None):
-        args = (self.calendar, self.shichen, self.runyue, shi,self.shike,1) if shi is not None else (
-        self.calendar, self.shichen, self.runyue,None,self.shike,1)
+        args = (self.calendar, self.shichen,
+                self.runyue, shi,self.shike,1) if shi is not None else (
+        self.calendar, self.shichen,
+        self.runyue,None,self.shike,1)
         return Calendar(*args).function_selection()
 
     def time_qi_gua(self, shi=None):
-        args = (self.calendar, self.shichen, self.runyue, shi,self.shike,0) if shi is not None else (
-            self.calendar, self.shichen, self.runyue,None,self.shike,0)
+        args = (self.calendar, self.shichen,
+                self.runyue, shi,self.shike,0) if shi is not None else (
+            self.calendar, self.shichen,
+            self.runyue,None,self.shike,0)
         return Calendar(*args).function_selection()
 
     @staticmethod
