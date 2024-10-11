@@ -412,64 +412,67 @@ def set_window(root):
 
         # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal,DuplicatedCode
         def w_4_1_():
-            w_4_1_v_0 = ["新历", "农历", "道历"]
-            w_4_1_v_1 = ["时区", "平太阳时", "真太阳时"]
-            w_4_1_v_3 = ["月日时起卦", "时刻分起卦", "平均随机数起卦", "随机数起卦", "五行起卦", "八卦起卦",
-                         "八卦五行起卦"]
+
+            w_4_1_v_0 = ["新历","农历","道历"]
+            w_4_1_v_1 = ["时区","平太阳时","真太阳时"]
+            w_4_1_v_3 = ["月日时起卦","时刻分起卦","平均随机数起卦","随机数起卦", "五行起卦", "八卦起卦", "八卦五行起卦"]
             w_4_1_v_4 = ["子时视明日", "子时视本日", "子时中而分界"]
             w_4_1_v_5 = ["作本月", "作下月", "月中为界"]
-            w_4_1_v_6 = ["关闭", "开启"]
-            w_4_1_v_7 = ["开启", "关闭"]
-            w_4_1_v_8 = ["顺首", "复首"]
-            w_4_1_v_9 = ["0取10", "0取0"]
-            w_4_1_v_10 = ["0刻取0刻","0刻取1刻"]
+            w_4_1_v_6 = ["关闭","开启"]
+            w_4_1_v_7 = ["开启","关闭"]
+            w_4_1_v_8 = ["顺首","复首"]
+            w_4_1_v_9 = ["0取10","0取0"]
 
-            text_dicts = {
-                1: [
-                    "将调用“起卦时区”中选择的时区",
-                    "将调用“起卦时区”中选择的时区，后转换成平太阳时",
-                    "将调用“起卦时区”中选择的时区，后转换成真太阳时"
-                ],
-                4: [
-                    "早子时、晚子时视明日\n新历、农历、道历都会受此项影响",
-                    "早子时、晚子时视本日\n新历、农历、道历都会受此项影响",
-                    "早子时视今日，晚子时视明日\n新历、农历、道历都会受此项影响"
-                ],
-                5: [
-                    "此设置仅限农历、道历",
-                    "此设置仅限农历、道历",
-                    "此设置仅限农历、道历"
-                ],
-                8: [
-                    "大安为首，天宫，人宫所落位置的下一位为第二、第三首",
-                    "大安为首，天宫，人宫所落位置为第二、第三首"
-                ]
+            text1_dict = {
+                0: "将调用“起卦时区”中选择的时区",
+                1: "将调用“起卦时区”中选择的时区，后转换成平太阳时",
+                2: "将调用“起卦时区”中选择的时区，后转换成真太阳时"
+            }
+
+            text4_dict = {
+                0: "将调用“起卦时区”中选择的时区",
+                1: "将调用“起卦时区”中选择的时区，后转换成平太阳时",
+                2: "将调用“起卦时区”中选择的时区，后转换成真太阳时"
+            }
+
+            text5_dict = {
+                0: "早子时、晚子时视明日\n新历、农历、道历都会受此项影响",
+                1: "早子时、晚子时视本日\n新历、农历、道历都会受此项影响",
+                2: "早子时视今日，晚子时视明日\n新历、农历、道历都会受此项影响"
+            }
+
+            text6_dict = {
+                0: "此设置仅限农历、道历",
+                1: "此设置仅限农历、道历",
+                2: "此设置仅限农历、道历"
+            }
+
+            text8_dict = {
+                0: "大安为首，天宫，人宫所落位置的下一位为第二、第三首",
+                1: "大安为首，天宫，人宫所落位置为第二、第三首"
             }
 
             def tool_tip_text():
-                texts = [text_dicts[key][XLR_JSON[key]] for key in text_dicts]
-                ToolTip(down_box_1, text=texts[0])
-                ToolTip(down_box_4, text=texts[1])
-                ToolTip(down_box_5, text=texts[2])
-                ToolTip(down_box_8, text=texts[3])
+                text_1 = text1_dict[XLR_JSON[1]]
+                text_4 = text5_dict[XLR_JSON[4]]
+                text_5 = text6_dict[XLR_JSON[5]]
+                text_8 = text8_dict[XLR_JSON[8]]
+                ToolTip(down_box_1, text=text_1)
+                ToolTip(down_box_4, text=text_4)
+                ToolTip(down_box_5, text=text_5)
+                ToolTip(down_box_8, text=text_8)
 
             def set_down_box():
-                down_boxes_ = [
-                    (down_box_0, w_4_1_v_0, XLR_JSON[0]),
-                    (down_box_1, w_4_1_v_1, XLR_JSON[1]),
-                    (down_box_2, UTC_TIME, XLR_JSON[2]),
-                    (down_box_3, w_4_1_v_3, XLR_JSON[3]),
-                    (down_box_4, w_4_1_v_4, XLR_JSON[4]),
-                    (down_box_5, w_4_1_v_5, XLR_JSON[5]),
-                    (down_box_6, w_4_1_v_6, XLR_JSON[6]),
-                    (down_box_7, w_4_1_v_7, XLR_JSON[7]),
-                    (down_box_8, w_4_1_v_8, XLR_JSON[8]),
-                    (down_box_9, w_4_1_v_9, XLR_JSON[9]),
-                    (down_box_10, w_4_1_v_10, XLR_JSON[10])
-                ]
-
-                for box_, values, index in down_boxes_:
-                    box_.set(values[index])
+                down_box_0.set(w_4_1_v_0[XLR_JSON[0]])
+                down_box_1.set(w_4_1_v_1[XLR_JSON[1]])
+                down_box_2.set(utc())
+                down_box_3.set(w_4_1_v_3[XLR_JSON[3]])
+                down_box_4.set(w_4_1_v_4[XLR_JSON[4]])
+                down_box_5.set(w_4_1_v_5[XLR_JSON[5]])
+                down_box_6.set(w_4_1_v_6[XLR_JSON[6]])
+                down_box_7.set(w_4_1_v_7[XLR_JSON[7]])
+                down_box_8.set(w_4_1_v_8[XLR_JSON[8]])
+                down_box_9.set(w_4_1_v_9[XLR_JSON[9]])
 
                 tool_tip_text()
 
@@ -484,48 +487,79 @@ def set_window(root):
                 XLR_JSON[7] = w_4_1_v_7.index(down_box_7.get())
                 XLR_JSON[8] = w_4_1_v_8.index(down_box_8.get())
                 XLR_JSON[9] = w_4_1_v_9.index(down_box_9.get())
-                XLR_JSON[10] = w_4_1_v_10.index(down_box_10.get())
 
                 tool_tip_text()
+
                 JsonFile.File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
 
             w_4_1_f_1 = ttk.Frame(w_4_1)
 
-            labels = ["起卦历法:", "起卦时间:", "起卦时区:", "起卦方法:", "起卦算法:", "时辰问题:", "闰月问题:",
-                      "计算吉值:", "三宫定义:", "数值问题:", "时刻问题:"]
+            w_4_1_text_0 = ttk.Label(w_4_1_f_1, text="起卦历法:")
+            w_4_1_text_1 = ttk.Label(w_4_1_f_1, text="起卦时间:")
+            w_4_1_text_2 = ttk.Label(w_4_1_f_1, text="起卦时区:")
+            w_4_1_text_3 = ttk.Label(w_4_1_f_1, text="起卦方法:")
+            w_4_1_text_8 = ttk.Label(w_4_1_f_1, text="起卦算法:")
+            w_4_1_text_4 = ttk.Label(w_4_1_f_1, text="时辰问题:")
+            w_4_1_text_5 = ttk.Label(w_4_1_f_1, text="闰月问题:")
+            w_4_1_text_6 = ttk.Label(w_4_1_f_1, text="计算吉值:")
+            w_4_1_text_7 = ttk.Label(w_4_1_f_1, text="三宫定义:")
+            w_4_1_text_9 = ttk.Label(w_4_1_f_1, text="数值问题:")
+            w_4_1_text_10 = ttk.Label(w_4_1_f_1, text="时刻问题:")
 
-            l = 0
-            for i, text in enumerate(labels):
-                if i < 9:
-                    ttk.Label(w_4_1_f_1, text=text).grid(row=i, column=0, padx=5, pady=5, sticky=W)
-                else:
-                    ttk.Label(w_4_1_f_1, text=text).grid(row=l, column=2, padx=5, pady=5, sticky=W)
-                    l += 1
-            down_boxes = [
-                down_box_0 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_0, state="readonly"),
-                down_box_1 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_1, state="readonly"),
-                down_box_2 := ttk.Combobox(w_4_1_f_1, values=UTC_TIME, state="readonly"),
-                down_box_3 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly"),
-                down_box_4 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_4, state="readonly"),
-                down_box_5 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_5, state="readonly"),
-                down_box_6 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_6, state="readonly"),
-                down_box_7 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_7, state="readonly"),
-                down_box_8 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_8, state="readonly"),
-                down_box_9 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_9, state="readonly"),
-                down_box_10 := ttk.Combobox(w_4_1_f_1, values=w_4_1_v_10, state="readonly"),
-            ]
+            down_box_0 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_0, state="readonly")
+            down_box_0.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            l = 0
-            for i, box in enumerate(down_boxes):
-                box.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
-                if i < 9:
-                    box.grid(row=i, column=1, padx=5, pady=5, sticky=W)
-                else:
-                    box.grid(row=l, column=3, padx=5, pady=5, sticky=W)
-                    l += 1
-            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,
-                                                                                          Exception) else set_down_box()
-            w_4_1_f_1.grid(row=0, column=0, padx=10, pady=10, sticky=W)
+            down_box_1 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_1, state="readonly")
+            down_box_1.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_2 = ttk.Combobox(w_4_1_f_1, values=UTC_TIME, state="readonly")
+            down_box_2.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
+            down_box_3.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_4 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_4, state="readonly")
+            down_box_4.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_5 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_5, state="readonly")
+            down_box_5.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_6 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_6, state="readonly")
+            down_box_6.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_7 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_7, state="readonly")
+            down_box_7.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_8 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_8, state="readonly")
+            down_box_8.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            down_box_9 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_9, state="readonly")
+            down_box_9.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
+            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
+            w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
+
+            w_4_1_text_0.grid(row=0,column=0,padx=5,pady=5,sticky=W)
+            w_4_1_text_1.grid(row=1, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_2.grid(row=2, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_3.grid(row=3, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_8.grid(row=4, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_4.grid(row=5, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_5.grid(row=6, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_6.grid(row=7, column=0, padx=5, pady=5, sticky=W)
+            w_4_1_text_7.grid(row=8, column=0, padx=5, pady=5, sticky=W)
+            down_box_0.grid(row=0, column=1, padx=5, pady=5, sticky=W)
+            down_box_1.grid(row=1, column=1, padx=5, pady=5, sticky=W)
+            down_box_2.grid(row=2, column=1, padx=5, pady=5, sticky=W)
+            down_box_3.grid(row=3, column=1, padx=5, pady=5, sticky=W)
+            down_box_8.grid(row=4, column=1, padx=5, pady=5, sticky=W)
+            down_box_4.grid(row=5, column=1, padx=5, pady=5, sticky=W)
+            down_box_5.grid(row=6, column=1, padx=5, pady=5, sticky=W)
+            down_box_6.grid(row=7, column=1, padx=5, pady=5, sticky=W)
+            down_box_7.grid(row=8, column=1, padx=5, pady=5, sticky=W)
+
+            w_4_1_text_9.grid(row=0, column=2, padx=5, pady=5, sticky=W)
+            down_box_9.grid(row=0, column=3, padx=5, pady=5, sticky=W)
 
         w_4_1_()
 
