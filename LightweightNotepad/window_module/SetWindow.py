@@ -422,6 +422,7 @@ def set_window(root):
             w_4_1_v_7 = ["开启","关闭"]
             w_4_1_v_8 = ["顺首","复首"]
             w_4_1_v_9 = ["0取10","0取0"]
+            w_4_1_v_10 = ["0刻取0刻", "0刻取1刻"]
 
             text1_dict = {
                 0: "将调用“起卦时区”中选择的时区",
@@ -473,6 +474,7 @@ def set_window(root):
                 down_box_7.set(w_4_1_v_7[XLR_JSON[7]])
                 down_box_8.set(w_4_1_v_8[XLR_JSON[8]])
                 down_box_9.set(w_4_1_v_9[XLR_JSON[9]])
+                down_box_10.set(w_4_1_v_10[XLR_JSON[10]])
 
                 tool_tip_text()
 
@@ -487,6 +489,7 @@ def set_window(root):
                 XLR_JSON[7] = w_4_1_v_7.index(down_box_7.get())
                 XLR_JSON[8] = w_4_1_v_8.index(down_box_8.get())
                 XLR_JSON[9] = w_4_1_v_9.index(down_box_9.get())
+                XLR_JSON[10] = w_4_1_v_10.index(down_box_10.get())
 
                 tool_tip_text()
 
@@ -536,6 +539,9 @@ def set_window(root):
             down_box_9 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_9, state="readonly")
             down_box_9.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
+            down_box_10 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_10, state="readonly")
+            down_box_10.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+
             messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
             w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
 
@@ -560,6 +566,8 @@ def set_window(root):
 
             w_4_1_text_9.grid(row=0, column=2, padx=5, pady=5, sticky=W)
             down_box_9.grid(row=0, column=3, padx=5, pady=5, sticky=W)
+            w_4_1_text_10.grid(row=1, column=2, padx=5, pady=5, sticky=W)
+            down_box_10.grid(row=1, column=3, padx=5, pady=5, sticky=W)
 
         w_4_1_()
 
