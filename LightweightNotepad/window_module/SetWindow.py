@@ -1,6 +1,7 @@
 from tkinter import messagebox
 from tkinter.ttk import Separator
-
+import re
+import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -14,6 +15,7 @@ from function.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
+
 def set_window(root):
     #child_windows = []
     window = ttk.Toplevel(str(root))
@@ -495,6 +497,45 @@ def set_window(root):
 
                 JsonFile.File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
 
+            def w_4_1_v_3_set():
+                def judge(input_string,input_string_2,window__):
+                    judge_of_bool = bool(re.match(r"^\d+(\.\d+)?$", input_string))
+                    judge_of_bool_2 = bool(re.match(r"^\d+(\.\d+)?$", input_string_2))
+                    if judge_of_bool and judge_of_bool_2:
+                        XLR_JSON[11] = float(input_string)
+                        XLR_JSON[12] = float(input_string_2)
+                        JsonFile.File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
+                        window_closes(window__,window)
+                    else:
+                        messagebox.showerror("错误",
+                                             message="请按以下格式输入：\n例1：\n始范围：1\n例2：\n末范围：9",
+                                             parent=window__)
+
+                if down_box_3.get() == "随机数起卦":
+                    window_ = ttk.Toplevel(str(window))
+                    window_init(window_, window, "随机数范围")
+                    window_.resizable(False, False)
+
+                    text0 = ttk.Label(window_, text="始范围")
+                    text1 = ttk.Label(window_, text="末范围")
+                    entry0 = ttk.Entry(window_)
+                    entry1 = ttk.Entry(window_)
+
+                    entry0.insert(tk.END, str([XLR_JSON[11]][0]))
+                    entry1.insert(tk.END, str([XLR_JSON[12]][0]))
+
+                    text0.grid(column=0, row=0, padx=5, pady=5)
+                    text1.grid(column=2, row=0, padx=5, pady=5)
+                    entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
+                    entry1.grid(column=3, row=0, padx=5, pady=5, ipadx=20)
+                    entry0.focus_set()
+
+                    # 绑定 Shift 键事件
+                    entry0.bind('<Shift_R>', lambda event: judge(entry0.get(),entry1.get(), window_))
+                    entry1.bind('<Shift_R>', lambda event: judge(entry0.get(), entry1.get(), window_))
+                    entry0.bind('<Return>', lambda event: entry1.focus_set())
+                    entry1.bind('<Return>', lambda event: entry0.focus_set())
+
             w_4_1_f_1 = ttk.Frame(w_4_1)
 
             w_4_1_text_0 = ttk.Label(w_4_1_f_1, text="起卦历法:")
@@ -520,6 +561,7 @@ def set_window(root):
 
             down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
             down_box_3.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
+            down_box_3.bind("<Button-3>", lambda event: w_4_1_v_3_set())
 
             down_box_4 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_4, state="readonly")
             down_box_4.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())

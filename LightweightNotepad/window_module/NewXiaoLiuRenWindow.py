@@ -1,6 +1,7 @@
 import os
 import re
 from tkinter import messagebox
+import random
 
 import ttkbootstrap as ttk
 
@@ -29,6 +30,8 @@ class NewX:
         self.suanfa = xlr_json[8]
         self.shuzhi = xlr_json[9]
         self.shike = xlr_json[10]
+        self.num_begin = xlr_json[11]
+        self.num_end = xlr_json[12]
         self.root_main = root_main
 
     def choose(self):
@@ -70,6 +73,10 @@ class NewX:
             return self.time_qi_gua_(shi)
         elif self.function == 1:
             return self.time_qi_gua_2_(shi)
+        elif self.function == 2:
+            return self.average_random_number()
+        elif self.function == 3:
+            return self.random_number()
 
         print(f"NewX:function {self.function}")
 
@@ -138,3 +145,18 @@ class NewX:
                 self.time_zone_(a)
         else:
             messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)
+
+    def average_random_number(self):
+        new_num1 = round(random.uniform(0, 5))
+        new_num2 = round(random.uniform(0, 5))
+        new_num3 = round(random.uniform(0, 5))
+        self.result = XiaoLiuRenNum(new_num1,new_num2,new_num3,
+                                    self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+
+    def random_number(self):
+        new_num1 = round(random.uniform(self.num_begin, self.num_end))
+        new_num2 = round(random.uniform(self.num_begin, self.num_end))
+        new_num3 = round(random.uniform(self.num_begin, self.num_end))
+        self.result = XiaoLiuRenNum(new_num1, new_num2, new_num3,
+                                    self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+
