@@ -468,7 +468,7 @@ if __name__ == '__main__':
     index_ = 0
 
     action_map = {
-        1: lambda: (root.withdraw(), OldXiaoLiuRenWindow(root, icon, FONT_STYLE)),    }
+        1: lambda: (root.withdraw(), OldXiaoLiuRenWindow(root, icon, FONT_STYLE,0)),    }
 
     action_map.get(num_wv1 % 2, lambda: None)()
 

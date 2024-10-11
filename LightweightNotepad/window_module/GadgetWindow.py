@@ -6,7 +6,7 @@ from PictureWindow import picture
 from ProjectPathVariables import ICON_PATH
 from RegressionWindow import regression
 from ZiWeiDouShuWindow import zi_wei_dou_shu_window
-from function.ProjectFunctions import window_init
+
 
 class GadgetWindow:
     _instance = None  # 用于跟踪单例窗口
@@ -24,7 +24,7 @@ class GadgetWindow:
         self.window.iconbitmap(ICON_PATH)
         self.window.resizable(None, None)
 
-        b1 = ttk.Button(self.window, text="小六壬", style=OUTLINE, command=lambda: OldXiaoLiuRenWindow(root, icon, font_style))
+        b1 = ttk.Button(self.window, text="小六壬", style=OUTLINE, command=lambda: OldXiaoLiuRenWindow(root, icon, font_style,0))
         b1.grid(column=0, row=0, padx=10, pady=10)
         b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, font_style))
         b2.grid(column=1, row=0, padx=10, pady=10)
@@ -35,6 +35,7 @@ class GadgetWindow:
         b5 = ttk.Button(self.window, text="图片操作", style=OUTLINE, command=lambda: picture(root, icon))
         b5.grid(column=4, row=0, padx=10, pady=10)
 
+        b1.bind("<Button-3>", lambda event: OldXiaoLiuRenWindow(root, icon, font_style, 1))
         # 设置窗口关闭时的行为
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 

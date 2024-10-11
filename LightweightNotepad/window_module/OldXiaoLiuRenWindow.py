@@ -28,12 +28,16 @@ def wv_1():
 
 class OldXiaoLiuRenWindow:
     _instance = None
-    def __init__(self,root_main, icon, font_style):
-        if OldXiaoLiuRenWindow._instance is not None and OldXiaoLiuRenWindow._instance.winfo_exists():
-            # 如果窗口已经存在，聚焦该窗口
-            OldXiaoLiuRenWindow._instance.focus()
-            return
-    
+    def __init__(self,root_main, icon, font_style,function_num):
+
+        if function_num == 0:
+            if OldXiaoLiuRenWindow._instance is not None and OldXiaoLiuRenWindow._instance.winfo_exists():
+                # 如果窗口已经存在，聚焦该窗口
+                OldXiaoLiuRenWindow._instance.focus()
+                return
+        else:
+            pass
+
         self.window = ttk.Toplevel(str(root_main))
         OldXiaoLiuRenWindow._instance = self.window
         self.window.title("小六壬")
