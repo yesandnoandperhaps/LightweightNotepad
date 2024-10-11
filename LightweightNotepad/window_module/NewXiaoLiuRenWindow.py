@@ -41,7 +41,7 @@ class NewX:
         (time_dict[self.time]() if self.function in (0, 1) else time_dict[0]())
 
         while self.result is None:
-            a = 1
+            self.root_main.update()
 
         g = {
             1: ("大安", "青龙木", "春季", "东", "寅卯", "事业宫"),
@@ -66,14 +66,12 @@ class NewX:
                 d1, d2, d3, d4, d5, d6
 
     def time_zone_(self,shi=None):
-        choose_dict = {
-            0: self.time_qi_gua_(shi),
-            1: self.time_qi_gua_(shi)
-        }
+        if self.function == 0:
+            return self.time_qi_gua_(shi)
+        elif self.function == 1:
+            return self.time_qi_gua_2_(shi)
 
         print(f"NewX:function {self.function}")
-
-        return choose_dict[self.function]
 
     def create_solar_time_window(self, title, judge_function,num):
         window = ttk.Toplevel(self.root_main)

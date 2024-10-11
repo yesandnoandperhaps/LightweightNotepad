@@ -99,3 +99,24 @@ def window_init(window, root_main, text):
     window.iconbitmap(ICON_PATH)
     window.protocol("WM_DELETE_WINDOW", lambda: window_closes(window, root_main))
     window_on(window, root_main)
+
+open_window = []
+
+def a_window(window_class, root, icon, font_style):
+    window = window_class(root, icon, font_style)
+    # 检查是否已经有窗口打开
+    if not open_window:
+        window = window_class()
+
+        # 在关闭窗口时移除实例
+        def on_closing():
+            open_window.remove(window)
+            window.destroy()
+
+        window.protocol("WM_DELETE_WINDOW", on_closing)
+
+        # 将窗口添加到列表中
+        open_window.append(window)
+        window.mainloop()
+    else:
+        open_window[0].focus_force()

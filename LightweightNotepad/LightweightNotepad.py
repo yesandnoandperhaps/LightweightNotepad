@@ -12,40 +12,21 @@ from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
-from OldXiaoLiuRenWindow import xiao_liu_ren_window
-from PictureWindow import picture
-from ProjectCapabilityVariables import font_set
-from ProjectFunctions import window_init, load_theme
-from ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-from ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-from RegressionWindow import regression
-from SetWindow import set_window
-from ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from window_module.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+from function.ProjectCapabilityVariables import font_set
+from function.ProjectFunctions import window_init, load_theme
+from function.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+from function.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
 
+from window_module.PictureWindow import picture
+from window_module.RegressionWindow import regression
+from window_module.SetWindow import set_window
+from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from window_module.GadgetWindow import GadgetWindow
 
 ###分割线
 #关于紫微斗数###分割线
 
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def gadget():
-
-    def triangle():
-        pass
-
-    window = ttk.Toplevel(str(root))
-    window_init(window, root, "轻量记事本-小工具")
-    window.resizable(None, None)
-
-    b1 = ttk.Button(window, text="小六壬", style=OUTLINE, command=lambda: xiao_liu_ren_window(root, icon, FONT_STYLE))
-    b1.grid(column=0,row=0,padx=10,pady=10)
-    b2 = ttk.Button(window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, FONT_STYLE))
-    b2.grid(column=1,row=0,padx=10,pady=10)
-    b3 = ttk.Button(window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
-    b3.grid(column=2,row=0,padx=10,pady=10)
-    b4 = ttk.Button(window, text="三角形计算", style=OUTLINE, command=triangle)
-    b4.grid(column=3,row=0,padx=10,pady=10)
-    b5 = ttk.Button(window, text="图片操作", style=OUTLINE, command=lambda: picture(root, icon))
-    b5.grid(column=4,row=0,padx=10,pady=10)
 ###分割线
 
 #关于主界面###分割线
@@ -66,7 +47,7 @@ def Before_drop_down_box_events():
         elif drop_down_box.get() == "设置":
             set_window(root)
         elif drop_down_box.get() == "小工具":
-            gadget()
+            GadgetWindow(root,icon,FONT_STYLE)
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def drop_down_box_event(event):
@@ -487,7 +468,7 @@ if __name__ == '__main__':
     index_ = 0
 
     action_map = {
-        1: lambda: (root.withdraw(), xiao_liu_ren_window(root, icon, FONT_STYLE)),    }
+        1: lambda: (root.withdraw(), OldXiaoLiuRenWindow(root, icon, FONT_STYLE)),    }
 
     action_map.get(num_wv1 % 2, lambda: None)()
 
