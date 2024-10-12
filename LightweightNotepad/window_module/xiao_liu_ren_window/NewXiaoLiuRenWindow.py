@@ -77,7 +77,7 @@ class NewX:
         elif self.function == 3:
             return self.random_number()
         elif self.function == 4:
-            return self.wu_xing()
+            return self.wu_xing_window()
 
         print(f"NewX:function {self.function}")
 
@@ -117,6 +117,7 @@ class NewX:
                                                                                 down_dox_group_main)
                             .for_modify(f=0)
                             )
+            down_box_1.bind("<Button-3>", lambda event: self.wu_xing(window))
             down_dox_group_main.append(down_box_1)
 
             messagebox.showerror("错误", message=f"{XLR_WU_XING_JSON}", parent=window) if isinstance(XLR_WU_XING_JSON,
@@ -199,5 +200,5 @@ class NewX:
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def wu_xing(self):
-        self.wu_xing_window()
+        pass
 
