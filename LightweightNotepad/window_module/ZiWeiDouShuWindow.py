@@ -7,7 +7,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 
 from function.ProjectFunctions import t_load
-from function.ProjectPathVariables import R_PATH, ICON_PATH
+from function.variables.ProjectPathVariables import R_PATH, ICON_PATH
 from module.ZiWeiDouShu import ZiWeiDouShu
 
 

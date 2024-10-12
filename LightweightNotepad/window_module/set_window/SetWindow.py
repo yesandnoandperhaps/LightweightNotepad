@@ -4,12 +4,12 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 from window_module.set_window.function.Transfer import Transfer
-from function import JsonFile
+from function.JsonFile import File
 from function.CustomToolTip import CustomToolTip as ToolTip
-from function.ProjectDictionaryVariables import UTC_TIME
+from variables.ProjectDictionaryVariables import UTC_TIME
 from function.ProjectFunctions import save, t_load, var_save, utc, window_init, window_closes, t_s, t_s_
-from function.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4,var2_num_w_4_3,var3_num_w_4_3,var_num_w_4_3
-from function.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
+from variables.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4
+from variables.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
     W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON
 
 
@@ -494,7 +494,7 @@ def set_window(root):
 
                 tool_tip_text()
 
-                JsonFile.File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
+                File.dict_save(XLR_DATA_PATH, XLR_JSON.file_dict)
 
             w_4_1_f_1 = ttk.Frame(w_4_1)
 

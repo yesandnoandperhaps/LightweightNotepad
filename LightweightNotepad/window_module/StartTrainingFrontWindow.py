@@ -6,8 +6,8 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 
 from ttkbootstrap.tooltip import ToolTip
-from function import ProjectCapabilityVariables
-from function.ProjectPathVariables import ICON_PATH
+from variables import ProjectCapabilityVariables
+from variables.ProjectPathVariables import ICON_PATH
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,DuplicatedCode
 class StartTrainingFrontWindow:

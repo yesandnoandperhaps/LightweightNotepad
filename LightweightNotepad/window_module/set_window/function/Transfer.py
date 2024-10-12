@@ -1,5 +1,5 @@
-from set_window.RandomNumbersWindow import RandomNumbersWindow
-from set_window.WuXingWindow import WuXingWindow
+from window_module.set_window.RandomNumbersWindow import RandomNumbersWindow
+from window_module.set_window.WuXingWindow import WuXingWindow
 
 
 class Transfer:

@@ -6,7 +6,7 @@ import ttkbootstrap as ttk
 
 from function import JsonFile
 from function.ProjectFunctions import window_init, window_closes
-from function.ProjectPathVariables import XLR_DATA_PATH, XLR_JSON
+from variables.ProjectPathVariables import XLR_DATA_PATH, XLR_JSON
 
 
 class RandomNumbersWindow:

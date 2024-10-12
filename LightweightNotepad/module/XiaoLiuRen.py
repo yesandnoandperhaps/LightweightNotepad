@@ -2,7 +2,7 @@ import decimal
 import math
 import random
 
-from function.ProjectPathVariables import  Q_PATH, U_PATH, V_PATH, XLR_JSON
+from variables.ProjectPathVariables import  Q_PATH, U_PATH, V_PATH, XLR_JSON
 
 v5 = XLR_JSON[7]
 v6 = XLR_JSON[6]

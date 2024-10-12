@@ -1,17 +1,17 @@
-import os
 import re
 from tkinter import messagebox
 import random
+import re
+from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from function.JsonFile import File
-from function.ProjectDictionaryVariables import XLR_DATA
+from function.DownBoxModify import DownBoxModify
 from function.ProjectFunctions import window_init, window_closes
-from function.ProjectPathVariables import DATA_FILE_PATH
-from function.SolarTimeCalculator import SolarTimeCalculator
 from function.XiaoLiuRenNum import XiaoLiuRenNum
-from module.XiaoLiuRenJson import Calendar
+from function.time.SolarTimeCalculator import SolarTimeCalculator
+from function.variables.ProjectPathVariables import XLR_JSON, XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
+from module.XiaoLiuRenDate import Calendar
 
 
 class NewX:
@@ -19,19 +19,18 @@ class NewX:
         self.result = None
         self.input_string = None
         self.xiao_liu_ren_result = None
-        self.xlr_data_path = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
-        xlr_json = File.dict_load(self.xlr_data_path, XLR_DATA)
-        self.calendar = xlr_json[0]
-        self.time = xlr_json[1]
-        self.time_zone = xlr_json[2]
-        self.function = xlr_json[3]
-        self.shichen = xlr_json[4]
-        self.runyue = xlr_json[5]
-        self.suanfa = xlr_json[8]
-        self.shuzhi = xlr_json[9]
-        self.shike = xlr_json[10]
-        self.num_begin = xlr_json[11]
-        self.num_end = xlr_json[12]
+        self.calendar = XLR_JSON[0]
+        self.time = XLR_JSON[1]
+        self.time_zone = XLR_JSON[2]
+        self.function = XLR_JSON[3]
+        self.shichen = XLR_JSON[4]
+        self.runyue = XLR_JSON[5]
+        self.suanfa = XLR_JSON[8]
+        self.shuzhi = XLR_JSON[9]
+        self.shike = XLR_JSON[10]
+        self.num_begin = XLR_JSON[11]
+        self.num_end = XLR_JSON[12]
+        self.wu_xing_num = XLR_WU_XING_JSON[0]
         self.root_main = root_main
 
     def choose(self):
@@ -87,7 +86,7 @@ class NewX:
         window_init(window, self.root_main, title)
         window.resizable(False, False)
 
-        text0 = ttk.Label(window, text="经度")
+        text0 = ttk.Label(window, text="经度:")
         entry0 = ttk.Entry(window)
 
         text0.grid(column=0, row=0, padx=5, pady=5)
@@ -97,23 +96,43 @@ class NewX:
         # 绑定 Shift 键事件
         entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num))
         entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num))
-    ''''
-    def wu_xing_window(self,title):
-        window = ttk.Toplevel(self.root_main)
-        window_init(window, self.root_main, title)
-        window.resizable(False, False)
 
-        text0 = ttk.Label(window, text="经度")
-        entry0 = ttk.Entry(window)
+    def wu_xing_window(self):
+        if self.wu_xing_num == 0:
+            down_dox_values_group_main = []
+            down_dox_group_main = []
 
-        text0.grid(column=0, row=0, padx=5, pady=5)
-        entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
-        entry0.focus_set()
+            down_box_group_1 = ["金","木","水","火","土"]
+            down_dox_values_group_main.append(down_box_group_1)
 
-        # 绑定 Shift 键事件
-        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window, num))
-        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window, num))
-    '''
+            window = ttk.Toplevel(self.root_main)
+            window_init(window, self.root_main, "五行输入")
+            window.resizable(False, False)
+
+            text0 = ttk.Label(window, text="所算事五行:")
+            down_box_1 = ttk.Combobox(master=window, values=down_box_group_1, state="readonly")
+            down_box_1.bind("<<ComboboxSelected>>", lambda event: DownBoxModify(XLR_WU_XING_JSON,
+                                                                                XLR_DATA_WU_XING_PATH,
+                                                                                down_dox_values_group_main,
+                                                                                down_dox_group_main)
+                            .for_modify(f=0)
+                            )
+            down_dox_group_main.append(down_box_1)
+
+            messagebox.showerror("错误", message=f"{XLR_WU_XING_JSON}", parent=window) if isinstance(XLR_WU_XING_JSON,
+                                                                                                     Exception) else DownBoxModify(
+                XLR_WU_XING_JSON,
+                XLR_DATA_WU_XING_PATH,
+                down_dox_values_group_main,
+                down_dox_group_main).for_set(0)
+
+            text0.grid(column=0, row=0, padx=5, pady=5)
+            down_box_1.grid(row=0, column=1, padx=10, pady=10)
+
+
+        elif self.wu_xing_num == 1:
+            pass
+
 
     def flat_solar_time(self):
         self.create_solar_time_window("平太阳时", self.flat_solar_judge_t,0)
@@ -180,5 +199,5 @@ class NewX:
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def wu_xing(self):
-        pass
+        self.wu_xing_window()
 

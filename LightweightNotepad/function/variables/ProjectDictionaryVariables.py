@@ -15,7 +15,8 @@ XLR_DATA = {
 }
 
 XLR_DATA_WU_XING = {
-"五行输入": 0
+"五行输入": 0,
+"五行记录": 0
 }
 
 UTC_TIME = [

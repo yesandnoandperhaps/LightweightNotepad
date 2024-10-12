@@ -1,10 +1,10 @@
 import os
 
 from function.JsonFile import File
-from function.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING
+from variables.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING
 
 p_ = os.path.dirname(__file__)
-PATH = os.path.abspath(os.path.join(p_, '..'))
+PATH = os.path.abspath(os.path.join(p_, '..', '..'))
 DATA_FILE_PATH = os.path.join(PATH, "data")
 ICON_FILE_PATH = os.path.join(PATH, "icon")
 os.makedirs(DATA_FILE_PATH, exist_ok=True)

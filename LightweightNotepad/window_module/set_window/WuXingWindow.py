@@ -2,9 +2,9 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from DownBoxModify import DownBoxModify
+from function.DownBoxModify import DownBoxModify
 from function.ProjectFunctions import window_init
-from function.ProjectPathVariables import XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
+from variables.ProjectPathVariables import XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
 
 
 class WuXingWindow:

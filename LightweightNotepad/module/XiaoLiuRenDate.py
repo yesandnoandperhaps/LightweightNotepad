@@ -2,9 +2,9 @@ from datetime import datetime
 
 from lunar_python import Solar, Lunar, LunarMonth
 
-from function.ProjectDictionaryVariables import SHI_CHEN_DICT
+from function.variables.ProjectDictionaryVariables import SHI_CHEN_DICT
 from function.ProjectFunctions import utc
-from function.TimeZoneConversion import TimeZoneConversionT
+from function.time.TimeZoneConversion import TimeZoneConversionT
 
 def min_ke(converted_time,ke):
     minutr = converted_time % 15

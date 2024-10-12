@@ -1,11 +1,11 @@
 import ttkbootstrap as ttk
 from ttkbootstrap import OUTLINE
 
-from OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from PictureWindow import picture
-from ProjectPathVariables import ICON_PATH
-from RegressionWindow import regression
-from ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+from window_module.PictureWindow import picture
+from variables.ProjectPathVariables import ICON_PATH
+from window_module.RegressionWindow import regression
+from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 class GadgetWindow:

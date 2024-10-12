@@ -7,7 +7,7 @@ from tkinter import filedialog, messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from function.ProjectPathVariables import ICON_PATH, DATA_FILE_PATH
+from variables.ProjectPathVariables import ICON_PATH, DATA_FILE_PATH
 from function.CustomToolTip import CustomToolTip as ToolTip
 from module import LinearRegression
 from window_module.StartTrainingFrontWindow import StartTrainingFrontWindow

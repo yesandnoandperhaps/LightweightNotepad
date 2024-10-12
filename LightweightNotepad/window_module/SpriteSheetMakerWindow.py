@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 from ttkbootstrap.constants import *
 
 from function.ProjectFunctions import t_load
-from function.ProjectPathVariables import Z_PATH, AA_PATH, AB_PATH, ICON_PATH
+from variables.ProjectPathVariables import Z_PATH, AA_PATH, AB_PATH, ICON_PATH
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable

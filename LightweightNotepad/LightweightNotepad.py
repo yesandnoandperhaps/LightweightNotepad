@@ -12,13 +12,13 @@ from PIL import Image
 from pystray import MenuItem, Menu
 from ttkbootstrap.constants import *
 
-from function.ProjectCapabilityVariables import font_set
+from function.variables.ProjectCapabilityVariables import font_set
 from function.ProjectFunctions import load_theme
-from function.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-from function.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
 from window_module.GadgetWindow import GadgetWindow
-from window_module.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from set_window.SetWindow import set_window
+from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+from window_module.set_window.SetWindow import set_window
 
 
 ###分割线

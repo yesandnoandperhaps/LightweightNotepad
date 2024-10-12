@@ -1,4 +1,4 @@
-from function.ProjectDictionaryVariables import ZHI_DICT_NUM
+from variables.ProjectDictionaryVariables import ZHI_DICT_NUM
 
 
 class XiaoLiuRenNum:
