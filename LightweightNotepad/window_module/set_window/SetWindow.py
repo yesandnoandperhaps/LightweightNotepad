@@ -1,11 +1,9 @@
 from tkinter import messagebox
 from tkinter.ttk import Separator
-import re
-import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from window_module.set_window.RandomNumbersWindow import RandomNumbersWindow
+from window_module.set_window.function.Transfer import Transfer
 from function import JsonFile
 from function.CustomToolTip import CustomToolTip as ToolTip
 from function.ProjectDictionaryVariables import UTC_TIME
@@ -523,7 +521,7 @@ def set_window(root):
 
             down_box_3 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_3, state="readonly")
             down_box_3.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
-            down_box_3.bind("<Button-3>", lambda event: RandomNumbersWindow(window,down_box_3))
+            down_box_3.bind("<Button-3>", lambda event: Transfer(window,down_box_3))
 
             down_box_4 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_4, state="readonly")
             down_box_4.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
@@ -546,7 +544,7 @@ def set_window(root):
             down_box_10 = ttk.Combobox(w_4_1_f_1, values=w_4_1_v_10, state="readonly")
             down_box_10.bind("<<ComboboxSelected>>", lambda event: modify_xlr_json())
 
-            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=w_4) if isinstance(XLR_JSON,Exception) else set_down_box()
+            messagebox.showerror("错误", message=f"{XLR_JSON}", parent=window) if isinstance(XLR_JSON,Exception) else set_down_box()
             w_4_1_f_1.grid(row=0,column=0,padx=10,pady=10,sticky=W)
 
             w_4_1_text_0.grid(row=0,column=0,padx=5,pady=5,sticky=W)
