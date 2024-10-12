@@ -61,7 +61,7 @@ class OldXiaoLiuRenWindow:
 
             def entry2_2():
                 self.window.destroy()
-                OldXiaoLiuRenWindow(root_main, icon, font_style)
+                OldXiaoLiuRenWindow(root_main, icon, font_style,0)
 
             # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal,DuplicatedCode
             def t_loop_output_x():
@@ -1065,7 +1065,7 @@ class OldXiaoLiuRenWindow:
 
             def entry2_2():
                 self.window.destroy()
-                OldXiaoLiuRenWindow(root_main, icon, font_style)
+                OldXiaoLiuRenWindow(root_main, icon, font_style,0)
 
             # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal,DuplicatedCode
             def t_loop_output_x():
@@ -1386,7 +1386,7 @@ class OldXiaoLiuRenWindow:
                 scrollbar.grid_remove()
                 f.grid()
                 xlr_num = NewX(self.window).choose()
-                LabelManager(f, font_style).create_labels(xlr_num)
+                LabelManager(f, font_style).update_labels(xlr_num)
 
         combo = ttk.Combobox(self.window, values=["起卦", "算一卦"], state="readonly")
         combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -1410,6 +1410,7 @@ class OldXiaoLiuRenWindow:
         scrollbar.config(command=text_widget.yview)
 
         f = ttk.Frame(self.window)
+        LabelManager(f, font_style).init_labels()
         f.grid(row=1, column=0, sticky="nsew")
         f.grid_remove()
 
@@ -1462,3 +1463,10 @@ class OldXiaoLiuRenWindow:
         # 关闭窗口时，将实例设为 None
         OldXiaoLiuRenWindow._instance = None
         self.window.destroy()
+
+    '''
+    def close_off(self,root_main, icon, font_style):
+        OldXiaoLiuRenWindow._instance = None
+        self.window.destroy()
+        OldXiaoLiuRenWindow(root_main, icon, font_style,0)
+    '''

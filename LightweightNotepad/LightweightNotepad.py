@@ -18,7 +18,7 @@ from function.ProjectInitialVariables import t_divide_up, circular_num, num_wv1,
 from function.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
 from window_module.GadgetWindow import GadgetWindow
 from window_module.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from window_module.SetWindow import set_window
+from set_window.SetWindow import set_window
 
 
 ###分割线

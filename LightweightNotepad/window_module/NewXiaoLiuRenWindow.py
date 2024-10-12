@@ -77,6 +77,8 @@ class NewX:
             return self.average_random_number()
         elif self.function == 3:
             return self.random_number()
+        elif self.function == 4:
+            return self.wu_xing()
 
         print(f"NewX:function {self.function}")
 
@@ -95,6 +97,23 @@ class NewX:
         # 绑定 Shift 键事件
         entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num))
         entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num))
+    ''''
+    def wu_xing_window(self,title):
+        window = ttk.Toplevel(self.root_main)
+        window_init(window, self.root_main, title)
+        window.resizable(False, False)
+
+        text0 = ttk.Label(window, text="经度")
+        entry0 = ttk.Entry(window)
+
+        text0.grid(column=0, row=0, padx=5, pady=5)
+        entry0.grid(column=1, row=0, padx=5, pady=5, ipadx=20)
+        entry0.focus_set()
+
+        # 绑定 Shift 键事件
+        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window, num))
+        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window, num))
+    '''
 
     def flat_solar_time(self):
         self.create_solar_time_window("平太阳时", self.flat_solar_judge_t,0)
@@ -159,4 +178,7 @@ class NewX:
         new_num3 = round(random.uniform(self.num_begin, self.num_end))
         self.result = XiaoLiuRenNum(new_num1, new_num2, new_num3,
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+
+    def wu_xing(self):
+        pass
 
