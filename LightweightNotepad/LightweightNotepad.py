@@ -1,26 +1,3 @@
-import ctypes
-import os
-import shutil
-import threading
-import tkinter as tk
-from tkinter import filedialog, messagebox
-
-import pystray
-import ttkbootstrap as ttk
-import windnd
-from PIL import Image
-from pystray import MenuItem, Menu
-from ttkbootstrap.constants import *
-
-from function.variables.ProjectCapabilityVariables import font_set
-from function.ProjectFunctions import load_theme
-from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-from window_module.GadgetWindow import GadgetWindow
-from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from window_module.set_window.SetWindow import set_window
-
-
 ###分割线
 #关于紫微斗数###分割线
 
@@ -415,6 +392,51 @@ def sever():
     window.mainloop()
 
 if __name__ == '__main__':
+    import ttkbootstrap as ttk
+    import tkinter as tk
+    splash = tk.Tk()
+    splash.overrideredirect(True)
+    splash.attributes("-topmost", True)
+
+    screen_width = splash.winfo_screenwidth()
+    screen_height = splash.winfo_screenheight()
+
+    window_width = 400
+    window_height = 200
+
+    position_x = (screen_width - window_width) // 2
+    position_y = (screen_height - window_height) // 2
+
+    splash.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+
+    label = tk.Label(splash, text="LightweightNotepad——加载中", font=("宋体", 16))
+    label.pack(expand=True)
+
+    splash.update()
+
+    import ctypes
+    import os
+    import shutil
+    import threading
+    from tkinter import filedialog, messagebox
+
+    import pystray
+    import windnd
+    from PIL import Image
+    from pystray import MenuItem, Menu
+    from ttkbootstrap.constants import *
+
+    from function.variables.ProjectCapabilityVariables import font_set
+    from function.ProjectFunctions import load_theme
+    from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+    from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+    from window_module.GadgetWindow import GadgetWindow
+    from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+    from window_module.set_window.SetWindow import set_window
+
+    # 关闭预启动界面
+    splash.destroy()
+
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(ICON_PATH)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)

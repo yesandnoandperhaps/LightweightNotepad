@@ -7,7 +7,8 @@ import torch_directml
 from sklearn.linear_model import LinearRegression as SLinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
-
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 class FeatureScaling:
     def __init__(self, feature_scaling, csv_path, input_columns="0,0",output_columns="1,1", device='gpu',start=True) -> None:
@@ -166,7 +167,7 @@ class LinearRegression:
         self.n = lr_n
         self.w = lr_w
         self.feature_scaling,self.output,input_size,output_size,self.actual_device = FeatureScaling(feature_scaling,csv_path,input_columns,output_columns,device,True).feature_scaling()
-
+        print(self.feature_scaling)
         self.features,self.target = self.pytorch_tensor()
         self.model = self.LinearRegressionModule(input_size, output_size).to(self.actual_device)
         self.actual_loss_function = self.criterion_loss_function(lr_loss_function)
@@ -237,6 +238,10 @@ class LinearRegression:
 
     def pytorch_linear_regression_bgd(self):
 
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            self.actual_optimization, mode='min', factor=0.5, patience=10, min_lr=1e-30
+        )
+
         for _ in range(self.e):
             self.model.train()
 
@@ -257,10 +262,13 @@ class LinearRegression:
 
             self.actual_optimization.zero_grad()
 
-            if (_ + 1) % 100 == 0:
-                print(f'Epoch [{_ + 1}/{self.e}], Loss: {loss.item():.4f}')
+            scheduler.step(loss)
+
+            current_lr = scheduler.optimizer.param_groups[0]['lr']
+            if (_ + 1) % 1000 == 0:
+                print(f'Epoch [{_ + 1}/{self.e}], Loss: {loss.item():.4f}, Learning Rate: {current_lr:.6f}')
         # 打印模型参数
-        print("Model parameters after training:")
+        print("训练后的模型参数:")
         for name, param in self.model.named_parameters():
             print(f"{name}: {param.data}")
 
@@ -276,9 +284,10 @@ class LinearRegression:
             rmse = mse ** 0.5
             r2 = r2_score(true_values, predicted_values)
 
-            print(f'Mean Squared Error (MSE): {mse:.4f}')
-            print(f'Root Mean Squared Error (RMSE): {rmse:.4f}')
-            print(f'R^2 Score: {r2:.4f}')
+            print(f'均方误差 (MSE): {mse:.4f}')
+            print(f'均方根误差 (RMSE): {rmse:.4f}')
+            print(f'R^2 分数: {r2:.4f}')
+            print(f'模型结果：{self.model.state_dict()}')
 
             # 计算残差
             residuals = true_values - predicted_values
@@ -286,26 +295,26 @@ class LinearRegression:
             # 绘制损失图
             plt.figure(figsize=(7, 5))
             plt.plot(range(1, self.e + 1), self.losses, color='b')
-            plt.xlabel('Epoch')
-            plt.ylabel('Loss')
-            plt.title('Loss over Epochs')
+            plt.xlabel('迭代次数 (Epoch)')
+            plt.ylabel('损失值')
+            plt.title('训练过程中损失值变化')
             plt.show()
 
             # 绘制残差图
             plt.figure(figsize=(7, 5))
             plt.scatter(predicted_values, residuals, alpha=0.5)
             plt.axhline(y=0, color='r', linestyle='--')
-            plt.xlabel('Predicted Values')
-            plt.ylabel('Residuals')
-            plt.title('Residuals vs Predicted Values')
+            plt.xlabel('预测值')
+            plt.ylabel('残差')
+            plt.title('残差与预测值的关系')
             plt.show()
 
             # 绘制残差直方图
             plt.figure(figsize=(7, 5))
             plt.hist(residuals, bins=30, edgecolor='k', alpha=0.7)
-            plt.xlabel('Residuals')
-            plt.ylabel('Frequency')
-            plt.title('Histogram of Residuals')
+            plt.xlabel('残差')
+            plt.ylabel('频率')
+            plt.title('残差直方图')
             plt.show()
 
             # 绘制合并图
@@ -314,24 +323,24 @@ class LinearRegression:
             # 绘制损失图
             plt.subplot(1, 3, 1)
             plt.plot(range(1, self.e + 1), self.losses, color='b')
-            plt.xlabel('Epoch')
-            plt.ylabel('Loss')
-            plt.title('Loss over Epochs')
+            plt.xlabel('迭代次数 (Epoch)')
+            plt.ylabel('损失值')
+            plt.title('训练过程中损失值变化')
 
             # 绘制残差图
             plt.subplot(1, 3, 2)
             plt.scatter(predicted_values, residuals, alpha=0.5)
             plt.axhline(y=0, color='r', linestyle='--')
-            plt.xlabel('Predicted Values')
-            plt.ylabel('Residuals')
-            plt.title('Residuals vs Predicted Values')
+            plt.xlabel('预测值')
+            plt.ylabel('残差')
+            plt.title('残差与预测值的关系')
 
             # 绘制残差直方图
             plt.subplot(1, 3, 3)
             plt.hist(residuals, bins=30, edgecolor='k', alpha=0.7)
-            plt.xlabel('Residuals')
-            plt.ylabel('Frequency')
-            plt.title('Histogram of Residuals')
+            plt.xlabel('残差')
+            plt.ylabel('频率')
+            plt.title('残差直方图')
 
             plt.tight_layout()
             plt.show()
@@ -370,7 +379,7 @@ class LinearRegression:
         }
         '''
 if __name__ == '__main__':
-    path = r"D:\LightweightNotepad\LightweightNotepad\data\啊.csv"
-    scaler = LinearRegression("批量梯度下降", "均方误差","a",0.01,6500,"z-score_normalization",path,"0,2","3,3","gpu")
+    path = r"D:\LightweightNotepad\工作簿2.csv"
+    scaler = LinearRegression("批量梯度下降", "均方误差","a",0.1,10000,"min-max_normalization",path,"0,4","5,6","gpu")
     scaled_data = scaler.linear_regression()
     print(scaled_data)
