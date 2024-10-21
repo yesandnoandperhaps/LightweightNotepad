@@ -1,436 +1,435 @@
+from tkinter import END, X, E
+
+
+class FadeInAnimation:
+    def __init__(self, root, image_path, steps=20, delay=100):
+        self.root = root
+        self.image_path = image_path
+        self.steps = steps
+        self.delay = delay
+        self.alpha = 0  # 初始透明度
+        self.increment = 255 // steps  # 计算每次增加的透明度步长
+
+        # 加载原始图像并创建一个圆角图像
+        self.original_image = Image.open(image_path).convert("RGBA")
+        self.rounded_image = self.original_image
+        self.image_label = tk.Label(root,bg="white",relief="flat")
+        self.image_label.pack(side="right", padx=20)
+
+        # 开始淡入动画
+        self.fade_in()
+
+    def fade_in(self):
+        # 创建带透明度的图像副本
+        faded_image = self.rounded_image.copy()
+        faded_image.putalpha(self.alpha)
+        self.photo = ImageTk.PhotoImage(faded_image)
+
+        # 更新图片显示
+        self.image_label.config(image=self.photo)
+
+        # 增加透明度，直到达到最大值255
+        if self.alpha < 255:
+            self.alpha = min(255, self.alpha + self.increment)
+            # 继续下一次动画更新
+            self.root.after(self.delay, self.fade_in)
+
+
+
 #关于主界面###分割线
-def quit_window():
-    root.destroy()
-
-def show_window():
-    root.deiconify()
-
-def on_exit():
-    root.withdraw()
 
 
-# noinspection PyPep8Naming
-def Before_drop_down_box_events():
+ # 在后台线程中执行动态导入
+def main():
+
+    def quit_window():
+        root.destroy()
+
+    def show_window():
+        root.deiconify()
+
+    def on_exit():
+        root.withdraw()
+
+    # noinspection PyPep8Naming
+    def Before_drop_down_box_events():
         if drop_down_box.get() == "保存":
             save_t()
         elif drop_down_box.get() == "设置":
             set_window(root)
         elif drop_down_box.get() == "小工具":
-            GadgetWindow(root,icon,FONT_STYLE)
+            GadgetWindow(root, icon, FONT_STYLE)
 
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def drop_down_box_event(event):
+    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
+    def drop_down_box_event(event):
         x, y = event.x_root, event.y_root
         if drop_down_box.winfo_rootx() < x < drop_down_box.winfo_rootx() + drop_down_box.winfo_width() and \
                 drop_down_box.winfo_rooty() < y < drop_down_box.winfo_rooty() + drop_down_box.winfo_height():
             Before_drop_down_box_events()
 
-
-# noinspection PyUnusedLocal
-def a(event):
-     deleted_text.append(text_widget.get('1.0', tk.END))
-     text_widget.delete('1.0', tk.END)
-deleted_text = []
-def b():
-    if deleted_text:
-        deleted_content = deleted_text.pop()
-        text_widget.insert(tk.END, deleted_content)
-
-def c():
-    text_widget.insert(tk.END, "\n")
-
-def on():
-    text_widget.tag_configure("found", background="")
-    toggle_window()
-
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def two_window():
-    global window2
-
-    # noinspection PyPep8Naming
-    def mySearch():
-        text_widget.tag_remove("found","1.0",END)
-        start = "1.0"
-        key = entry.get()
-        if len(key.strip()) == 0:
-            return
-        while True:
-            pos = text_widget.search(key,start,END)
-            if pos == "":
-                break
-            text_widget.tag_add("found",pos,"%s+%dc" %(pos,len(key)))
-            start = "%s+%dc" % (pos,len(key))
-    def focus2():
-        entry2.focus_set()
-    def focus1():
-        entry.focus_set()
-
-    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyAssignmentToLoopOrWithParameter
-    def replace():
-        k = entry.get()
-        f = entry2.get()
-        t = text_widget.get(1.0, tk.END)
-        new_text = t.replace(k, f)
+    # noinspection PyUnusedLocal
+    def a(event):
+        deleted_text.append(text_widget.get('1.0', tk.END))
         text_widget.delete('1.0', tk.END)
-        text_widget.insert(tk.END, new_text)
-    if not window2:
-        window2 = tk.Toplevel()
-        window2.title("查找与替换")
-        window2.iconbitmap(ICON_PATH)
-        window2.resizable( width=False, height=False )
-        window2.wm_attributes("-topmost", True)
-        lbl = ttk.Label(window2, text="查找:")
-        lbl.grid(row=0, column=0, padx=5, pady=5)
-        entry = tk.Entry(window2, width=30)
-        entry.grid(row=0, column=1,padx=5,pady=5)
-        entry.bind("<Return>", lambda event: mySearch())
-        entry.focus_set()
-        lb2 = ttk.Label(window2, text="替换:")
-        lb2.grid(row=1, column=0, padx=5, pady=5)
-        entry2 = tk.Entry(window2, width=30)
-        entry2.grid(row=1, column=1,padx=5,pady=5)
-        entry2.bind("<Return>", lambda event: replace())
-        window2.protocol("WM_DELETE_WINDOW", on)
-        window2.bind("<Control-f> ", lambda event:toggle_window())
-        entry.bind("<Control-f> ", lambda event:toggle_window())
-        entry.bind(" <Down>",lambda event:focus2())
-        entry2.bind("<Up>",lambda event:focus1())
-        entry2.bind("<Control-f> ", lambda event:toggle_window())
-        window2.mainloop()
 
-def toggle_window():
-    global window2
-    if window2:
-        # noinspection PyUnresolvedReferences
-        window2.destroy()
-        window2 = None
-    else:
-        two_window()
+    deleted_text = []
 
-def save_2():
-    def save_2t():
-        file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
-            ("Text files", "*.txt"), ("All files", "*.*")])
+    def b():
+        if deleted_text:
+            deleted_content = deleted_text.pop()
+            text_widget.insert(tk.END, deleted_content)
 
-        with open(A_PATH, 'w', encoding='utf-8') as file:
-             lines = text_widget.get("1.0","end")
-             file.writelines(lines)
+    def c():
+        text_widget.insert(tk.END, "\n")
 
-        if file_path:
-            shutil.copy(A_PATH, file_path)
+    def on():
+        text_widget.tag_configure("found", background="")
+        toggle_window()
 
-    thread = threading.Thread(target=save_2t)
-    thread.start()
+    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
+    def two_window():
+        global window2
 
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
-def read(filename, msg):
-    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyAssignmentToLoopOrWithParameter
-    def read_and_split():
-        global index,index_,t_size
-        with open(msg, 'r',encoding='utf-8',errors = 'ignore') as file:
-            index = 0
+        # noinspection PyPep8Naming
+        def mySearch():
+            text_widget.tag_remove("found", "1.0", END)
+            start = "1.0"
+            key = entry.get()
+            if len(key.strip()) == 0:
+                return
             while True:
-                file.seek(index * t_divide_up)
-                data = file.read(t_divide_up)
-                if not data:
-                    folder = os.path.join(DATA_FILE_PATH, "text-temp")
-                    try:
-                        os.mkdir("text-temp")
-                    except:
-                        shutil.rmtree(folder)
-                        os.mkdir("text-temp")
-                    index -= 1
-                    progressbarOne['value'] -= 1
-                    while True:
-                        progressbarOne['value'] += 1
-                        try:
-                            shutil.move(f'{filename}_{index}', folder)
-                            index -= 1
-                        except:
-                            try:
-                                os.remove(f'{filename}_{index}')
-                            except:
-                                index = 0
-                                index_ = 1
-                                folder_t = (folder + "\\" + f'{filename}_{index}')
-
-                                size = os.path.getsize(msg)
-                                division = size//t_divide_up
-                                division08=division*0.1
-                                progressbarOne['value'] -= division08
-
-                                with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as file:
-                                    a = file.read()
-                                    progressbarOne['value'] += division08
-                                    text_widget.insert(tk.END, a)
-                                    window3.destroy()
-                                    root.attributes("-disabled", 0)
-                            break
+                pos = text_widget.search(key, start, END)
+                if pos == "":
                     break
+                text_widget.tag_add("found", pos, "%s+%dc" % (pos, len(key)))
+                start = "%s+%dc" % (pos, len(key))
 
-                with open(f'{filename}_{index}', 'w',encoding='utf-8',errors = 'ignore') as file:
-                    file.write(str(data))
-                index += 1
-                progressbarOne['value'] += 1
+        def focus2():
+            entry2.focus_set()
 
+        def focus1():
+            entry.focus_set()
 
-    thread = threading.Thread(target=read_and_split)
-    thread.start()
+        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyAssignmentToLoopOrWithParameter
+        def replace():
+            k = entry.get()
+            f = entry2.get()
+            t = text_widget.get(1.0, tk.END)
+            new_text = t.replace(k, f)
+            text_widget.delete('1.0', tk.END)
+            text_widget.insert(tk.END, new_text)
 
+        if not window2:
+            window2 = tk.Toplevel()
+            window2.title("查找与替换")
+            window2.iconbitmap(ICON_PATH)
+            window2.resizable(width=False, height=False)
+            window2.wm_attributes("-topmost", True)
+            lbl = ttk.Label(window2, text="查找:")
+            lbl.grid(row=0, column=0, padx=5, pady=5)
+            entry = tk.Entry(window2, width=30)
+            entry.grid(row=0, column=1, padx=5, pady=5)
+            entry.bind("<Return>", lambda event: mySearch())
+            entry.focus_set()
+            lb2 = ttk.Label(window2, text="替换:")
+            lb2.grid(row=1, column=0, padx=5, pady=5)
+            entry2 = tk.Entry(window2, width=30)
+            entry2.grid(row=1, column=1, padx=5, pady=5)
+            entry2.bind("<Return>", lambda event: replace())
+            window2.protocol("WM_DELETE_WINDOW", on)
+            window2.bind("<Control-f> ", lambda event: toggle_window())
+            entry.bind("<Control-f> ", lambda event: toggle_window())
+            entry.bind(" <Down>", lambda event: focus2())
+            entry2.bind("<Up>", lambda event: focus1())
+            entry2.bind("<Control-f> ", lambda event: toggle_window())
+            window2.mainloop()
 
-# noinspection PyGlobalUndefined
-def save_ff():
-
-    global progressbarOne2
-
-    def save_tf():
-
-     # noinspection PyBroadException,PyShadowingNames
-     def save_tt():
-         folder = os.path.join(DATA_FILE_PATH, "text-temp")
-         filename_ = os.path.join(folder, f'{filename}')
-         index = 0
-         while True:
-             try:
-                 folder_t = (folder + "\\" + f'{filename}_{index}')
-                 with open(folder_t, 'r',encoding='utf-8',errors = 'ignore') as file:
-                     a = file.read()
-                     index += 1
-                 with open(filename_,'a',encoding='utf-8',errors = 'ignore') as file:
-                     file.write(a)
-                     progressbarOne2['value'] += 1
-             except:
-                 index -= 1
-                 print(index)
-                 division08=division*0.1
-                 progressbarOne2['value'] -= division08
-                 shutil.copy(filename_, msg)
-                 progressbarOne2['value'] += division08
-                 window4.destroy()
-                 root.attributes("-disabled", 0)
-                 icon.notify("文件已成功保存", "Lightweight text editor")
-                 break
-     thread = threading.Thread(target=save_tt)
-     thread.start()
-
-    size = os.path.getsize(msg)
-    division = size//t_divide_up
-    window4 = tk.Toplevel(root)
-    window4.title("保存")
-    window4.resizable(None, None)
-    window4.iconbitmap(ICON_PATH)
-    window4.minsize(400, 50)
-    window4.maxsize(400, 50)
-    window4.wm_attributes("-topmost", True)
-    root.attributes("-disabled", 1)
-    lbl = ttk.Label(window4, text="正在保存中")
-    lbl.pack(padx=5, pady=5)
-    def on2():
-        messagebox.showerror("错误", message="正在保存中，请勿退出",parent=window4)
-    progressbarOne2 = ttk.Progressbar(window4,style="striped")
-    progressbarOne2.pack(pady=5,fill=X)
-    progressbarOne2['maximum'] = division
-    progressbarOne2['value'] = 0
-    window4.protocol("WM_DELETE_WINDOW", on2)
-    save_tf()
-    window4.mainloop()
-
-
-# noinspection PyBroadException,PyShadowingNames
-def save_t():
-    try:
-     size = os.path.getsize(msg)
-     filename = os.path.basename(msg)
-     if os.path.exists(msg):
-        if size < t_size:
-            with open(msg, 'w', encoding='utf-8') as file:
-                lines = text_widget.get("1.0","end")
-                file.writelines(lines)
-                icon.notify("文件已成功保存", "Lightweight text editor")
+    def toggle_window():
+        global window2
+        if window2:
+            # noinspection PyUnresolvedReferences
+            window2.destroy()
+            window2 = None
         else:
-            if index_ ==  1:
-                folder = os.path.join(DATA_FILE_PATH, "text-temp")
-                folder_t = (folder + "\\" + f'{filename}_{index}')
-                with open(folder_t, 'w',encoding='utf-8') as file:
-                    lines = text_widget.get("1.0","end")
-                    file.writelines(lines)
-                    save_ff()
-            else:
-                pass
-     else:
-        save_2()
-    except:
-        save_2()
+            two_window()
 
+    def save_2():
+        def save_2t():
+            file_path = filedialog.asksaveasfilename(parent=root, defaultextension=".txt", filetypes=[
+                ("Text files", "*.txt"), ("All files", "*.*")])
 
-# noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
-def i(files):
-    global progressbarOne,window3,filename,t_size,msg
-    msg = '\n'.join((item.decode('gbk') for item in files))
-    filename = os.path.basename(msg)
-    size = os.path.getsize(msg)
+            with open(A_PATH, 'w', encoding='utf-8') as file:
+                lines = text_widget.get("1.0", "end")
+                file.writelines(lines)
 
-    if size < t_size:
-        with open(msg, 'r', encoding='utf-8') as file:
-            data = file.read()
-            text_widget.insert(tk.END, data)
+            if file_path:
+                shutil.copy(A_PATH, file_path)
 
-    elif onandoff == "关闭":
-
-        # noinspection PyShadowingNames
-        def save_ttt():
-            icon.notify("正在导入文件，不建议操作当前窗口", "Lightweight text editor")
-            with open(msg, 'r', encoding='utf-8') as file:
-
-                while True:
-
-                    data = file.readlines(circular_num)
-
-                    if not data:
-                        icon.notify("导入成功", "Lightweight text editor")
-                        break
-
-                    text_widget.insert(tk.END, ''.join(data))
-
-        thread = threading.Thread(target=save_ttt)
+        thread = threading.Thread(target=save_2t)
         thread.start()
 
-    else:
+    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
+    def read(filename, msg):
+        # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyAssignmentToLoopOrWithParameter
+        def read_and_split():
+            global index, index_, t_size
+            with open(msg, 'r', encoding='utf-8', errors='ignore') as file:
+                index = 0
+                while True:
+                    file.seek(index * t_divide_up)
+                    data = file.read(t_divide_up)
+                    if not data:
+                        folder = os.path.join(DATA_FILE_PATH, "text-temp")
+                        try:
+                            os.mkdir("text-temp")
+                        except:
+                            shutil.rmtree(folder)
+                            os.mkdir("text-temp")
+                        index -= 1
+                        progressbarOne['value'] -= 1
+                        while True:
+                            progressbarOne['value'] += 1
+                            try:
+                                shutil.move(f'{filename}_{index}', folder)
+                                index -= 1
+                            except:
+                                try:
+                                    os.remove(f'{filename}_{index}')
+                                except:
+                                    index = 0
+                                    index_ = 1
+                                    folder_t = (folder + "\\" + f'{filename}_{index}')
+
+                                    size = os.path.getsize(msg)
+                                    division = size // t_divide_up
+                                    division08 = division * 0.1
+                                    progressbarOne['value'] -= division08
+
+                                    with open(folder_t, 'r', encoding='utf-8', errors='ignore') as file:
+                                        a = file.read()
+                                        progressbarOne['value'] += division08
+                                        text_widget.insert(tk.END, a)
+                                        window3.destroy()
+                                        root.attributes("-disabled", 0)
+                                break
+                        break
+
+                    with open(f'{filename}_{index}', 'w', encoding='utf-8', errors='ignore') as file:
+                        file.write(str(data))
+                    index += 1
+                    progressbarOne['value'] += 1
+
+        thread = threading.Thread(target=read_and_split)
+        thread.start()
+
+    # noinspection PyGlobalUndefined
+    def save_ff():
+
+        global progressbarOne2
+
+        def save_tf():
+
+            # noinspection PyBroadException,PyShadowingNames
+            def save_tt():
+                folder = os.path.join(DATA_FILE_PATH, "text-temp")
+                filename_ = os.path.join(folder, f'{filename}')
+                index = 0
+                while True:
+                    try:
+                        folder_t = (folder + "\\" + f'{filename}_{index}')
+                        with open(folder_t, 'r', encoding='utf-8', errors='ignore') as file:
+                            a = file.read()
+                            index += 1
+                        with open(filename_, 'a', encoding='utf-8', errors='ignore') as file:
+                            file.write(a)
+                            progressbarOne2['value'] += 1
+                    except:
+                        index -= 1
+                        print(index)
+                        division08 = division * 0.1
+                        progressbarOne2['value'] -= division08
+                        shutil.copy(filename_, msg)
+                        progressbarOne2['value'] += division08
+                        window4.destroy()
+                        root.attributes("-disabled", 0)
+                        icon.notify("文件已成功保存", "Lightweight text editor")
+                        break
+
+            thread = threading.Thread(target=save_tt)
+            thread.start()
+
         size = os.path.getsize(msg)
-        division = size//t_divide_up
-        window3 = tk.Toplevel(root)
-        window3.title("导入")
-        window3.resizable(None, None)
-        window3.iconbitmap(ICON_PATH)
-        window3.minsize(400, 50)
-        window3.maxsize(400, 50)
-        window3.wm_attributes("-topmost", True)
+        division = size // t_divide_up
+        window4 = tk.Toplevel(root)
+        window4.title("保存")
+        window4.resizable(None, None)
+        window4.iconbitmap(ICON_PATH)
+        window4.minsize(400, 50)
+        window4.maxsize(400, 50)
+        window4.wm_attributes("-topmost", True)
         root.attributes("-disabled", 1)
-        lbl = ttk.Label(window3, text="正在导入中")
+        lbl = ttk.Label(window4, text="正在保存中")
         lbl.pack(padx=5, pady=5)
+
         def on2():
-            messagebox.showerror("错误", message="导入过程中，请勿退出",parent=window3)
-        progressbarOne = ttk.Progressbar(window3,style="striped")
-        progressbarOne.pack(pady=5,fill=X)
-        progressbarOne['maximum'] = division
-        progressbarOne['value'] = 0
-        window3.protocol("WM_DELETE_WINDOW", on2)
-        read(filename, msg)
-        window3.mainloop()
+            messagebox.showerror("错误", message="正在保存中，请勿退出", parent=window4)
 
+        progressbarOne2 = ttk.Progressbar(window4, style="striped")
+        progressbarOne2.pack(pady=5, fill=X)
+        progressbarOne2['maximum'] = division
+        progressbarOne2['value'] = 0
+        window4.protocol("WM_DELETE_WINDOW", on2)
+        save_tf()
+        window4.mainloop()
 
-# noinspection PyBroadException,PyGlobalUndefined
-def next_page():
-    global index, index_
+    # noinspection PyBroadException,PyShadowingNames
+    def save_t():
+        try:
+            size = os.path.getsize(msg)
+            filename = os.path.basename(msg)
+            if os.path.exists(msg):
+                if size < t_size:
+                    with open(msg, 'w', encoding='utf-8') as file:
+                        lines = text_widget.get("1.0", "end")
+                        file.writelines(lines)
+                        icon.notify("文件已成功保存", "Lightweight text editor")
+                else:
+                    if index_ == 1:
+                        folder = os.path.join(DATA_FILE_PATH, "text-temp")
+                        folder_t = (folder + "\\" + f'{filename}_{index}')
+                        with open(folder_t, 'w', encoding='utf-8') as file:
+                            lines = text_widget.get("1.0", "end")
+                            file.writelines(lines)
+                            save_ff()
+                    else:
+                        pass
+            else:
+                save_2()
+        except:
+            save_2()
 
-    if index_ != 1:
-        messagebox.showerror("错误", message="仅限大文件操作", parent=root)
-        return
+    # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
+    def i(files):
+        global progressbarOne, window3, filename, t_size, msg
+        msg = '\n'.join((item.decode('gbk') for item in files))
+        filename = os.path.basename(msg)
+        size = os.path.getsize(msg)
 
-    folder = os.path.join(DATA_FILE_PATH, "text-temp")
-    try:
-        index += 1
-        folder_t = os.path.join(folder, f'{filename}_{index}')
-        _update_text_widget(folder_t)
-    except FileNotFoundError:
-        messagebox.showerror("错误", message="已经是尾页", parent=root)
-        index -= 1  # 恢复index为上一页
-    except Exception as e:
-        messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
+        if size < t_size:
+            with open(msg, 'r', encoding='utf-8') as file:
+                data = file.read()
+                text_widget.insert(tk.END, data)
 
+        elif onandoff == "关闭":
 
-# noinspection PyBroadException
-def return_page():
-    global index, index_
+            # noinspection PyShadowingNames
+            def save_ttt():
+                icon.notify("正在导入文件，不建议操作当前窗口", "Lightweight text editor")
+                with open(msg, 'r', encoding='utf-8') as file:
 
-    if index_ != 1:
-        messagebox.showerror("错误", message="仅限大文件操作", parent=root)
-        return
+                    while True:
 
-    folder = os.path.join(DATA_FILE_PATH, "text-temp")
-    try:
-        index -= 1
-        folder_t = os.path.join(folder, f'{filename}_{index}')
-        _update_text_widget(folder_t)
-    except FileNotFoundError:
-        messagebox.showerror("错误", message="已经是首页", parent=root)
-        index += 1  # 恢复index为下一页
-    except Exception as e:
-        messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
+                        data = file.readlines(circular_num)
 
+                        if not data:
+                            icon.notify("导入成功", "Lightweight text editor")
+                            break
 
-def _update_text_widget(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text_widget.delete('1.0', tk.END)
-        text_widget.insert(tk.END, file.read())
+                        text_widget.insert(tk.END, ''.join(data))
 
+            thread = threading.Thread(target=save_ttt)
+            thread.start()
 
-# noinspection DuplicatedCode
-def sever():
-    w.grid_forget()
-    window = tk.Toplevel(root)
-    window.title("分离控制")
-    window.resizable(None, None)
-    window.iconbitmap(ICON_PATH)
-    window.minsize(400, 50)
-    window.maxsize(400, 50)
-    sever_window_b2 = ttk.Button(window, text="下一页", style="link", command=next_page)
-    sever_window_b2.pack(padx=5, pady=5, side='right')
-    sever_window_b3 = ttk.Button(window, text="上一页", style="link", command=return_page)
-    sever_window_b3.pack(padx=5, pady=5, side='right')
-    def on2():
-        window.destroy()
-        w.grid(row=2,column=0,sticky=E)
-    b4 = ttk.Button(window, text="取消分离", style="link", command=on2)
-    b4.pack(padx=5,pady=5,side='left')
-    window.protocol("WM_DELETE_WINDOW", on2)
-    window.mainloop()
+        else:
+            size = os.path.getsize(msg)
+            division = size // t_divide_up
+            window3 = tk.Toplevel(root)
+            window3.title("导入")
+            window3.resizable(None, None)
+            window3.iconbitmap(ICON_PATH)
+            window3.minsize(400, 50)
+            window3.maxsize(400, 50)
+            window3.wm_attributes("-topmost", True)
+            root.attributes("-disabled", 1)
+            lbl = ttk.Label(window3, text="正在导入中")
+            lbl.pack(padx=5, pady=5)
 
-if __name__ == '__main__':
-    import ttkbootstrap as ttk
-    import tkinter as tk
-    splash = tk.Tk()
-    splash.overrideredirect(True)
-    splash.attributes("-topmost", True)
+            def on2():
+                messagebox.showerror("错误", message="导入过程中，请勿退出", parent=window3)
 
-    screen_width = splash.winfo_screenwidth()
-    screen_height = splash.winfo_screenheight()
+            progressbarOne = ttk.Progressbar(window3, style="striped")
+            progressbarOne.pack(pady=5, fill=X)
+            progressbarOne['maximum'] = division
+            progressbarOne['value'] = 0
+            window3.protocol("WM_DELETE_WINDOW", on2)
+            read(filename, msg)
+            window3.mainloop()
 
-    window_width = 400
-    window_height = 200
+    # noinspection PyBroadException,PyGlobalUndefined
+    def next_page():
+        global index, index_
 
-    position_x = (screen_width - window_width) // 2
-    position_y = (screen_height - window_height) // 2
+        if index_ != 1:
+            messagebox.showerror("错误", message="仅限大文件操作", parent=root)
+            return
 
-    splash.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+        folder = os.path.join(DATA_FILE_PATH, "text-temp")
+        try:
+            index += 1
+            folder_t = os.path.join(folder, f'{filename}_{index}')
+            _update_text_widget(folder_t)
+        except FileNotFoundError:
+            messagebox.showerror("错误", message="已经是尾页", parent=root)
+            index -= 1  # 恢复index为上一页
+        except Exception as e:
+            messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
 
-    label = tk.Label(splash, text="LightweightNotepad——加载中", font=("宋体", 16))
-    label.pack(expand=True)
+    # noinspection PyBroadException
+    def return_page():
+        global index, index_
 
-    splash.update()
+        if index_ != 1:
+            messagebox.showerror("错误", message="仅限大文件操作", parent=root)
+            return
 
-    import ctypes
-    import os
-    import shutil
-    import threading
-    from tkinter import filedialog, messagebox
+        folder = os.path.join(DATA_FILE_PATH, "text-temp")
+        try:
+            index -= 1
+            folder_t = os.path.join(folder, f'{filename}_{index}')
+            _update_text_widget(folder_t)
+        except FileNotFoundError:
+            messagebox.showerror("错误", message="已经是首页", parent=root)
+            index += 1  # 恢复index为下一页
+        except Exception as e:
+            messagebox.showerror("错误", message=f"读取文件出错: {str(e)}", parent=root)
 
-    import pystray
-    import windnd
-    from PIL import Image
-    from pystray import MenuItem, Menu
-    from ttkbootstrap.constants import *
+    def _update_text_widget(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            text_widget.delete('1.0', tk.END)
+            text_widget.insert(tk.END, file.read())
 
-    from function.variables.ProjectCapabilityVariables import font_set
-    from function.ProjectFunctions import load_theme
-    from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-    from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-    from window_module.GadgetWindow import GadgetWindow
-    from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-    from window_module.set_window.SetWindow import set_window
+    # noinspection DuplicatedCode
+    def sever():
+        w.grid_forget()
+        window = tk.Toplevel(root)
+        window.title("分离控制")
+        window.resizable(None, None)
+        window.iconbitmap(ICON_PATH)
+        window.minsize(400, 50)
+        window.maxsize(400, 50)
+        sever_window_b2 = ttk.Button(window, text="下一页", style="link", command=next_page)
+        sever_window_b2.pack(padx=5, pady=5, side='right')
+        sever_window_b3 = ttk.Button(window, text="上一页", style="link", command=return_page)
+        sever_window_b3.pack(padx=5, pady=5, side='right')
 
-    # 关闭预启动界面
-    splash.destroy()
+        def on2():
+            window.destroy()
+            w.grid(row=2, column=0, sticky=E)
+
+        b4 = ttk.Button(window, text="取消分离", style="link", command=on2)
+        b4.pack(padx=5, pady=5, side='left')
+        window.protocol("WM_DELETE_WINDOW", on2)
+        window.mainloop()
 
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(ICON_PATH)
@@ -457,32 +456,32 @@ if __name__ == '__main__':
                           yscrollcommand=scrollbar.set, font=FONT_STYLE)
     text_widget.grid(row=1, column=0, sticky="nsew")
     text_widget.tag_configure("found", background="yellow")
-    t=text_widget.get("1.0",tk.END)
+    t = text_widget.get("1.0", tk.END)
     text_widget.focus_set()
     w = ttk.Frame(root)
-    w.grid(row=2,column=0,sticky=E)
+    w.grid(row=2, column=0, sticky=E)
     b1 = ttk.Button(w, text="分离控制", style="link", command=sever)
-    b1.pack(padx=5,pady=5,side='left')
+    b1.pack(padx=5, pady=5, side='left')
     # noinspection DuplicatedCode
     b2 = ttk.Button(w, text="下一页", style="link", command=next_page)
-    b2.pack(padx=5,pady=5,side='right')
+    b2.pack(padx=5, pady=5, side='right')
     b3 = ttk.Button(w, text="上一页", style="link", command=return_page)
-    b3.pack(padx=5,pady=5, side='right')
+    b3.pack(padx=5, pady=5, side='right')
     window2 = None
-    windnd.hook_dropfiles(root,func=i)
+    windnd.hook_dropfiles(root, func=i)
     root.protocol('WM_DELETE_WINDOW', on_exit)
     threading.Thread(target=icon.run, daemon=True).start()
     root.bind("<Control-z> ", a)
     root.bind("<Control-y>", lambda event: b())
-    root.bind("<Shift_L>",lambda event: c())
-    root.bind("<Control-f> ", lambda event:toggle_window())
+    root.bind("<Shift_L>", lambda event: c())
+    root.bind("<Control-f> ", lambda event: toggle_window())
     scrollbar.config(command=text_widget.yview)
     root.grid_rowconfigure(1, weight=1)
     root.grid_columnconfigure(0, weight=1)
     index_ = 0
 
     action_map = {
-        1: lambda: (root.withdraw(), OldXiaoLiuRenWindow(root, icon, FONT_STYLE,0)),    }
+        1: lambda: (root.withdraw(), OldXiaoLiuRenWindow(root, icon, FONT_STYLE, 0)), }
 
     action_map.get(num_wv1 % 2, lambda: None)()
 
@@ -496,3 +495,67 @@ if __name__ == '__main__':
         messagebox.showerror("错误", f"发生错误: {error}")
 
     root.mainloop()
+
+if __name__ == '__main__':
+    import tkinter as tk
+    from PIL import Image, ImageTk
+    import threading
+    splash = tk.Tk()
+    splash.overrideredirect(True)
+    splash.attributes("-topmost", True)
+    splash.configure(bg="white")
+
+    screen_width = splash.winfo_screenwidth()
+    screen_height = splash.winfo_screenheight()
+    window_width = 810
+    window_height = 610
+    position_x = (screen_width - window_width) // 2
+    position_y = (screen_height - window_height) // 2
+    splash.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+
+    # 文本标签
+    f_ = tk.Frame(splash)
+    label = tk.Label(f_, text="LightweightNotepad——加载中", font=("宋体", 16), bg="white")
+    f_.pack(side="left", padx=20)
+    label.grid(column=0, row=0)
+
+    image_path = r"D:\LightweightNotepad\LightweightNotepad\icon\main_icon_no.png"
+    fade_steps = 20
+    animation_delay = 100  # 每步100毫秒
+    corner_radius = 45
+
+    # 创建动画对象
+    anim = FadeInAnimation(splash, image_path, fade_steps, animation_delay)
+
+
+
+    def load_modules_and_start():
+        global ctypes, os, shutil, ttk, filedialog, messagebox, pystray, windnd
+        global MenuItem, Menu, font_set, load_theme, t_divide_up, circular_num
+        global num_wv1, v, onandoff, A_PATH, DATA_FILE_PATH, ICON_PATH
+        global GadgetWindow, OldXiaoLiuRenWindow, set_window
+        import ctypes
+        import os
+        import shutil
+        import ttkbootstrap as ttk
+        from tkinter import filedialog, messagebox
+
+        import pystray
+        import windnd
+        from pystray import MenuItem, Menu
+
+        from function.variables.ProjectCapabilityVariables import font_set
+        from function.ProjectFunctions import load_theme
+        from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+        from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+        from window_module.GadgetWindow import GadgetWindow
+        from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+        from window_module.set_window.SetWindow import set_window
+
+        splash.destroy()
+        main()
+
+
+    threading.Thread(target=load_modules_and_start).start()
+
+    splash.mainloop()
