@@ -1,19 +1,16 @@
-from tkinter import END, X, E
-
-
 class FadeInAnimation:
-    def __init__(self, root, image_path, steps=20, delay=100):
-        self.root = root
-        self.image_path = image_path
+    def __init__(self, windows, image_path_png, steps=20, delay=100):
+        self.photo = None
+        self.root = windows
+        self.image_path = image_path_png
         self.steps = steps
         self.delay = delay
         self.alpha = 0  # 初始透明度
         self.increment = 255 // steps  # 计算每次增加的透明度步长
 
-        # 加载原始图像并创建一个圆角图像
-        self.original_image = Image.open(image_path).convert("RGBA")
-        self.rounded_image = self.original_image
-        self.image_label = tk.Label(root,bg="white",relief="flat")
+        # 加载原始图像并创建一个标签用于显示
+        self.original_image = Image.open(image_path_png).convert("RGBA")
+        self.image_label = tk.Label(windows,bg="white", relief="flat")
         self.image_label.pack(side="right", padx=20)
 
         # 开始淡入动画
@@ -21,7 +18,7 @@ class FadeInAnimation:
 
     def fade_in(self):
         # 创建带透明度的图像副本
-        faded_image = self.rounded_image.copy()
+        faded_image = self.original_image.copy()
         faded_image.putalpha(self.alpha)
         self.photo = ImageTk.PhotoImage(faded_image)
 
@@ -33,14 +30,40 @@ class FadeInAnimation:
             self.alpha = min(255, self.alpha + self.increment)
             # 继续下一次动画更新
             self.root.after(self.delay, self.fade_in)
+# noinspection PyUnresolvedReferences
+
+def import_modules():
+    global ctypes, os, shutil, ttk, filedialog, messagebox
+    global pystray, windnd, Image, MenuItem, Menu, font_set, load_theme
+    global t_divide_up, circular_num, num_wv1, v, onandoff
+    global A_PATH, DATA_FILE_PATH, ICON_PATH, GadgetWindow, OldXiaoLiuRenWindow, set_window
+
+    import ctypes
+    import os
+    import shutil
+    import ttkbootstrap as ttk
+    from tkinter import filedialog, messagebox
+
+    import pystray
+    import windnd
+    from PIL import Image
+    from pystray import MenuItem, Menu
+
+    from function.variables.ProjectCapabilityVariables import font_set
+    from function.ProjectFunctions import load_theme
+    from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+    from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+    from window_module.GadgetWindow import GadgetWindow
+    from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+    from window_module.set_window.SetWindow import set_window
+
+    # 模块导入完毕后关闭启动窗口
+    # noinspection PyTypeChecker
+    splash.after(0, continue_execution)
 
 
-
-#关于主界面###分割线
-
-
- # 在后台线程中执行动态导入
-def main():
+# noinspection PyPep8Naming
+def continue_execution():
 
     def quit_window():
         root.destroy()
@@ -92,13 +115,13 @@ def main():
 
         # noinspection PyPep8Naming
         def mySearch():
-            text_widget.tag_remove("found", "1.0", END)
+            text_widget.tag_remove("found", "1.0", tk.END)
             start = "1.0"
             key = entry.get()
             if len(key.strip()) == 0:
                 return
             while True:
-                pos = text_widget.search(key, start, END)
+                pos = text_widget.search(key, start, tk.END)
                 if pos == "":
                     break
                 text_widget.tag_add("found", pos, "%s+%dc" % (pos, len(key)))
@@ -275,7 +298,7 @@ def main():
             messagebox.showerror("错误", message="正在保存中，请勿退出", parent=window4)
 
         progressbarOne2 = ttk.Progressbar(window4, style="striped")
-        progressbarOne2.pack(pady=5, fill=X)
+        progressbarOne2.pack(pady=5, fill=tk.X)
         progressbarOne2['maximum'] = division
         progressbarOne2['value'] = 0
         window4.protocol("WM_DELETE_WINDOW", on2)
@@ -358,7 +381,7 @@ def main():
                 messagebox.showerror("错误", message="导入过程中，请勿退出", parent=window3)
 
             progressbarOne = ttk.Progressbar(window3, style="striped")
-            progressbarOne.pack(pady=5, fill=X)
+            progressbarOne.pack(pady=5, fill=tk.X)
             progressbarOne['maximum'] = division
             progressbarOne['value'] = 0
             window3.protocol("WM_DELETE_WINDOW", on2)
@@ -424,13 +447,14 @@ def main():
 
         def on2():
             window.destroy()
-            w.grid(row=2, column=0, sticky=E)
+            w.grid(row=2, column=0, sticky=tk.E)
 
         b4 = ttk.Button(window, text="取消分离", style="link", command=on2)
         b4.pack(padx=5, pady=5, side='left')
         window.protocol("WM_DELETE_WINDOW", on2)
         window.mainloop()
 
+    splash.destroy()
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(ICON_PATH)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)
@@ -459,7 +483,7 @@ def main():
     t = text_widget.get("1.0", tk.END)
     text_widget.focus_set()
     w = ttk.Frame(root)
-    w.grid(row=2, column=0, sticky=E)
+    w.grid(row=2, column=0, sticky=tk.E)
     b1 = ttk.Button(w, text="分离控制", style="link", command=sever)
     b1.pack(padx=5, pady=5, side='left')
     # noinspection DuplicatedCode
@@ -488,8 +512,8 @@ def main():
     try:
         if v % 2 == 1:
             text_widget.delete('1.0', tk.END)
-            with open(A_PATH, 'r', encoding='utf-8') as f_:
-                data = f_.read()
+            with open(A_PATH, 'r', encoding='utf-8') as f__:
+                data = f__.read()
                 text_widget.insert(tk.END, data)
     except Exception as error:
         messagebox.showerror("错误", f"发生错误: {error}")
@@ -497,9 +521,11 @@ def main():
     root.mainloop()
 
 if __name__ == '__main__':
-    import tkinter as tk
-    from PIL import Image, ImageTk
     import threading
+    import tkinter as tk
+    # noinspection PyUnresolvedReferences
+    from PIL import Image, ImageTk
+
     splash = tk.Tk()
     splash.overrideredirect(True)
     splash.attributes("-topmost", True)
@@ -507,55 +533,32 @@ if __name__ == '__main__':
 
     screen_width = splash.winfo_screenwidth()
     screen_height = splash.winfo_screenheight()
+
     window_width = 810
     window_height = 610
+
     position_x = (screen_width - window_width) // 2
     position_y = (screen_height - window_height) // 2
+
     splash.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
 
-    # 文本标签
-    f_ = tk.Frame(splash)
-    label = tk.Label(f_, text="LightweightNotepad——加载中", font=("宋体", 16), bg="white")
-    f_.pack(side="left", padx=20)
-    label.grid(column=0, row=0)
-
     image_path = r"D:\LightweightNotepad\LightweightNotepad\icon\main_icon_no.png"
+
     fade_steps = 20
-    animation_delay = 100  # 每步100毫秒
-    corner_radius = 45
+    animation_delay = 100
 
     # 创建动画对象
     anim = FadeInAnimation(splash, image_path, fade_steps, animation_delay)
 
 
+    f_ = tk.Frame(splash)
+    label = tk.Label(f_, text="LightweightNotepad——加载中", font=("宋体", 16), bg="white")
 
-    def load_modules_and_start():
-        global ctypes, os, shutil, ttk, filedialog, messagebox, pystray, windnd
-        global MenuItem, Menu, font_set, load_theme, t_divide_up, circular_num
-        global num_wv1, v, onandoff, A_PATH, DATA_FILE_PATH, ICON_PATH
-        global GadgetWindow, OldXiaoLiuRenWindow, set_window
-        import ctypes
-        import os
-        import shutil
-        import ttkbootstrap as ttk
-        from tkinter import filedialog, messagebox
+    f_.pack(side="left", padx=20)
+    label.grid(column=0, row=0)
 
-        import pystray
-        import windnd
-        from pystray import MenuItem, Menu
+    # 使用线程异步导入模块
+    threading.Thread(target=import_modules).start()
 
-        from function.variables.ProjectCapabilityVariables import font_set
-        from function.ProjectFunctions import load_theme
-        from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-        from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-        from window_module.GadgetWindow import GadgetWindow
-        from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-        from window_module.set_window.SetWindow import set_window
-
-        splash.destroy()
-        main()
-
-
-    threading.Thread(target=load_modules_and_start).start()
-
+    # 显示启动窗口
     splash.mainloop()
