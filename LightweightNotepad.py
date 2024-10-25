@@ -49,13 +49,13 @@ def import_modules():
     from PIL import Image
     from pystray import MenuItem, Menu
 
-    from function.variables.ProjectCapabilityVariables import font_set
-    from function.ProjectFunctions import load_theme
-    from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-    from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-    from window_module.GadgetWindow import GadgetWindow
-    from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-    from window_module.set_window.SetWindow import set_window
+    from LightweightNotepad.function.variables.ProjectCapabilityVariables import font_set
+    from LightweightNotepad.function.ProjectFunctions import load_theme
+    from LightweightNotepad.function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+    from LightweightNotepad.function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+    from LightweightNotepad.window_module.GadgetWindow import GadgetWindow
+    from LightweightNotepad.window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+    from LightweightNotepad.window_module.set_window.SetWindow import set_window
 
     # 模块导入完毕后关闭启动窗口
     # noinspection PyTypeChecker
@@ -455,6 +455,7 @@ def continue_execution():
         window.mainloop()
 
     splash.destroy()
+
     menu = (MenuItem('显示', show_window, default=True), Menu.SEPARATOR, MenuItem('退出', quit_window))
     image = Image.open(ICON_PATH)
     icon = pystray.Icon("icon", image, "轻量记事本", menu)
@@ -547,9 +548,7 @@ if __name__ == '__main__':
     fade_steps = 20
     animation_delay = 100
 
-    # 创建动画对象
     anim = FadeInAnimation(splash, image_path, fade_steps, animation_delay)
-
 
     f_ = tk.Frame(splash)
     label = tk.Label(f_, text="LightweightNotepad——加载中", font=("宋体", 16), bg="white")
@@ -557,8 +556,6 @@ if __name__ == '__main__':
     f_.pack(side="left", padx=20)
     label.grid(column=0, row=0)
 
-    # 使用线程异步导入模块
     threading.Thread(target=import_modules).start()
 
-    # 显示启动窗口
     splash.mainloop()

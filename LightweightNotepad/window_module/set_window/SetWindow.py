@@ -10,13 +10,12 @@ from variables.ProjectDictionaryVariables import UTC_TIME
 from function.ProjectFunctions import save, t_load, var_save, utc, window_init, window_closes, t_s, t_s_
 from variables.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4
 from variables.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
-    W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON
+    W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON, B_PATH
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 
 def set_window(root):
-    print(root)
     window = ttk.Toplevel(str(root))
     window_init(window,root,"轻量记事本-设置")
     window.resizable(None,None)
@@ -40,8 +39,9 @@ def set_window(root):
         # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal
         def change_theme(event):
             theme_cbo_value = theme_cbo.get()
+            with open(B_PATH, 'w', encoding='utf-8') as file:
+                file.write(theme_cbo_value)
             style.theme_use(theme_cbo_value)
-            theme_cbo.selection_clear()
 
         w_ = ttk.Frame(window)
         w_.grid(row=0,column=0,sticky=W)

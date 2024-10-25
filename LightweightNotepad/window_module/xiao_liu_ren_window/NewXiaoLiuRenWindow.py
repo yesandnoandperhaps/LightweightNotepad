@@ -117,7 +117,7 @@ class NewX:
                                                                                 down_dox_group_main)
                             .for_modify(f=0)
                             )
-            down_box_1.bind("<Button-3>", lambda event: self.wu_xing(window))
+            down_box_1.bind("<Button-3>", lambda event: self.wu_xing())
             down_dox_group_main.append(down_box_1)
 
             messagebox.showerror("错误", message=f"{XLR_WU_XING_JSON}", parent=window) if isinstance(XLR_WU_XING_JSON,
