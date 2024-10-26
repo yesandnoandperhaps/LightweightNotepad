@@ -3,10 +3,10 @@ import re
 
 from lunar_python import LunarMonth
 
-from function.time.GregorianCalendarLunar import GregorianCalendarToLunar
-from function.variables.ProjectDictionaryVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
+from LightweightNotepad.function.time.GregorianCalendarLunar import GregorianCalendarToLunar
+from LightweightNotepad.function.variables.ProjectDictionaryVariables import ZHI_DICT_NUM, TIAN_GAN_DICT, DI_ZHI_DICT, YUE_GAN_DICT, YUE_ZHI_DICT, \
     SHI_CHEN_DICT
-from function.variables.ProjectPathVariables import S_PATH, T_PATH
+from LightweightNotepad.function.variables.ProjectPathVariables import S_PATH, T_PATH
 
 
 # noinspection PyPep8Naming,PyUnboundLocalVariable,DuplicatedCode,SpellCheckingInspection

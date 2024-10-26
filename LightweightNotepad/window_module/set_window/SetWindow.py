@@ -3,13 +3,13 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from window_module.set_window.function.Transfer import Transfer
-from function.JsonFile import File
-from function.CustomToolTip import CustomToolTip as ToolTip
-from variables.ProjectDictionaryVariables import UTC_TIME
-from function.ProjectFunctions import save, t_load, var_save, utc, window_init, window_closes, t_s, t_s_
-from variables.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4
-from variables.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
+from LightweightNotepad.window_module.set_window.function.Transfer import Transfer
+from LightweightNotepad.function.JsonFile import File
+from LightweightNotepad.function.CustomToolTip import CustomToolTip as ToolTip
+from LightweightNotepad.function.variables.ProjectDictionaryVariables import UTC_TIME
+from LightweightNotepad.function.ProjectFunctions import save, t_load, var_save, utc, window_init, window_closes, t_s, t_s_
+from LightweightNotepad.function.variables.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4
+from LightweightNotepad.function.variables.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
     W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON, B_PATH
 
 

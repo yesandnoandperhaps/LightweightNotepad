@@ -6,12 +6,12 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from function.DownBoxModify import DownBoxModify
-from function.ProjectFunctions import window_init, window_closes
-from function.XiaoLiuRenNum import XiaoLiuRenNum
-from function.time.SolarTimeCalculator import SolarTimeCalculator
-from function.variables.ProjectPathVariables import XLR_JSON, XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
-from module.XiaoLiuRenDate import Calendar
+from LightweightNotepad.function.DownBoxModify import DownBoxModify
+from LightweightNotepad.function.ProjectFunctions import window_init, window_closes
+from LightweightNotepad.function.XiaoLiuRenNum import XiaoLiuRenNum
+from LightweightNotepad.function.time.SolarTimeCalculator import SolarTimeCalculator
+from LightweightNotepad.function.variables.ProjectPathVariables import XLR_JSON, XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
+from LightweightNotepad.module.XiaoLiuRenDate import Calendar
 
 
 class NewX:

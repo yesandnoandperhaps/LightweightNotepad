@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 class FadeInAnimation:
     def __init__(self, windows, image_path_png, steps=20, delay=100):
         self.photo = None
@@ -33,34 +36,41 @@ class FadeInAnimation:
 # noinspection PyUnresolvedReferences
 
 def import_modules():
-    global ctypes, os, shutil, ttk, filedialog, messagebox
-    global pystray, windnd, Image, MenuItem, Menu, font_set, load_theme
-    global t_divide_up, circular_num, num_wv1, v, onandoff
-    global A_PATH, DATA_FILE_PATH, ICON_PATH, GadgetWindow, OldXiaoLiuRenWindow, set_window
+    try:
+        global ctypes, os, shutil, ttk, filedialog, messagebox
+        global pystray, windnd, Image, MenuItem, Menu, font_set, load_theme
+        global t_divide_up, circular_num, num_wv1, v, onandoff
+        global A_PATH, DATA_FILE_PATH, ICON_PATH, GadgetWindow, OldXiaoLiuRenWindow, set_window
 
-    import ctypes
-    import os
-    import shutil
-    import ttkbootstrap as ttk
-    from tkinter import filedialog, messagebox
+        import ctypes
+        import os
+        import shutil
+        import ttkbootstrap as ttk
+        from tkinter import filedialog, messagebox
 
-    import pystray
-    import windnd
-    from PIL import Image
-    from pystray import MenuItem, Menu
+        import pystray
+        import windnd
+        from PIL import Image
+        from pystray import MenuItem, Menu
 
-    from LightweightNotepad.function.variables.ProjectCapabilityVariables import font_set
-    from LightweightNotepad.function.ProjectFunctions import load_theme
-    from LightweightNotepad.function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
-    from LightweightNotepad.function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
-    from LightweightNotepad.window_module.GadgetWindow import GadgetWindow
-    from LightweightNotepad.window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-    from LightweightNotepad.window_module.set_window.SetWindow import set_window
+        from LightweightNotepad.function.variables.ProjectCapabilityVariables import font_set
+        from LightweightNotepad.function.ProjectFunctions import load_theme
+        from LightweightNotepad.function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+        from LightweightNotepad.function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+        from LightweightNotepad.window_module.GadgetWindow import GadgetWindow
+        from LightweightNotepad.window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+        from LightweightNotepad.window_module.set_window.SetWindow import set_window
 
-    # 模块导入完毕后关闭启动窗口
-    # noinspection PyTypeChecker
-    splash.after(0, continue_execution)
+        # 模块导入完毕后关闭启动窗口
+        # noinspection PyTypeChecker
+        splash.after(0, continue_execution)
 
+    except Exception as e:
+        splash_ = tk.Tk()
+
+        tk.Label(splash_, text=str(e)).pack()
+
+        splash_.mainloop()
 
 # noinspection PyPep8Naming
 def continue_execution():

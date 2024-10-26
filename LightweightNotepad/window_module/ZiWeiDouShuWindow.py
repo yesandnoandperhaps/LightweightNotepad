@@ -6,9 +6,9 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from function.ProjectFunctions import t_load
-from function.variables.ProjectPathVariables import R_PATH, ICON_PATH
-from module.ZiWeiDouShu import ZiWeiDouShu
+from LightweightNotepad.function.ProjectFunctions import t_load
+from LightweightNotepad.function.variables.ProjectPathVariables import R_PATH, ICON_PATH
+from LightweightNotepad.module.ZiWeiDouShu import ZiWeiDouShu
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyUnusedLocal

@@ -1,4 +1,4 @@
-from variables.ProjectDictionaryVariables import ZHI_DICT_NUM
+from LightweightNotepad.function.variables.ProjectDictionaryVariables import ZHI_DICT_NUM
 
 
 class XiaoLiuRenNum:

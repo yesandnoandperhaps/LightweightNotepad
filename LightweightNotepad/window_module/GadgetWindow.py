@@ -1,11 +1,11 @@
 import ttkbootstrap as ttk
 from ttkbootstrap import OUTLINE
 
-from xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from window_module.PictureWindow import picture
-from variables.ProjectPathVariables import ICON_PATH
-from window_module.RegressionWindow import regression
-from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from LightweightNotepad.window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+from LightweightNotepad.window_module.PictureWindow import picture
+from LightweightNotepad.function.variables.ProjectPathVariables import ICON_PATH
+#from LightweightNotepad.window_module.RegressionWindow import regression
+from LightweightNotepad.window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 class GadgetWindow:
@@ -28,10 +28,10 @@ class GadgetWindow:
         b1.grid(column=0, row=0, padx=10, pady=10)
         b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, font_style))
         b2.grid(column=1, row=0, padx=10, pady=10)
-        b3 = ttk.Button(self.window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
-        b3.grid(column=2, row=0, padx=10, pady=10)
-        b4 = ttk.Button(self.window, text="三角形计算", style=OUTLINE, command=())
-        b4.grid(column=3, row=0, padx=10, pady=10)
+        #b3 = ttk.Button(self.window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
+        #b3.grid(column=2, row=0, padx=10, pady=10)
+        #b4 = ttk.Button(self.window, text="三角形计算", style=OUTLINE, command=())
+        #b4.grid(column=3, row=0, padx=10, pady=10)#
         b5 = ttk.Button(self.window, text="图片操作", style=OUTLINE, command=lambda: picture(root, icon))
         b5.grid(column=4, row=0, padx=10, pady=10)
 
