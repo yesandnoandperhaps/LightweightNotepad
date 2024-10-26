@@ -1,6 +1,6 @@
 import tkinter.font as tk_font
-from LightweightNotepad.function.ProjectFunctions import t_load
-from LightweightNotepad.function.variables.ProjectPathVariables import D_PATH, E_PATH, F_PATH
+from function.ProjectFunctions import t_load
+from function.variables.ProjectPathVariables import D_PATH, E_PATH, F_PATH
 
 
 # noinspection PyPep8Naming

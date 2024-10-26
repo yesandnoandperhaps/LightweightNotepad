@@ -1,11 +1,11 @@
 import ttkbootstrap as ttk
 from ttkbootstrap import OUTLINE
 
-from LightweightNotepad.window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
-from LightweightNotepad.window_module.PictureWindow import picture
-from LightweightNotepad.function.variables.ProjectPathVariables import ICON_PATH
-#from LightweightNotepad.window_module.RegressionWindow import regression
-from LightweightNotepad.window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
+from window_module.PictureWindow import picture
+from function.variables.ProjectPathVariables import ICON_PATH
+#from window_module.RegressionWindow import regression
+from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
 
 
 class GadgetWindow:

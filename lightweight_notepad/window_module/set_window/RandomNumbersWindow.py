@@ -4,9 +4,9 @@ from tkinter import messagebox
 
 import ttkbootstrap as ttk
 
-from LightweightNotepad.function import JsonFile
-from LightweightNotepad.function.ProjectFunctions import window_init, window_closes
-from LightweightNotepad.function.variables.ProjectPathVariables import XLR_DATA_PATH, XLR_JSON
+from function import JsonFile
+from function.ProjectFunctions import window_init, window_closes
+from function.variables.ProjectPathVariables import XLR_DATA_PATH, XLR_JSON
 
 
 class RandomNumbersWindow:

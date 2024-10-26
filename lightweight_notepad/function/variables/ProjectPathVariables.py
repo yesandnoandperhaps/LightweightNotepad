@@ -1,7 +1,7 @@
 import os
 
-from LightweightNotepad.function.JsonFile import File
-from LightweightNotepad.function.variables.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING
+from function.JsonFile import File
+from function.variables.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING
 
 p_ = os.path.dirname(__file__)
 PATH = os.path.abspath(os.path.join(p_, '..', '..'))

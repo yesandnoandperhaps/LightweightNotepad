@@ -1,4 +1,4 @@
-from LightweightNotepad.function import JsonFile
+from function import JsonFile
 class DownBoxModify:
     def __init__(self,json,json_path,down_dox_values_group,down_dox_group):
         self.json = json
