@@ -1460,7 +1460,6 @@ class OldXiaoLiuRenWindow:
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def on_close(self):
-        # 关闭窗口时，将实例设为 None
         OldXiaoLiuRenWindow._instance = None
         self.window.destroy()
 

@@ -10,8 +10,12 @@ from function.DownBoxModify import DownBoxModify
 from function.ProjectFunctions import window_init, window_closes
 from function.XiaoLiuRenNum import XiaoLiuRenNum
 from function.time.SolarTimeCalculator import SolarTimeCalculator
-from function.variables.ProjectPathVariables import XLR_JSON, XLR_WU_XING_JSON, XLR_DATA_WU_XING_PATH
+from function.variables.ProjectPathVariables import XLR_JSON, XLR_DATA_WU_XING_JI_LU_PATH, XLR_WU_XING_JI_LU_JSON, \
+    XLR_WU_XING_JSON
+from function.variables.ProjectDictionaryVariables import SI_XIANG_WU_XING, HOU_TIAN_WU_XING, DI_ZHI_DICT, ZHI_DICT_NUM, \
+    ZAO_WAN_DI_ZHI_DICT, WAN_ZAO_DI_ZHI_DICT
 from module.XiaoLiuRenDate import Calendar
+from set_window.RandomNumbersWindow import RandomNumbersWindow
 
 
 class NewX:
@@ -30,7 +34,15 @@ class NewX:
         self.shike = XLR_JSON[10]
         self.num_begin = XLR_JSON[11]
         self.num_end = XLR_JSON[12]
-        self.wu_xing_num = XLR_WU_XING_JSON[0]
+        self.num2_begin = XLR_JSON[13]
+        self.num2_end = XLR_JSON[14]
+        self.wu_xing_input = XLR_WU_XING_JSON[0]
+        self.wu_xing_take_num = XLR_WU_XING_JSON[1]
+        self.yin_yang = XLR_WU_XING_JSON[2]
+        self.yin_yang_take_num_compute = XLR_WU_XING_JSON[3]
+        self.yin_yang_take_num = XLR_WU_XING_JSON[4]
+        self.wu_xing_take_num_compute_t = XLR_WU_XING_JSON[5]
+        self.before_after_input = XLR_WU_XING_JSON[6]
         self.root_main = root_main
 
     def choose(self):
@@ -81,7 +93,7 @@ class NewX:
 
         print(f"NewX:function {self.function}")
 
-    def create_solar_time_window(self, title, judge_function,num):
+    def create_solar_time_window(self, title, judge_function,num,method=None,wu_time_list=None):
         window = ttk.Toplevel(self.root_main)
         window_init(window, self.root_main, title)
         window.resizable(False, False)
@@ -94,11 +106,11 @@ class NewX:
         entry0.focus_set()
 
         # 绑定 Shift 键事件
-        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num))
-        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num))
+        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
+        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
 
     def wu_xing_window(self):
-        if self.wu_xing_num == 0:
+        if self.wu_xing_input == 0:
             down_dox_values_group_main = []
             down_dox_group_main = []
 
@@ -111,21 +123,21 @@ class NewX:
 
             text0 = ttk.Label(window, text="所算事五行:")
             down_box_1 = ttk.Combobox(master=window, values=down_box_group_1, state="readonly")
-            down_box_1.bind("<<ComboboxSelected>>", lambda event: DownBoxModify(XLR_WU_XING_JSON,
-                                                                                XLR_DATA_WU_XING_PATH,
+            down_box_1.bind("<<ComboboxSelected>>", lambda event: DownBoxModify(XLR_WU_XING_JI_LU_JSON,
+                                                                                XLR_DATA_WU_XING_JI_LU_PATH,
                                                                                 down_dox_values_group_main,
                                                                                 down_dox_group_main)
-                            .for_modify(f=0)
+                            .for_modify()
                             )
-            down_box_1.bind("<Button-3>", lambda event: self.wu_xing())
+            down_box_1.bind("<Button-3>", lambda event: self.wu_xing(down_box_1.get(),window))
             down_dox_group_main.append(down_box_1)
 
-            messagebox.showerror("错误", message=f"{XLR_WU_XING_JSON}", parent=window) if isinstance(XLR_WU_XING_JSON,
+            messagebox.showerror("错误", message=f"{XLR_WU_XING_JI_LU_JSON}", parent=window) if isinstance(XLR_WU_XING_JI_LU_JSON,
                                                                                                      Exception) else DownBoxModify(
-                XLR_WU_XING_JSON,
-                XLR_DATA_WU_XING_PATH,
+                XLR_WU_XING_JI_LU_JSON,
+                XLR_DATA_WU_XING_JI_LU_PATH,
                 down_dox_values_group_main,
-                down_dox_group_main).for_set(0)
+                down_dox_group_main).for_set()
 
             text0.grid(column=0, row=0, padx=5, pady=5)
             down_box_1.grid(row=0, column=1, padx=10, pady=10)
@@ -144,7 +156,7 @@ class NewX:
     def time_qi_gua_(self, shi=None):
         p0 = self.time_qi_gua(shi)
         print(f"time_qi_gua_ results: p0={p0}")  # Debug print
-        self.result = XiaoLiuRenNum(p0[1], p0[2], p0[3],
+        self.result = XiaoLiuRenNum(p0[1], p0[2], p0[3][0],
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
     def time_qi_gua_2_(self, shi=None):
@@ -171,17 +183,27 @@ class NewX:
     def solar_judge(input_string):
         return bool(re.match(r"^-?\d+(\.\d+)?$", input_string))
 
-    def flat_solar_judge_t(self,input_string,window,num=0):
+    def flat_solar_judge_t(self,input_string,window,num=0,method=None,wu_time_list=None):
         tf = self.solar_judge(input_string)
         if tf:
             if num == 0:
                 a = SolarTimeCalculator(float(input_string)).flat_solar_time()
                 window_closes(window, self.root_main)
-                self.time_zone_(a)
+                if method is None:
+                    self.time_zone_(a)
+                else:
+                    print("f")
+                    wu_time_list.append(a)
+                    method(wu_time_list)
             else:
                 a = SolarTimeCalculator(float(input_string)).true_solar_time()
                 window_closes(window, self.root_main)
-                self.time_zone_(a)
+                if method is None:
+                    self.time_zone_(a)
+                else:
+                    print("f_")
+                    wu_time_list.append(a)
+                    method(wu_time_list)
         else:
             messagebox.showerror("错误", message="请按以下格式输入：\n例1：\n经度：116.39\n例2：\n经度：-77.00941797699967", parent=window)
 
@@ -199,6 +221,82 @@ class NewX:
         self.result = XiaoLiuRenNum(new_num1, new_num2, new_num3,
                                     self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
 
-    def wu_xing(self):
-        pass
 
+    def wu_xing(self,wu,window):
+        window_closes(window, self.root_main)
+        wu_time_list = [wu]
+        print(self.time)
+        if self.time == 0:
+            p0 = self.time_qi_gua()
+            wu_time_list.append(p0[3][0])
+            self.wu_xing_(wu_time_list)
+
+        elif self.time == 1:
+            self.create_solar_time_window(title="平太阳时", judge_function=self.flat_solar_judge_t,
+                                          num=0,method=self.wu_xing_,
+                                          wu_time_list=wu_time_list)
+        elif self.time == 2:
+            self.create_solar_time_window(title="真太阳时", judge_function=self.flat_solar_judge_t,
+                                          num=1,method=self.wu_xing_,
+                                          wu_time_list=wu_time_list)
+
+    # noinspection PyUnboundLocalVariable
+    def wu_xing_(self,wu_time_list):
+        print(wu_time_list)
+        if self.wu_xing_take_num == 0:
+            p0 = HOU_TIAN_WU_XING[wu_time_list[0]]
+            s0 = wu_time_list[1] if isinstance(wu_time_list[1], str) else self.time_qi_gua(wu_time_list[1])
+
+            if isinstance(s0, str):
+                dz_index = ZHI_DICT_NUM[s0[0]]
+            else:
+                dz_index = ZHI_DICT_NUM[s0[3][0]]
+
+            d0 = DI_ZHI_DICT[dz_index]
+            l0 = ZAO_WAN_DI_ZHI_DICT[dz_index]
+            j0 = WAN_ZAO_DI_ZHI_DICT[dz_index]
+
+            if self.yin_yang == 0:
+                p_time = NewX.find(d0,self.yin_yang_take_num_compute,self.yin_yang_take_num,p0)
+            elif self.yin_yang == 1:
+                p_time = NewX.find(l0,self.yin_yang_take_num_compute,self.yin_yang_take_num,p0)
+            elif self.yin_yang == 2:
+                p_time = NewX.find(j0,self.yin_yang_take_num_compute,self.yin_yang_take_num,p0)
+            elif self.yin_yang == 3:
+                pass
+
+            if self.wu_xing_take_num_compute_t == 0:
+                num1,num2,num3 = RandomNumbersWindow.generate_numbers_small_p(p_time)
+                self.result = XiaoLiuRenNum(month=num1, day=num2, hour=num3,
+                                            shuzhi=self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+            else:
+                if self.before_after_input == 0:
+                    num1,num2,num3 = RandomNumbersWindow(self.root_main,13,14,p_time).event0(1)
+                    self.result = XiaoLiuRenNum(month=num1,day=num2,hour=num3,
+                                                shuzhi=self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+                elif self.before_after_input == 1:
+                    num1,num2,num3 = RandomNumbersWindow.generate_numbers(self.num2_begin, self.num2_end,p_time)
+                    self.result = XiaoLiuRenNum(month=num1, day=num2, hour=num3,
+                                                shuzhi=self.shuzhi, method=self.suanfa).xiao_liu_ren_num()
+        elif self.wu_xing_take_num == 1:
+            pass
+        elif self.wu_xing_take_num == 2:
+            pass
+
+    @staticmethod
+    def find(look, compute, take, p0):
+        p_time = None
+        if compute == 0:
+            if look[1] == "阳":
+                if take == 0:
+                    p_time = p0[0]
+                elif take == 1:
+                    p_time = p0[1]
+            elif look[1] == "阴":
+                if take == 0:
+                    p_time = p0[1]
+                elif take == 1:
+                    p_time = p0[0]
+        else:
+            p_time = p0[0] + p0[1]
+        return p_time

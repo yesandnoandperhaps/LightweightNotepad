@@ -45,7 +45,6 @@ def set_window(root):
 
         w_ = ttk.Frame(window)
         w_.grid(row=0,column=0,sticky=W)
-
         lbl = ttk.Label(w_, text="选择主题:")
         lbl.grid(column=0,row=0,padx=10,pady=10,ipadx=5)
 
@@ -559,6 +558,20 @@ def set_window(root):
 
 
     w_root4()
+
+
+    window.update_idletasks()
+
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    window_width = window.winfo_width()
+    window_height = window.winfo_height()
+
+    position_x = (screen_width - window_width) // 2
+    position_y = (screen_height - window_height) // 2
+
+    window.geometry(f"+{position_x}+{position_y+80}")
 
     window.grid_rowconfigure(1, weight=1)
     window.grid_columnconfigure(0, weight=1)

@@ -15,6 +15,9 @@ class XiaoLiuRenNum:
         elif isinstance(hour, int):
             self.hour = hour
             print(f"XiaoLiuRenNum: hour is int, using hour={self.hour}")
+        elif isinstance(hour, float):
+            self.hour = hour
+            print(f"XiaoLiuRenNum: hour is float, using hour={self.hour}")
 
         self.method = method
         self.shuzhi = shuzhi
