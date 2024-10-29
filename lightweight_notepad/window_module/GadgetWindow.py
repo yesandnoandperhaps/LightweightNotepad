@@ -5,7 +5,7 @@ from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenW
 from window_module.PictureWindow import picture
 from function.variables.ProjectPathVariables import ICON_PATH
 #from window_module.RegressionWindow import regression
-from window_module.ZiWeiDouShuWindow import zi_wei_dou_shu_window
+from window_module.ZiWeiDouShuWindow import ZiWeiDouShuWindow
 
 
 class GadgetWindow:
@@ -26,7 +26,7 @@ class GadgetWindow:
 
         b1 = ttk.Button(self.window, text="小六壬", style=OUTLINE, command=lambda: OldXiaoLiuRenWindow(root, icon, font_style,0))
         b1.grid(column=0, row=0, padx=10, pady=10)
-        b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: zi_wei_dou_shu_window(root, font_style))
+        b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: ZiWeiDouShuWindow(root, font_style))
         b2.grid(column=1, row=0, padx=10, pady=10)
         #b3 = ttk.Button(self.window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
         #b3.grid(column=2, row=0, padx=10, pady=10)

@@ -15,7 +15,7 @@ from function.variables.ProjectPathVariables import XLR_JSON, XLR_DATA_WU_XING_J
 from function.variables.ProjectDictionaryVariables import SI_XIANG_WU_XING, HOU_TIAN_WU_XING, DI_ZHI_DICT, ZHI_DICT_NUM, \
     ZAO_WAN_DI_ZHI_DICT, WAN_ZAO_DI_ZHI_DICT
 from module.XiaoLiuRenDate import Calendar
-from set_window.RandomNumbersWindow import RandomNumbersWindow
+from window_module.set_window.RandomNumbersWindow import RandomNumbersWindow
 
 
 class NewX:
