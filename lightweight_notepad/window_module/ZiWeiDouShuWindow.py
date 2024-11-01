@@ -25,6 +25,33 @@ class GridLabelText:
         self.positions[(row, column,frame_window)] = name
         print(f"{name} 被放置在位置 ({row}, {column},{frame_window})") 
 
+    @staticmethod
+    def get_window(label_text):
+        return label_text.nametowidget(label_text.winfo_parent())
+    
+    @staticmethod
+    def get_no_name(class_name,name_window,name_list_label,font_style,num0,num1):
+        for window, text in zip(name_window, name_list_label):
+            label = ttk.Label(window, text=text, font=font_style)
+            class_name.grid_label_text(text, label, num0, num1,GridLabelText.get_window(label))
+
+    @staticmethod
+    def accumulate_vector(initial_vector, increment=10, times=11, reverse_result=False):
+        result = []
+        vector = initial_vector[:]
+        
+        for _ in range(times):
+            vector = [x + increment for x in vector]
+            result.append(f"{vector[0]}-{vector[1]}")
+        
+        # 根据参数选择是否翻转结果
+        if reverse_result:
+            result.reverse()
+        
+        return [f"{initial_vector[0]}-{initial_vector[1]}"] + result
+
+
+
 class ZiWeiDouShuWindow:
     def __init__(self,root_main,font_style):
         t = str(t_load(R_PATH) or "横排样式")
@@ -136,7 +163,7 @@ class ZiWeiDouShuWindow:
         ,yueGan,yueGanwuXing,yueGanyinYang\
             ,self.yueZhi,yueZhiwuXing,yueZhiyinYang,yueZhishengXiao\
             ,self.shiChen,shiChenwuXing,shiChenyinYang,shiChenshengXiao\
-                ,self.Ming,self.Shen,wuXingju,self.ziWei\
+                ,self.Ming,self.Shen,self.wuXingju,self.ziWei\
                     ,JD,NOONJD,MJD\
                         ,riGan,riGanwuXing,ruGanyinYang\
                             ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
@@ -151,10 +178,10 @@ class ZiWeiDouShuWindow:
 
                 self.group_w13\
                      = "天干地支：{}\n干支五行：{}\n干支阴阳：{}\n干支生肖：{}\n儒略日【傍晚】：{}\n儒略日【正午】：{}\n简化儒略日：{}\n五行局：{}\n{}\n"\
-                    .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,wuXingju,self.male_or_female)
+                    .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,self.wuXingju,self.male_or_female)
                 
                 self.zi_wei_dou_shu()
-    
+
     def zi_wei_dou_shu(self):
         self.window_z = ttk.Toplevel()
         self.window_z.title("轻量记事本-小工具-紫微斗数-三合派")
@@ -185,15 +212,11 @@ class ZiWeiDouShuWindow:
         self.w12.grid(row=1,column=3,padx=10,pady=10)
         self.w13 = ttk.Frame(self.window_z)
         self.w13.grid(row=1,column=1,rowspan=1,columnspan=1,padx=10,pady=10)
+        class_grid = GridLabelText()
 
         # 定义窗口列表
         windows = [self.w, self.w2, self.w3, self.w4, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w13]
         texts = ["巳", "午", "未", "申", "辰", "卯", "寅", "丑", "子", "亥", "戌", "酉", self.group_w13]
-
-        # 遍历每个窗口和对应的文字
-        for i, (win, text) in enumerate(zip(windows, texts)):
-            label = ttk.Label(win, text=text, font=self.font_style)
-            label.grid(row=10, column=0)
 
         god_labels = [
             ("命宫", 10, 1),
@@ -242,9 +265,59 @@ class ZiWeiDouShuWindow:
             "申":positions[self.Ming][4],"酉":positions[self.Ming][3],"戌":positions[self.Ming][2],"亥":positions[self.Ming][1]
         }
 
+        命主_map = {
+            self.w9:"子",
+            self.w8:"丑",
+            self.w7:"寅",
+            self.w6:"卯",
+            self.w5:"辰",
+            self.w:"巳",
+            self.w2:"午",
+            self.w3:"未",
+            self.w4:"申",
+            self.w12:"酉",
+            self.w11:"戌",
+            self.w10:"亥"
+        }
+
+        命主_dict = {
+            "子":"贪狼",
+            "丑":"巨门",
+            "寅":"禄存",
+            "卯":"文曲",
+            "辰":"廉贞",
+            "巳":"武曲",
+            "午":"破军",
+            "未":"武曲",
+            "申":"廉贞",
+            "酉":"文曲",
+            "戌":"禄存",
+            "亥":"巨门"
+        }
+
+        身主_dict = {
+            "子":"火星",
+            "丑":"天相",
+            "寅":"天梁",
+            "卯":"天同",
+            "辰":"文昌",
+            "巳":"天机",
+            "午":"火星",
+            "未":"天相",
+            "申":"天梁",
+            "酉":"天同",
+            "戌":"文昌",
+            "亥":"天机"
+        }
+
         Shen_ = ttk.Label(shen_map[self.Shen], text="身宫", font=self.font_style,foreground="#cb0008")
-        Shen_.grid(row=9, column=1)
-        天才 =  ttk.Label(天才_map[self.nianZhi],text="天才",font=self.font_style)
+        class_grid.grid_label_text("身宫", Shen_, 9, 2,GridLabelText.get_window(Shen_))
+        天才 = ttk.Label(天才_map[self.nianZhi],text="天才",font=self.font_style)
+        天伤 = ttk.Label(positions[self.Ming][7],text="天伤",font=self.font_style)
+        天使 = ttk.Label(positions[self.Ming][5],text="天使",font=self.font_style)
+        命主 = 命主_dict[命主_map[positions[self.Ming][0]]]
+        身主 = 身主_dict[self.nianZhi]
+        self.group_w13 += f"命主：{命主}\n身主：{身主}" 
 
         
         windows = [self.w7,
@@ -277,7 +350,7 @@ class ZiWeiDouShuWindow:
 
         for i, text in enumerate(texts):
             label = ttk.Label(windows[i], text=text, font=self.font_style)
-            label.grid(row=9,column=0)
+            class_grid.grid_label_text(text, label, 9, 0,GridLabelText.get_window(label))
 
         match self.ziWei:
             case "子":
@@ -3010,27 +3083,193 @@ class ZiWeiDouShuWindow:
         天寿 = ttk.Label(w_value,text="天寿",font=self.font_style)
 
         支系 ={
-            "子":[self.w, self.w8, self.w, self.w4, self.w11, self.w7, self.w12, self.w6, self.w11, self.w5, self.w2, self.w2, self.w11, self.w7],
-            "丑":[self.w2, self.w7, self.w8, self.w12, self.w11, self.w7, self.w4, self.w7, self.w12, self.w, self.w3, self.w, self.w12, self.w10],
-            "寅":[self.w3, self.w6, self.w12, self.w11, self.w8, self.w, self.w3, self.w8, self.w4, self.w2, self.w4, self.w5, self.w4, self.w4],
-            "卯":[self.w4, self.w5, self.w, self.w, self.w8, self.w, self.w2, self.w9, self.w3, self.w3, self.w12, self.w6, self.w3, self.w],
-            "辰":[self.w12, self.w, self.w8, self.w2, self.w8, self.w, self.w, self.w10, self.w2, self.w4, self.w11, self.w7, self.w2, self.w7],
-            "巳":[self.w11, self.w2, self.w12, self.w3, self.w5, self.w4, self.w5, self.w11, self.w, self.w12, self.w10, self.w8, self.w, self.w10],
-            "午":[self.w10, self.w3, self.w, self.w7, self.w5, self.w4, self.w6, self.w12, self.w5, self.w11, self.w9, self.w9, self.w5, self.w4],
-            "未":[self.w9, self.w4, self.w8, self.w6, self.w5, self.w4, self.w7, self.w4, self.w6, self.w10, self.w8, self.w10, self.w6, self.w],
-            "申":[self.w8, self.w12, self.w12, self.w5, self.w3, self.w10, self.w8, self.w3, self.w7, self.w9, self.w7, self.w11, self.w7, self.w7],
-            "酉":[self.w7, self.w11, self.w, self.w10, self.w3, self.w10, self.w9, self.w2, self.w8, self.w8, self.w6, self.w12, self.w8, self.w10],
-            "戌":[self.w6, self.w10, self.w8, self.w9, self.w3, self.w10, self.w10, self.w, self.w9, self.w7, self.w5, self.w4, self.w9, self.w4],
-            "亥":[self.w5, self.w9, self.w12, self.w8, self.w11, self.w7, self.w11, self.w5, self.w10, self.w6, self.w, self.w3, self.w10, self.w]
+            "子":list(reversed([self.w, self.w8, self.w, self.w4, self.w11, self.w7, self.w12, self.w6, self.w11, self.w5, self.w2, self.w2, self.w11, self.w7])),
+            "丑":list(reversed([self.w2, self.w7, self.w8, self.w12, self.w11, self.w7, self.w4, self.w7, self.w12, self.w, self.w3, self.w, self.w12, self.w10])),
+            "寅":list(reversed([self.w3, self.w6, self.w12, self.w11, self.w8, self.w, self.w3, self.w8, self.w4, self.w2, self.w4, self.w5, self.w4, self.w4])),
+            "卯":list(reversed([self.w4, self.w5, self.w, self.w, self.w8, self.w, self.w2, self.w9, self.w3, self.w3, self.w12, self.w6, self.w3, self.w])),
+            "辰":list(reversed([self.w12, self.w, self.w8, self.w2, self.w8, self.w, self.w, self.w10, self.w2, self.w4, self.w11, self.w7, self.w2, self.w7])),
+            "巳":list(reversed([self.w11, self.w2, self.w12, self.w3, self.w5, self.w4, self.w5, self.w11, self.w, self.w12, self.w10, self.w8, self.w, self.w10])),
+            "午":list(reversed([self.w10, self.w3, self.w, self.w7, self.w5, self.w4, self.w6, self.w12, self.w5, self.w11, self.w9, self.w9, self.w5, self.w4])),
+            "未":list(reversed([self.w9, self.w4, self.w8, self.w6, self.w5, self.w4, self.w7, self.w4, self.w6, self.w10, self.w8, self.w10, self.w6, self.w])),
+            "申":list(reversed([self.w8, self.w12, self.w12, self.w5, self.w3, self.w10, self.w8, self.w3, self.w7, self.w9, self.w7, self.w11, self.w7, self.w7])),
+            "酉":list(reversed([self.w7, self.w11, self.w, self.w10, self.w3, self.w10, self.w9, self.w2, self.w8, self.w8, self.w6, self.w12, self.w8, self.w10])),
+            "戌":list(reversed([self.w6, self.w10, self.w8, self.w9, self.w3, self.w10, self.w10, self.w, self.w9, self.w7, self.w5, self.w4, self.w9, self.w4])),
+            "亥":list(reversed([self.w5, self.w9, self.w12, self.w8, self.w11, self.w7, self.w11, self.w5, self.w10, self.w6, self.w, self.w3, self.w10, self.w]))
         }
+
+        长生十二 = {
+            "水二局":{
+                "阴女":[self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3],
+                "阳女":[self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12]
+            },
+            "木三局":{
+                "阴女":[self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w11],
+                "阳女":[self.w10, self.w11, self.w12, self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7, self.w8, self.w9]
+            },
+            "金四局":{
+                "阴女":[self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5],
+                "阳女":[self.w, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w4, self.w3, self.w2]
+            },
+            "土五局":{
+                "阴女":[self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3],
+                "阳女":[self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12]
+            },
+            "火六局":{
+                "阴女":[self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8],
+                "阳女":[self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w4, self.w3, self.w2, self.w, self.w5, self.w6]
+            }
+        }
+
+        截空 = {
+            "甲":[self.w4, self.w12],
+            "己":[self.w12, self.w4],
+            "乙":[self.w3, self.w2],
+            "庚":[self.w2, self.w3],
+            "丙":[self.w5, self.w],
+            "辛":[self.w, self.w5],
+            "丁":[self.w7, self.w6],
+            "壬":[self.w6, self.w7],
+            "戊":[self.w9, self.w8],
+            "癸":[self.w8, self.w9]
+        }
+        
+        旬空 = {
+            "甲":{
+                "子":[self.w11, self.w10],
+                "戌":[self.w4, self.w12],
+                "申":[self.w2, self.w3],
+                "午":[self.w5, self.w],
+                "辰":[self.w7, self.w6],
+                "寅":[self.w9, self.w8]
+            },
+            "乙":{
+                "丑":[self.w11, self.w10],
+                "亥":[self.w4, self.w12],
+                "酉":[self.w2, self.w3],
+                "未":[self.w5, self.w],
+                "巳":[self.w7, self.w6],
+                "卯":[self.w9, self.w8]
+            },
+            "丙":{
+                "寅":[self.w11, self.w10],
+                "子":[self.w4, self.w12],
+                "戌":[self.w2, self.w3],
+                "申":[self.w5, self.w],
+                "午":[self.w7, self.w6],
+                "辰":[self.w9, self.w8]
+            },
+            "丁":{
+                "卯":[self.w11, self.w10],
+                "丑":[self.w4, self.w12],
+                "亥":[self.w2, self.w3],
+                "酉":[self.w5, self.w],
+                "未":[self.w7, self.w6],
+                "巳":[self.w9, self.w8]
+            },
+            "戊":{
+                "辰":[self.w11, self.w10],
+                "寅":[self.w4, self.w12],
+                "子":[self.w2, self.w3],
+                "戌":[self.w5, self.w],
+                "申":[self.w7, self.w6],
+                "午":[self.w9, self.w8]
+            },
+            "己":{
+                "巳":[self.w11, self.w10],
+                "卯":[self.w4, self.w12],
+                "丑":[self.w2, self.w3],
+                "亥":[self.w5, self.w],
+                "酉":[self.w7, self.w6],
+                "未":[self.w9, self.w8]
+            },
+            "庚":{
+                "午":[self.w11, self.w10],
+                "辰":[self.w4, self.w12],
+                "寅":[self.w2, self.w3],
+                "子":[self.w5, self.w],
+                "戌":[self.w7, self.w6],
+                "申":[self.w9, self.w8]
+            },
+            "辛":{
+                "未":[self.w11, self.w10],
+                "巳":[self.w4, self.w12],
+                "卯":[self.w2, self.w3],
+                "丑":[self.w5, self.w],
+                "亥":[self.w7, self.w6],
+                "酉":[self.w9, self.w8]
+            },
+            "壬":{
+                "申":[self.w11, self.w10],
+                "午":[self.w4, self.w12],
+                "辰":[self.w2, self.w3],
+                "寅":[self.w5, self.w],
+                "子":[self.w7, self.w6],
+                "戌":[self.w9, self.w8]
+            },
+            "癸":{
+                "酉":[self.w11, self.w10],
+                "未":[self.w4, self.w12],
+                "巳":[self.w2, self.w3],
+                "卯":[self.w5, self.w],
+                "丑":[self.w7, self.w6],
+                "亥":[self.w9, self.w8]
+            }
+        }
+        
+        大限 = {
+            "水二局":{
+                "阴女":GridLabelText.accumulate_vector(initial_vector=[2,11], reverse_result=True),
+                "阳女":GridLabelText.accumulate_vector(initial_vector=[2,11], reverse_result=False)
+            },
+            "木三局":{
+                "阴女":GridLabelText.accumulate_vector(initial_vector=[3,12], reverse_result=True),
+                "阳女":GridLabelText.accumulate_vector(initial_vector=[3,12], reverse_result=False)
+            },
+            "金四局":{
+                "阴女":GridLabelText.accumulate_vector(initial_vector=[4,13], reverse_result=True),
+                "阳女":GridLabelText.accumulate_vector(initial_vector=[4,13], reverse_result=False)
+            },
+            "土五局":{
+                "阴女":GridLabelText.accumulate_vector(initial_vector=[5,14], reverse_result=True),
+                "阳女":GridLabelText.accumulate_vector(initial_vector=[5,14], reverse_result=False)
+            },
+            "火六局":{
+                "阴女":GridLabelText.accumulate_vector(initial_vector=[6,15], reverse_result=True),
+                "阳女":GridLabelText.accumulate_vector(initial_vector=[6,15], reverse_result=False)
+            }
+        }
+        
+        小限 = {
+            "寅":{
+                "男":["辰","巳","午","未"]
+            }
+        }
+
+        if self.male_or_female == "阳男":
+            male_or_female = "阴女"
+        elif self.male_or_female == "阴男":
+            male_or_female = "阳女"
 
         支系_window = 支系[self.nianZhi]
 
         支系_list_label = ["天马", "解神", "天哭", "天虚", "龙池", "凤阁", "红鸾", "天喜", "孤辰", "寡宿", "蜚廉", "破碎", "天空", "月德"]
 
+        长生十二_window = 长生十二[self.wuXingju][male_or_female]
+        长生十二_list_label = ["长生","沐浴","冠带","临官","帝旺","衰","病","死","墓","绝","胎","养"]
 
-        def get_window(label_text):
-            return label_text.nametowidget(label_text.winfo_parent())
+        截空_window = 截空[self.nianGan]
+        截空_list_label = ["正截空","副截空"]
+
+        旬空_window = 旬空[self.nianGan][self.nianZhi]
+        旬空_list_label = ["正旬空","副旬空"]
+
+        大限_window = [
+            positions[self.Ming][0],positions[self.Ming][11],positions[self.Ming][10],positions[self.Ming][9],
+            positions[self.Ming][8],positions[self.Ming][7],positions[self.Ming][6],positions[self.Ming][5],
+            positions[self.Ming][4],positions[self.Ming][3],positions[self.Ming][2],positions[self.Ming][1]
+            ]
+
+        大限_list_label = 大限[self.wuXingju][male_or_female]
 
         # 控件名称与变量名映射
         controls = {
@@ -3045,13 +3284,15 @@ class ZiWeiDouShuWindow:
             "天姚":tianyao,"天巫": tianwu,
             "天月": tianyue, "阴煞": tiansha, "三台":santai,
             "八座":bazuo, "恩光":enguang,"天贵":tiangui,
-            "天寿":天寿,"天官":天官,"天福":天福,"天厨":天厨,"天才":天才
+            "天寿":天寿,"天官":天官,"天福":天福,"天厨":天厨,"天才":天才,"天使":天使,"天伤":天伤
         }
 
         # 生成包含控件父窗口的字典
-        window_frame = {name: get_window(widget) for name, widget in controls.items()}
+        window_frame = {name: GridLabelText.get_window(widget) for name, widget in controls.items()}
 
-        class_grid = GridLabelText()
+        for i, (win, text) in enumerate(zip(windows, texts)):
+            label = ttk.Label(win, text=text, font=self.font_style)
+            label.grid(row=10, column=0)
 
         class_grid.grid_label_text("紫微", ziWei_, 8, 1, window_frame["紫微"])
         class_grid.grid_label_text("天机", tianJi, 8, 1, window_frame["天机"])
@@ -3099,12 +3340,17 @@ class ZiWeiDouShuWindow:
         class_grid.grid_label_text("恩光", enguang, 7, 1, window_frame["恩光"])
         class_grid.grid_label_text("天贵", tiangui, 7, 1, window_frame["天贵"])
 
-        for window, text in zip(支系_window, 支系_list_label):
-            支系_label = ttk.Label(window, text=text, font=self.font_style)
-            class_grid.grid_label_text(text, 支系_label, 7, 1,get_window(支系_label))
+        GridLabelText.get_no_name(class_grid,支系_window, 支系_list_label,self.font_style,7,1)
+        GridLabelText.get_no_name(class_grid,长生十二_window, 长生十二_list_label,self.font_style,9,1)
+        GridLabelText.get_no_name(class_grid,截空_window, 截空_list_label,self.font_style,7,1)
+        GridLabelText.get_no_name(class_grid,旬空_window, 旬空_list_label,self.font_style,7,1)
 
         class_grid.grid_label_text("天才", 天才, 7, 1, window_frame["天才"])
         class_grid.grid_label_text("天寿", 天寿, 7, 1, window_frame["天寿"])
+        class_grid.grid_label_text("天伤", 天伤, 7, 1, window_frame["天伤"])
+        class_grid.grid_label_text("天使", 天使, 7, 1, window_frame["天使"])
+
+        GridLabelText.get_no_name(class_grid,大限_window, 大限_list_label,self.font_style,12,0)
 
         self.window_z.grid_rowconfigure(1, weight=1)
         self.window_z.grid_columnconfigure(1, weight=1)
