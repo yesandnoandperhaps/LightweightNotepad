@@ -11,6 +11,20 @@ from function.variables.ProjectPathVariables import R_PATH, ICON_PATH
 from function.variables.ProjectDictionaryVariables import ZHI_DICT_NUM
 from module.ZiWeiDouShu import ZiWeiDouShu
 
+class GridLabelText:
+    def __init__(self):
+        self.positions = {}
+    
+
+    def grid_label_text(self, name, label_text,row, column,frame_window):
+        while (row, column,frame_window) in self.positions:
+            print(f"位置 ({row}, {column},{frame_window}) 已被 {self.positions[(row, column,frame_window)]} 占用，尝试下一个位置.")
+            column += 1
+
+        label_text.grid(row=row, column=column)
+        self.positions[(row, column,frame_window)] = name
+        print(f"{name} 被放置在位置 ({row}, {column},{frame_window})") 
+
 class ZiWeiDouShuWindow:
     def __init__(self,root_main,font_style):
         t = str(t_load(R_PATH) or "横排样式")
@@ -139,14 +153,9 @@ class ZiWeiDouShuWindow:
                      = "天干地支：{}\n干支五行：{}\n干支阴阳：{}\n干支生肖：{}\n儒略日【傍晚】：{}\n儒略日【正午】：{}\n简化儒略日：{}\n五行局：{}\n{}\n"\
                     .format(ganZhi,wuXing,yinYang,shengXiao,JD,NOONJD,MJD,wuXingju,self.male_or_female)
                 
-                self.z_t()
-                self.Heavenly()
-                self.twelve_god()
-                self.person()
-                self.confirm_ziWei_and_ziWei_five()
-                self.confirm_zi_wei_time_and_month_and_day_group() 
+                self.zi_wei_dou_shu()
     
-    def z_t(self):
+    def zi_wei_dou_shu(self):
         self.window_z = ttk.Toplevel()
         self.window_z.title("轻量记事本-小工具-紫微斗数-三合派")
         self.window_z.iconbitmap(ICON_PATH)
@@ -177,7 +186,6 @@ class ZiWeiDouShuWindow:
         self.w13 = ttk.Frame(self.window_z)
         self.w13.grid(row=1,column=1,rowspan=1,columnspan=1,padx=10,pady=10)
 
-    def Heavenly(self):
         # 定义窗口列表
         windows = [self.w, self.w2, self.w3, self.w4, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w13]
         texts = ["巳", "午", "未", "申", "辰", "卯", "寅", "丑", "子", "亥", "戌", "酉", self.group_w13]
@@ -187,7 +195,6 @@ class ZiWeiDouShuWindow:
             label = ttk.Label(win, text=text, font=self.font_style)
             label.grid(row=10, column=0)
 
-    def twelve_god(self):
         god_labels = [
             ("命宫", 10, 1),
             ("兄弟", 10, 1),
@@ -229,11 +236,17 @@ class ZiWeiDouShuWindow:
             "申": self.w4, "酉": self.w12, "戌": self.w11, "亥": self.w10
         }
 
-        if self.Shen in shen_map:
-            Shen_ = ttk.Label(shen_map[self.Shen], text="身宫", font=self.font_style,foreground="#cb0008")
-            Shen_.grid(row=9, column=1)
+        天才_map = {
+            "子":positions[self.Ming][0],"丑":positions[self.Ming][11],"寅":positions[self.Ming][10],"卯":positions[self.Ming][9],
+            "辰":positions[self.Ming][8],"巳":positions[self.Ming][7],"午":positions[self.Ming][6],"未":positions[self.Ming][5],
+            "申":positions[self.Ming][4],"酉":positions[self.Ming][3],"戌":positions[self.Ming][2],"亥":positions[self.Ming][1]
+        }
 
-    def person(self):
+        Shen_ = ttk.Label(shen_map[self.Shen], text="身宫", font=self.font_style,foreground="#cb0008")
+        Shen_.grid(row=9, column=1)
+        天才 =  ttk.Label(天才_map[self.nianZhi],text="天才",font=self.font_style)
+
+        
         windows = [self.w7,
                    self.w6,
                    self.w5,
@@ -266,7 +279,6 @@ class ZiWeiDouShuWindow:
             label = ttk.Label(windows[i], text=text, font=self.font_style)
             label.grid(row=9,column=0)
 
-    def confirm_ziWei_and_ziWei_five(self):
         match self.ziWei:
             case "子":
                 ziWei_ = ttk.Label(self.w9, text="紫微", font=self.font_style)
@@ -279,7 +291,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w2, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w3, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w4, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w4, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w12, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w11, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w7, text="破军", font=self.font_style)
@@ -422,7 +434,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w5, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w2, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w3, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w3, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w4, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w12, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w8, text="破军", font=self.font_style)
@@ -562,7 +574,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w6, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w5, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w2, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w2, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w3, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w4, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w9, text="破军", font=self.font_style)
@@ -702,7 +714,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w7, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w6, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w5, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w2, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w3, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w10, text="破军", font=self.font_style)
@@ -842,7 +854,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w8, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w7, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w6, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w5, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w5, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w2, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w11, text="破军", font=self.font_style)
@@ -982,7 +994,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w9, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w8, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w7, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w6, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w6, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w5, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w12, text="破军", font=self.font_style)
@@ -1122,7 +1134,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w10, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w9, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w8, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w7, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w7, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w6, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w5, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w4, text="破军", font=self.font_style)
@@ -1262,7 +1274,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w11, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w10, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w9, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w8, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w8, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w7, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w6, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w3, text="破军", font=self.font_style)
@@ -1402,7 +1414,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w12, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w11, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w10, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w9, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w9, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w8, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w7, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w2, text="破军", font=self.font_style)
@@ -1542,7 +1554,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w4, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w12, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w11, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w10, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w10, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w9, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w8, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w, text="破军", font=self.font_style)
@@ -1682,7 +1694,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w3, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w4, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w12, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w11, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w11, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w10, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w9, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w5, text="破军", font=self.font_style)
@@ -1822,7 +1834,7 @@ class ZiWeiDouShuWindow:
                 taiYin = ttk.Label(self.w2, text="太阴", font=self.font_style)
                 tanLang = ttk.Label(self.w3, text="贪狼", font=self.font_style)
                 juMen = ttk.Label(self.w4, text="巨门", font=self.font_style)
-                taiXiang = ttk.Label(self.w12, text="天相", font=self.font_style)
+                天相 = ttk.Label(self.w12, text="天相", font=self.font_style)
                 tianLiang = ttk.Label(self.w11, text="天梁", font=self.font_style)
                 qiSha = ttk.Label(self.w10, text="七杀", font=self.font_style)
                 poJun = ttk.Label(self.w6, text="破军", font=self.font_style)
@@ -2216,83 +2228,30 @@ class ZiWeiDouShuWindow:
                         病符 = ttk.Label(self.w5, text="病符", font=self.font_style)
                         大耗 = ttk.Label(self.w6, text="大耗", font=self.font_style)
                         伏兵 = ttk.Label(self.w7, text="伏兵", font=self.font_style)
-                        官府 = ttk.Label(self.w8, text="官府", font=self.font_style)
+                        官府 = ttk.Label(self.w8, text="官府", font=self.font_style)        
 
+        博士.grid(row=11,column=0)
+        力士.grid(row=11,column=0)
+        青龙.grid(row=11,column=0)
+        小耗.grid(row=11,column=0)
+        将军.grid(row=11,column=0)
+        奏书.grid(row=11,column=0)
+        飞廉.grid(row=11,column=0)
+        喜神.grid(row=11,column=0)
+        病符.grid(row=11,column=0)
+        大耗.grid(row=11,column=0)
+        伏兵.grid(row=11,column=0)
+        官府.grid(row=11,column=0)
 
-
-
-        def grid_deploy():
-            ziWei_.grid(row=8,column=0)
-            tianJi.grid(row=8,column=0)
-            taiYang.grid(row=8,column=0)
-            wuQu.grid(row=8,column=0)
-            tianTong.grid(row=8,column=0)
-            lianZhen.grid(row=8,column=0)
-            tianFu.grid(row=8,column=1)
-            taiYin.grid(row=8,column=1)
-            tanLang.grid(row=8,column=1)
-            juMen.grid(row=8,column=1)
-            taiXiang.grid(row=8,column=1)
-            tianLiang.grid(row=8,column=1)
-            qiSha.grid(row=8,column=1)
-            poJun.grid(row=8,column=1)
-            禄存.grid(row=8,column=10)
-            擎羊.grid(row=8,column=11)
-            陀罗.grid(row=8,column=12)
-            天魁.grid(row=8,column=13)
-            天钺.grid(row=8,column=14)
-
-            天官.grid(row=7,column=13)
-            天福.grid(row=7,column=14)
-            天厨.grid(row=7,column=15)
-
-            博士.grid(row=11,column=0)
-            力士.grid(row=11,column=0)
-            青龙.grid(row=11,column=0)
-            小耗.grid(row=11,column=0)
-            将军.grid(row=11,column=0)
-            奏书.grid(row=11,column=0)
-            飞廉.grid(row=11,column=0)
-            喜神.grid(row=11,column=0)
-            病符.grid(row=11,column=0)
-            大耗.grid(row=11,column=0)
-            伏兵.grid(row=11,column=0)
-            官府.grid(row=11,column=0)
-
-
-
-        grid_deploy()
-
-    def confirm_zi_wei_time_and_month_and_day_group(self):
         Shen_num = ZHI_DICT_NUM[self.Shen]
         nianZhi_num = ZHI_DICT_NUM[self.nianZhi]
         Ming_num = ZHI_DICT_NUM[self.Ming]
         天寿_num = (Shen_num-1+nianZhi_num)%12#宫位
-        print("天寿",天寿_num)
         window_w =[self.w9,self.w8,self.w7,self.w6,self.w5,self.w,self.w2,self.w3,self.w4,self.w12,self.w11,self.w10]
         w_value = window_w[天寿_num]
+
         match self.nianZhi:
             case "戌"|"午"|"寅":
-                match self.nianZhi:
-                    case "戌":
-                        天马 = ttk.Label(self.w4, text="天马", font=self.font_style)
-                        解神 = ttk.Label(self.w8, text="解神", font=self.font_style)
-                        天哭 = ttk.Label(self.w4, text="天哭", font=self.font_style)
-                        天虚 = ttk.Label(self.w5, text="天虚", font=self.font_style)
-                        龙池 = ttk.Label(self.w7, text="龙池", font=self.font_style)
-                        凤阁 = ttk.Label(self.w9, text="凤阁", font=self.font_style)
-                        红鸾 = ttk.Label(self.w, text="红鸾", font=self.font_style)
-                        天喜 = ttk.Label(self.w10, text="天喜", font=self.font_style)
-                        孤辰 = ttk.Label(self.w10, text="孤辰", font=self.font_style)
-                        寡宿 = ttk.Label(self.w3, text="寡宿", font=self.font_style)
-                        蜚廉 = ttk.Label(self.w9, text="蜚廉", font=self.font_style)
-                        破碎 = ttk.Label(self.w8, text="破碎", font=self.font_style)
-                        天空 = ttk.Label(self.w10, text="天空", font=self.font_style)
-                        月德 = ttk.Label(self.w6, text="月德", font=self.font_style)
-                    case "午":
-                        pass
-                    case "寅":
-                        pass
                 match self.shiChen:
                     case "子":
                         wenChang = ttk.Label(self.w11, text="文昌", font=self.font_style)
@@ -2732,6 +2691,7 @@ class ZiWeiDouShuWindow:
                         dikong = ttk.Label(self.w9, text="地空", font=self.font_style)
                         taiFu = ttk.Label(self.w, text="台辅", font=self.font_style)
                         fengGao = ttk.Label(self.w8, text="封诰", font=self.font_style)
+
         match self.yueZhi:
             case "寅":
                 zuofu_num = 5
@@ -3028,136 +2988,126 @@ class ZiWeiDouShuWindow:
         wenchang_num = ((wenchang_num - 1 - self.day)%12 + 1)%12
         wenqu_num = ((wenqu_num - 1 - self.day) % 12 + 1)%12
 
-        match zuofu_num:
-            case 1:
-                santai = ttk.Label(self.w9, text="三台", font=self.font_style)
-            case 2:
-                santai = ttk.Label(self.w8, text="三台", font=self.font_style)
-            case 3:
-                santai = ttk.Label(self.w7, text="三台", font=self.font_style)
-            case 4:
-                santai = ttk.Label(self.w6, text="三台", font=self.font_style)
-            case 5:
-                santai = ttk.Label(self.w5, text="三台", font=self.font_style)
-            case 6:
-                santai = ttk.Label(self.w, text="三台", font=self.font_style)
-            case 7:
-                santai = ttk.Label(self.w2, text="三台", font=self.font_style)
-            case 8:
-                santai = ttk.Label(self.w3, text="三台", font=self.font_style)
-            case 9:
-                santai = ttk.Label(self.w4, text="三台", font=self.font_style)
-            case 10:
-                santai = ttk.Label(self.w12, text="三台", font=self.font_style)
-            case 11:
-                santai = ttk.Label(self.w11, text="三台", font=self.font_style)
-            case 0:
-                santai = ttk.Label(self.w10, text="三台", font=self.font_style)
+        dic_windows = {
+            1: self.w9,
+            2: self.w8,
+            3: self.w7,
+            4: self.w6,
+            5: self.w5,
+            6: self.w,
+            7: self.w2,
+            8: self.w3,
+            9: self.w4,
+            10: self.w12,
+            11: self.w11,
+            0: self.w10
+        }
 
-        match youbi_num:
-            case 1:
-                bazuo = ttk.Label(self.w9, text="八座", font=self.font_style)
-            case 2:
-                bazuo = ttk.Label(self.w8, text="八座", font=self.font_style)
-            case 3:
-                bazuo = ttk.Label(self.w7, text="八座", font=self.font_style)
-            case 4:
-                bazuo = ttk.Label(self.w6, text="八座", font=self.font_style)
-            case 5:
-                bazuo = ttk.Label(self.w5, text="八座", font=self.font_style)
-            case 6:
-                bazuo = ttk.Label(self.w, text="八座", font=self.font_style)
-            case 7:
-                bazuo = ttk.Label(self.w2, text="八座", font=self.font_style)
-            case 8:
-                bazuo = ttk.Label(self.w3, text="八座", font=self.font_style)
-            case 9:
-                bazuo = ttk.Label(self.w4, text="八座", font=self.font_style)
-            case 10:
-                bazuo = ttk.Label(self.w12, text="八座", font=self.font_style)
-            case 11:
-                bazuo = ttk.Label(self.w11, text="八座", font=self.font_style)
-            case 0:
-                bazuo = ttk.Label(self.w10, text="八座", font=self.font_style)
+        santai = ttk.Label(dic_windows[zuofu_num], text="三台", font=self.font_style)
+        bazuo  = ttk.Label(dic_windows[youbi_num], text="八座", font=self.font_style)
+        enguang = ttk.Label(dic_windows[wenchang_num], text="恩光", font=self.font_style)
+        tiangui = ttk.Label(dic_windows[wenqu_num], text="天贵", font=self.font_style)
+        天寿 = ttk.Label(w_value,text="天寿",font=self.font_style)
 
-        match wenchang_num:
-            case 1:
-                enguang = ttk.Label(self.w9, text="恩光", font=self.font_style)
-            case 2:
-                enguang = ttk.Label(self.w8, text="恩光", font=self.font_style)
-            case 3:
-                enguang = ttk.Label(self.w7, text="恩光", font=self.font_style)
-            case 4:
-                enguang = ttk.Label(self.w6, text="恩光", font=self.font_style)
-            case 5:
-                enguang = ttk.Label(self.w5, text="恩光", font=self.font_style)
-            case 6:
-                enguang = ttk.Label(self.w, text="恩光", font=self.font_style)
-            case 7:
-                enguang = ttk.Label(self.w2, text="恩光", font=self.font_style)
-            case 8:
-                enguang = ttk.Label(self.w3, text="恩光", font=self.font_style)
-            case 9:
-                enguang = ttk.Label(self.w4, text="恩光", font=self.font_style)
-            case 10:
-                enguang = ttk.Label(self.w12, text="恩光", font=self.font_style)
-            case 11:
-                enguang = ttk.Label(self.w11, text="恩光", font=self.font_style)
-            case 0:
-                enguang = ttk.Label(self.w10, text="恩光", font=self.font_style)
+        支系 ={
+            "子":[self.w, self.w8, self.w, self.w4, self.w11, self.w7, self.w12, self.w6, self.w11, self.w5, self.w2, self.w2, self.w11, self.w7],
+            "丑":[self.w2, self.w7, self.w8, self.w12, self.w11, self.w7, self.w4, self.w7, self.w12, self.w, self.w3, self.w, self.w12, self.w10],
+            "寅":[self.w3, self.w6, self.w12, self.w11, self.w8, self.w, self.w3, self.w8, self.w4, self.w2, self.w4, self.w5, self.w4, self.w4],
+            "卯":[self.w4, self.w5, self.w, self.w, self.w8, self.w, self.w2, self.w9, self.w3, self.w3, self.w12, self.w6, self.w3, self.w],
+            "辰":[self.w12, self.w, self.w8, self.w2, self.w8, self.w, self.w, self.w10, self.w2, self.w4, self.w11, self.w7, self.w2, self.w7],
+            "巳":[self.w11, self.w2, self.w12, self.w3, self.w5, self.w4, self.w5, self.w11, self.w, self.w12, self.w10, self.w8, self.w, self.w10],
+            "午":[self.w10, self.w3, self.w, self.w7, self.w5, self.w4, self.w6, self.w12, self.w5, self.w11, self.w9, self.w9, self.w5, self.w4],
+            "未":[self.w9, self.w4, self.w8, self.w6, self.w5, self.w4, self.w7, self.w4, self.w6, self.w10, self.w8, self.w10, self.w6, self.w],
+            "申":[self.w8, self.w12, self.w12, self.w5, self.w3, self.w10, self.w8, self.w3, self.w7, self.w9, self.w7, self.w11, self.w7, self.w7],
+            "酉":[self.w7, self.w11, self.w, self.w10, self.w3, self.w10, self.w9, self.w2, self.w8, self.w8, self.w6, self.w12, self.w8, self.w10],
+            "戌":[self.w6, self.w10, self.w8, self.w9, self.w3, self.w10, self.w10, self.w, self.w9, self.w7, self.w5, self.w4, self.w9, self.w4],
+            "亥":[self.w5, self.w9, self.w12, self.w8, self.w11, self.w7, self.w11, self.w5, self.w10, self.w6, self.w, self.w3, self.w10, self.w]
+        }
 
-        match wenqu_num:
-            case 1:
-                tiangui = ttk.Label(self.w9, text="天贵", font=self.font_style)
-            case 2:
-                tiangui = ttk.Label(self.w8, text="天贵", font=self.font_style)
-            case 3:
-                tiangui = ttk.Label(self.w7, text="天贵", font=self.font_style)
-            case 4:
-                tiangui = ttk.Label(self.w6, text="天贵", font=self.font_style)
-            case 5:
-                tiangui = ttk.Label(self.w5, text="天贵", font=self.font_style)
-            case 6:
-                tiangui = ttk.Label(self.w, text="天贵", font=self.font_style)
-            case 7:
-                tiangui = ttk.Label(self.w2, text="天贵", font=self.font_style)
-            case 8:
-                tiangui = ttk.Label(self.w3, text="天贵", font=self.font_style)
-            case 9:
-                tiangui = ttk.Label(self.w4, text="天贵", font=self.font_style)
-            case 10:
-                tiangui = ttk.Label(self.w12, text="天贵", font=self.font_style)
-            case 11:
-                tiangui = ttk.Label(self.w11, text="天贵", font=self.font_style)
-            case 0:
-                tiangui = ttk.Label(self.w10, text="天贵", font=self.font_style)
+        支系_window = 支系[self.nianZhi]
+
+        支系_list_label = ["天马", "解神", "天哭", "天虚", "龙池", "凤阁", "红鸾", "天喜", "孤辰", "寡宿", "蜚廉", "破碎", "天空", "月德"]
 
 
+        def get_window(label_text):
+            return label_text.nametowidget(label_text.winfo_parent())
 
+        # 控件名称与变量名映射
+        controls = {
+            "禄存": 禄存, "擎羊": 擎羊, "陀罗": 陀罗, "天魁": 天魁, "天钺": 天钺,
+            "文昌": wenChang, "文曲": wenQu, "火星": huoXing, "铃星": lingXing,
+            "左辅": zuofu, "右弼": youbi, "紫微": ziWei_, "天机": tianJi, "太阳": taiYang,
+            "武曲": wuQu, "天同": tianTong, "廉贞": lianZhen, "天府": tianFu,
+            "太阴": taiYin, "贪狼": tanLang, "巨门": juMen, "天相": 天相,
+            "天梁": tianLiang, "七杀": qiSha, "破军": poJun,
+            "地劫": diJie, "地空": dikong,
+            "台辅": taiFu, "封诰": fengGao, "天刑": tianxing,
+            "天姚":tianyao,"天巫": tianwu,
+            "天月": tianyue, "阴煞": tiansha, "三台":santai,
+            "八座":bazuo, "恩光":enguang,"天贵":tiangui,
+            "天寿":天寿,"天官":天官,"天福":天福,"天厨":天厨,"天才":天才
+        }
 
-        def grid_deploy():
-            wenChang.grid(row=8,column=2)
-            wenQu.grid(row=8,column=3)
-            huoXing.grid(row=8,column=4)
-            lingXing.grid(row=8,column=5)
-            zuofu.grid(row=8,column=6)
-            youbi.grid(row=8,column=7)
+        # 生成包含控件父窗口的字典
+        window_frame = {name: get_window(widget) for name, widget in controls.items()}
 
-            diJie.grid(row=7,column=0)
-            dikong.grid(row=7,column=1)
-            taiFu.grid(row=7,column=2)
-            fengGao.grid(row=7,column=3)
-            tianxing.grid(row=7,column=4)
-            tianyao.grid(row=7,column=5)
-            tianwu.grid(row=7,column=6)
-            tianyue.grid(row=7,column=7)
-            tiansha.grid(row=7,column=8)
-            santai.grid(row=7,column=9)
-            bazuo.grid(row=7,column=10)
-            enguang.grid(row=7,column=11)
-            tiangui.grid(row=7,column=12)
+        class_grid = GridLabelText()
 
-        grid_deploy()
+        class_grid.grid_label_text("紫微", ziWei_, 8, 1, window_frame["紫微"])
+        class_grid.grid_label_text("天机", tianJi, 8, 1, window_frame["天机"])
+        class_grid.grid_label_text("太阳", taiYang, 8, 1, window_frame["太阳"])
+        class_grid.grid_label_text("武曲", wuQu, 8, 1, window_frame["武曲"])
+        class_grid.grid_label_text("天同", tianTong, 8, 1, window_frame["天同"])
+        class_grid.grid_label_text("廉贞", lianZhen, 8, 1, window_frame["廉贞"])
+        class_grid.grid_label_text("天府", tianFu, 8, 1, window_frame["天府"])
+        class_grid.grid_label_text("太阴", taiYin, 8, 1, window_frame["太阴"])
+        class_grid.grid_label_text("贪狼", tanLang, 8, 1, window_frame["贪狼"])
+        class_grid.grid_label_text("巨门", juMen, 8, 1, window_frame["巨门"])
+        class_grid.grid_label_text("天相", 天相, 8, 1, window_frame["天相"])
+        class_grid.grid_label_text("天梁", tianLiang, 8, 1, window_frame["天梁"])
+        class_grid.grid_label_text("七杀", qiSha, 8, 1, window_frame["七杀"])
+        class_grid.grid_label_text("破军", poJun, 8, 1, window_frame["破军"])
+
+        class_grid.grid_label_text("文昌", wenChang, 8, 1, window_frame["文昌"])
+        class_grid.grid_label_text("文曲", wenQu, 8, 1, window_frame["文曲"])
+        class_grid.grid_label_text("火星", huoXing, 8, 1, window_frame["火星"])
+        class_grid.grid_label_text("铃星", lingXing, 8, 1, window_frame["铃星"])
+        class_grid.grid_label_text("左辅", zuofu, 8, 1, window_frame["左辅"])
+        class_grid.grid_label_text("右弼", youbi, 8, 1, window_frame["右弼"])
+        
+        class_grid.grid_label_text("禄存", 禄存, 8, 1, window_frame["禄存"])
+        class_grid.grid_label_text("擎羊", 擎羊, 8, 1, window_frame["擎羊"])
+        class_grid.grid_label_text("陀罗", 陀罗, 8, 1, window_frame["陀罗"])
+        class_grid.grid_label_text("天魁", 天魁, 8, 1, window_frame["天魁"])
+        class_grid.grid_label_text("天钺", 天钺, 8, 1, window_frame["天钺"])
+
+        class_grid.grid_label_text("天官", 天官, 7, 1, window_frame["天官"])
+        class_grid.grid_label_text("天福", 天福, 7, 1, window_frame["天福"])
+        class_grid.grid_label_text("天厨", 天厨, 7, 1, window_frame["天厨"])
+
+        class_grid.grid_label_text("地劫", diJie, 7, 1, window_frame["地劫"])
+        class_grid.grid_label_text("地空", dikong, 7, 1, window_frame["地空"])
+        class_grid.grid_label_text("台辅", taiFu, 7, 1, window_frame["台辅"])
+        class_grid.grid_label_text("封诰", fengGao, 7, 1, window_frame["封诰"])
+        class_grid.grid_label_text("天刑", tianxing, 7, 1, window_frame["天刑"])
+        class_grid.grid_label_text("天姚", tianyao, 7, 1, window_frame["天姚"])
+        class_grid.grid_label_text("天巫", tianwu, 7, 1, window_frame["天巫"])
+        class_grid.grid_label_text("天月", tianyue, 7, 1, window_frame["天月"])
+        class_grid.grid_label_text("阴煞", tiansha, 7, 1, window_frame["阴煞"])
+        class_grid.grid_label_text("三台", santai, 7, 1, window_frame["三台"])
+        class_grid.grid_label_text("八座", bazuo, 7, 1, window_frame["八座"])
+        class_grid.grid_label_text("恩光", enguang, 7, 1, window_frame["恩光"])
+        class_grid.grid_label_text("天贵", tiangui, 7, 1, window_frame["天贵"])
+
+        for window, text in zip(支系_window, 支系_list_label):
+            支系_label = ttk.Label(window, text=text, font=self.font_style)
+            class_grid.grid_label_text(text, 支系_label, 7, 1,get_window(支系_label))
+
+        class_grid.grid_label_text("天才", 天才, 7, 1, window_frame["天才"])
+        class_grid.grid_label_text("天寿", 天寿, 7, 1, window_frame["天寿"])
+
+        self.window_z.grid_rowconfigure(1, weight=1)
+        self.window_z.grid_columnconfigure(1, weight=1)
 
     '''
         [ self.w  巳 ][ self.w2 午 ][ self.w3 未 ][ self.w4 申 ]

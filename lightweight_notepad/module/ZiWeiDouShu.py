@@ -99,7 +99,7 @@ class ZiWeiDouShu:
                     case "子":
                         yueGan = "丙"
                     case "丑":
-                        yueGan = "子"
+                        yueGan = "丁"
             case "乙" | "庚":
                 match yueZhi:
                     case "寅":
