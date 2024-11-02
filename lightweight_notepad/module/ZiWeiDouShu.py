@@ -576,7 +576,7 @@ class ZiWeiDouShu:
                                 ,riGan,riGanwuXing,ruGanyinYang\
                                     ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
                                     ,shiGan,shiGanwuXing,shiGanyinYang\
-                                    ,Lunar_day
+                                    ,Lunar_day,Lunar_month
             
 
 '''

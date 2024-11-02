@@ -488,6 +488,7 @@ root = tk.Tk()
 root.title("轻量记事本")
 root.iconbitmap(ICON_PATH)
 FONT_STYLE, v2, v3, v4 = font_set()
+print(FONT_STYLE)
 style = ttk.Style()
 current_theme = load_theme()
 if current_theme in style.theme_names():

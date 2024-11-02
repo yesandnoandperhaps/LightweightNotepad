@@ -7,6 +7,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 
 from function.ProjectFunctions import t_load
+from function.variables.ProjectCapabilityVariables import font_set
 from function.variables.ProjectPathVariables import R_PATH, ICON_PATH
 from function.variables.ProjectDictionaryVariables import ZHI_DICT_NUM
 from module.ZiWeiDouShu import ZiWeiDouShu
@@ -14,26 +15,54 @@ from module.ZiWeiDouShu import ZiWeiDouShu
 class GridLabelText:
     def __init__(self):
         self.positions = {}
-    
 
-    def grid_label_text(self, name, label_text,row, column,frame_window):
+    def grid_label_text(self, name, label_text,row, column,frame_window,columnspan=False,朝旺利陷=False):
         while (row, column,frame_window) in self.positions:
-            print(f"位置 ({row}, {column},{frame_window}) 已被 {self.positions[(row, column,frame_window)]} 占用，尝试下一个位置.")
+            print(f"位置 ({row}, {column},{frame_window}) 已被 {self.positions[(row, column,frame_window)]} 占用,尝试下一个位置.")
             column += 1
 
-        label_text.grid(row=row, column=column)
+        if not columnspan:
+            label_text_get = label_text.cget("text")
+            label_text_get_new = GridLabelText.extract_before_brackets(label_text_get)
+            label_bool = GridLabelText.extract_within_brackets(label_text_get)
+            if label_bool:
+                label_text_get_new_new = GridLabelText.get_nested_value_or_default(朝旺利陷,frame_window,label_text_get_new,label_text_get_new)
+                label_text.config(text=label_text_get_new_new+label_bool)
+                if label_text_get_new_new == label_text_get:
+                    print(f"{name}未改变")
+                else:
+                    print(f"{name}改变为{label_text_get_new+label_bool}")
+            else:
+                label_text_get_new = GridLabelText.get_nested_value_or_default(朝旺利陷,frame_window,label_text_get,label_text_get)
+                label_text.config(text=label_text_get_new)
+                if label_text_get_new == label_text_get:
+                    print(f"{name}未改变")
+                else:
+                    print(f"{name}改变为{label_text_get_new}")
+            label_text.grid(row=row, column=column)
+        else:
+            label_text.grid(row=row, column=column,columnspan=columnspan)
         self.positions[(row, column,frame_window)] = name
         print(f"{name} 被放置在位置 ({row}, {column},{frame_window})") 
 
     @staticmethod
+    def get_nested_value_or_default(dictionary, outer_key, inner_key, default):
+        return dictionary.get(outer_key, {}).get(inner_key, default)
+
+    @staticmethod
     def get_window(label_text):
         return label_text.nametowidget(label_text.winfo_parent())
-    
+
     @staticmethod
-    def get_no_name(class_name,name_window,name_list_label,font_style,num0,num1):
+    def get_no_name(class_name, name_window, name_list_label, font_style, num0, num1, num2=False, text_=False, 朝旺利陷=False):
         for window, text in zip(name_window, name_list_label):
-            label = ttk.Label(window, text=text, font=font_style)
-            class_name.grid_label_text(text, label, num0, num1,GridLabelText.get_window(label))
+            label_text = text_ + text if text_ else text
+            label = ttk.Label(window, text=label_text, font=font_style)
+
+            if num2:
+                class_name.grid_label_text(text, label, num0, num1, GridLabelText.get_window(label), num2,朝旺利陷)
+            else:
+                class_name.grid_label_text(text, label, num0, num1, GridLabelText.get_window(label),朝旺利陷=朝旺利陷)
 
     @staticmethod
     def accumulate_vector(initial_vector, increment=10, times=11, reverse_result=False):
@@ -49,6 +78,54 @@ class GridLabelText:
             result.reverse()
         
         return [f"{initial_vector[0]}-{initial_vector[1]}"] + result
+    
+    @staticmethod
+    def get_row(matrix, row_index):
+        return matrix[row_index]
+
+    @staticmethod
+    def get_column(matrix, col_index):
+        return [row[col_index] for row in matrix]
+    
+    @staticmethod
+    def list_srt(col):
+        return', '.join(map(str, col))
+    
+    @staticmethod
+    def get_all_labels_text(frame):
+        labels_text = {}
+        for widget in frame.winfo_children():
+            if isinstance(widget, tk.Label):
+                labels_text[widget.winfo_name()] = widget.cget('text')
+        return labels_text
+
+    @staticmethod
+    def display_labels_text(frame):
+        labels_text = GridLabelText.get_all_labels_text(frame)
+        print("labels_text:",labels_text)
+        for name, text in labels_text.items():
+            print(f"Label Name: {name}, Text: {text}")
+
+    @staticmethod
+    def extract_within_brackets(input_str):
+        start_index = input_str.find("【")
+        end_index = input_str.find("】") + 1
+
+        if start_index != -1 and end_index > start_index:
+            return input_str[start_index:end_index]
+        else:
+            return False
+        
+    @staticmethod
+    def extract_before_brackets(input_str):
+        start_index = input_str.find("【")
+        
+        if start_index != -1:
+            return input_str[:start_index]
+        else:
+            return False
+
+
 
 
 
@@ -139,7 +216,7 @@ class ZiWeiDouShuWindow:
         r_ = re.sub(r'\D+',"",gain_entry2)
         r__ = re.sub(r'\D+',"",gain_entry3)
         r___ = re.sub(r'\D+',"",gain_entry4)
-        r____ = re.sub(r'^(?!男$|女$|其它$).+$',"",gain_combobox)
+        self.r____ = re.sub(r'^(?!男$|女$|其它$).+$',"",gain_combobox)
         if gain_entry1 and (r != gain_entry1):
             messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
         elif gain_entry2 and (r_ != gain_entry2):
@@ -148,9 +225,9 @@ class ZiWeiDouShuWindow:
             messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
         elif gain_entry4 and (r___ != gain_entry4):
             messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
-        elif gain_combobox and (r____ != gain_combobox):
+        elif gain_combobox and (self.r____ != gain_combobox):
             messagebox.showerror("错误", message="请按以下格式输入：\n例：\n年：2024或公元前2024\n月：4\n日：1\n时：1\n性别：其它\n注：以正月初一为起", parent=window)
-        elif not (r and r_ and r__ and r___ and r____):
+        elif not (r and r_ and r__ and r___ and self.r____):
             messagebox.showerror("错误", message="并未输入值", parent=window)
         else:
             datetime.datetime(int(re.sub(r'\D+',"",r)), int(r_), int(r__)).date()
@@ -168,13 +245,13 @@ class ZiWeiDouShuWindow:
                         ,riGan,riGanwuXing,ruGanyinYang\
                             ,riZhi,riZhiwuXing,riZhiyinYang,ruZhishengXiao\
                             ,shiGan,shiGanwuXing,shiGanyinYang\
-                            ,self.day\
+                            ,self.day,self.Lunar_month\
                                                       = self.ziWei.ZiWeisoushu()
                 ganZhi = self.nianGan+self.nianZhi+yueGan+self.yueZhi+riGan+riZhi+shiGan+self.shiChen
                 wuXing = nianGanwuXing+nianZhiwuXing+yueGanwuXing+yueZhiwuXing+riGanwuXing+riZhiwuXing+shiGanwuXing+shiChenwuXing
                 yinYang = nianGanyinYang+nianZhiyinYang+yueGanyinYang+yueZhiyinYang+ruGanyinYang+riZhiyinYang+shiGanyinYang+shiChenyinYang
                 shengXiao = "无"+nianZhishengXiao+"无"+yueZhishengXiao+"无"+ruZhishengXiao+"无"+shiChenshengXiao
-                self.male_or_female = nianGanyinYang + r____
+                self.male_or_female = nianGanyinYang + self.r____
 
                 self.group_w13\
                      = "天干地支：{}\n干支五行：{}\n干支阴阳：{}\n干支生肖：{}\n儒略日【傍晚】：{}\n儒略日【正午】：{}\n简化儒略日：{}\n五行局：{}\n{}\n"\
@@ -214,9 +291,275 @@ class ZiWeiDouShuWindow:
         self.w13.grid(row=1,column=1,rowspan=1,columnspan=1,padx=10,pady=10)
         class_grid = GridLabelText()
 
+        朝旺利陷 = {
+            self.w9:{
+                "天机":"天机【朝】",
+                "天府":"天府【朝】",
+                "太阴":"太阴【朝】",
+                "天梁":"天梁【朝】",
+                "破军":"破军【朝】",
+                "禄存":"禄存【朝】",
+                "武曲":"武曲【旺】",
+                "天同":"天同【旺】",
+                "贪狼":"贪狼【旺】",
+                "巨门":"巨门【旺】",
+                "七杀":"七杀【旺】",
+                "文昌":"文昌【得】",
+                "文曲":"文曲【得】",
+                "紫微":"紫微【平】",
+                "廉贞":"廉贞【平】",
+                "太阳":"太阳【陷】",
+                "擎羊":"擎羊【陷】",
+                "火星":"火星【陷】",
+                "铃星":"铃星【陷】"
+            },
+            self.w8:{
+                "紫微":"紫微【朝】",
+                "武曲":"武曲【朝】",
+                "天府":"天府【朝】",
+                "太阴":"太阴【朝】",
+                "贪狼":"贪狼【朝】",
+                "天相":"天相【朝】",
+                "七杀":"七杀【朝】",
+                "文昌":"文昌【朝】",
+                "文曲":"文曲【朝】",
+                "擎羊":"擎羊【朝】",
+                "陀罗":"陀罗【朝】",
+                "天梁":"天梁【旺】",
+                "破军":"破军【旺】",
+                "火星":"火星【得】",
+                "铃星":"铃星【得】",
+                "廉贞":"廉贞【利】",
+                "太阳":"太阳【不】",
+                "天同":"天同【不】",
+                "巨门":"巨门【不】",
+                "天机":"天机【陷】"
+            },
+            self.w7:{
+                "廉贞":"廉贞【朝】",
+                "天府":"天府【朝】",
+                "巨门":"巨门【朝】",
+                "天相":"天相【朝】",
+                "天梁":"天梁【朝】",
+                "七杀":"七杀【朝】",
+                "禄存":"禄存【朝】",
+                "火星":"火星【朝】",
+                "铃星":"铃星【朝】",
+                "紫微":"紫微【旺】",
+                "太阳":"太阳【旺】",
+                "太阴":"太阴【旺】",
+                "天机":"天机【得】",
+                "武曲":"武曲【得】",
+                "破军":"破军【得】",
+                "天同":"天同【利】",
+                "贪狼":"贪狼【平】",
+                "文曲":"文曲【平】",
+                "文昌":"文昌【陷】",
+                "陀罗":"陀罗【陷】",
+            },
+            self.w6:{
+                "太阳":"太阳【朝】",
+                "巨门":"巨门【朝】",
+                "天梁":"天梁【朝】",
+                "禄存":"禄存【朝】",
+                "紫微":"紫微【旺】",
+                "天机":"天机【旺】",
+                "七杀":"七杀【旺】",
+                "文曲":"文曲【旺】",
+                "天府":"天府【得】",
+                "武曲":"武曲【利】",
+                "贪狼":"贪狼【利】",
+                "文昌":"文昌【利】",
+                "火星":"火星【利】",
+                "铃星":"铃星【利】",
+                "天同":"天同【平】",
+                "廉贞":"廉贞【平】",
+                "太阴":"太阴【陷】",
+                "天相":"天相【陷】",
+                "破军":"破军【陷】",
+                "擎羊":"擎羊【陷】"
+            },
+            self.w5:{
+                "武曲":"武曲【朝】",
+                "天府":"天府【朝】",
+                "贪狼":"贪狼【朝】",
+                "天梁":"天梁【朝】",
+                "七杀":"七杀【朝】",
+                "擎羊":"擎羊【朝】",
+                "陀罗":"陀罗【朝】",
+                "太阳":"太阳【旺】",
+                "破军":"破军【旺】",
+                "紫微":"紫微【得】",
+                "天相":"天相【得】",
+                "文昌":"文昌【得】",
+                "文曲":"文曲【得】",
+                "天机":"天机【利】",
+                "廉贞":"廉贞【利】",
+                "天同":"天同【平】",
+                "太阴":"太阴【陷】",
+                "巨门":"巨门【陷】",
+                "火星":"火星【陷】",
+                "铃星":"铃星【陷】"
+            },
+            self.w:{
+                "天同":"天同【朝】",
+                "文昌":"文昌【朝】",
+                "文曲":"文曲【朝】",
+                "禄存":"禄存【朝】",
+                "紫微":"紫微【旺】",
+                "太阳":"太阳【旺】",
+                "巨门":"巨门【旺】",
+                "天府":"天府【得】",
+                "天相":"天相【得】",
+                "火星":"火星【得】",
+                "铃星":"铃星【得】",
+                "天机":"天机【平】",
+                "武曲":"武曲【平】",
+                "七杀":"七杀【平】",
+                "破军":"破军【平】",
+                "廉贞":"廉贞【陷】",
+                "太阴":"太阴【陷】",
+                "贪狼":"贪狼【陷】",
+                "天梁":"天梁【陷】",
+                "陀罗":"陀罗【陷】"
+            },
+            self.w2:{
+                "紫微":"紫微【朝】",
+                "天机":"天机【朝】",
+                "天相":"天相【朝】",
+                "天梁":"天梁【朝】",
+                "破军":"破军【朝】",
+                "禄存":"禄存【朝】",
+                "火星":"火星【朝】",
+                "铃星":"铃星【朝】",
+                "太阳":"太阳【旺】",
+                "武曲":"武曲【旺】",
+                "天府":"天府【旺】",
+                "贪狼":"贪狼【旺】",
+                "巨门":"巨门【旺】",
+                "七杀":"七杀【旺】",
+                "廉贞":"廉贞【平】",
+                "太阴":"太阴【不】",
+                "天同":"天同【陷】",
+                "文昌":"文昌【陷】",
+                "文曲":"文曲【陷】",
+                "擎羊":"擎羊【陷】"
+            },
+            self.w3:{
+                "紫微":"紫微【朝】",
+                "武曲":"武曲【朝】",
+                "天府":"天府【朝】",
+                "贪狼":"贪狼【朝】",
+                "七杀":"七杀【朝】",
+                "擎羊":"擎羊【朝】",
+                "陀罗":"陀罗【朝】",
+                "天梁":"天梁【旺】",
+                "破军":"破军【旺】",
+                "文曲":"文曲【旺】",
+                "太阳":"太阳【得】",
+                "天相":"天相【得】",
+                "廉贞":"廉贞【利】",
+                "文昌":"文昌【利】",
+                "火星":"火星【利】",
+                "铃星":"铃星【利】",
+                "天同":"天同【不】",
+                "太阴":"太阴【不】",
+                "巨门":"巨门【不】",
+                "天机":"天机【不】"
+            },
+            self.w4:{
+                "廉贞":"廉贞【朝】",
+                "巨门":"巨门【朝】",
+                "天相":"天相【朝】",
+                "七杀":"七杀【朝】",
+                "禄存":"禄存【朝】",
+                "紫微":"紫微【旺】",
+                "天同":"天同【旺】",
+                "天机":"天机【得】",
+                "太阳":"太阳【得】",
+                "武曲":"武曲【得】",
+                "天府":"天府【得】",
+                "破军":"破军【得】",
+                "文昌":"文昌【得】",
+                "文曲":"文曲【得】",
+                "太阴":"太阴【利】",
+                "贪狼":"贪狼【平】",
+                "天梁":"天梁【陷】",
+                "陀罗":"陀罗【陷】",
+                "火星":"火星【陷】",
+                "铃羊":"铃羊【陷】"
+            },
+            self.w12:{
+                "巨门":"巨门【朝】",
+                "文昌":"文昌【朝】",
+                "文曲":"文曲【朝】",
+                "禄存":"禄存【朝】",
+                "紫微":"紫微【旺】",
+                "天机":"天机【旺】",
+                "天府":"天府【旺】",
+                "太阴":"太阴【旺】",
+                "七杀":"七杀【旺】",
+                "天梁":"天梁【得】",
+                "火星":"火星【得】",
+                "铃星":"铃星【得】",
+                "武曲":"武曲【利】",
+                "贪狼":"贪狼【利】",
+                "太阳":"太阳【平】",
+                "天同":"天同【平】",
+                "廉贞":"廉贞【平】",
+                "天相":"天相【陷】",
+                "破军":"破军【陷】",
+                "擎羊":"擎羊【陷】"
+            },
+            self.w11:{
+                "武曲":"武曲【朝】",
+                "天府":"天府【朝】",
+                "贪狼":"贪狼【朝】",
+                "天梁":"天梁【朝】",
+                "七杀":"七杀【朝】",
+                "擎羊":"擎羊【朝】",
+                "陀罗":"陀罗【朝】",
+                "火星":"火星【朝】",
+                "铃星":"铃星【朝】",
+                "太阴":"太阴【旺】",
+                "破军":"破军【旺】",
+                "紫微":"紫微【得】",
+                "天相":"天相【得】",
+                "天机":"天机【利】",
+                "廉贞":"廉贞【利】",
+                "天同":"天同【平】",
+                "太阳":"太阳【不】",
+                "巨门":"巨门【陷】",
+                "文昌":"文昌【陷】",
+                "文曲":"文曲【陷】"
+            },
+            self.w10:{
+                "天同":"天同【朝】",
+                "太阴":"太阴【朝】",
+                "禄存":"禄存【朝】",
+                "紫微":"紫微【旺】",
+                "巨门":"巨门【旺】",
+                "文曲":"文曲【旺】",
+                "天府":"天府【得】",
+                "天相":"天相【得】",
+                "文昌":"文昌【利】",
+                "火星":"火星【利】",
+                "铃星":"铃星【利】",
+                "破军":"破军【平】",
+                "天机":"天机【平】",
+                "武曲":"武曲【平】",
+                "七杀":"七杀【平】",
+                "太阳":"太阳【陷】",
+                "廉贞":"廉贞【陷】",
+                "贪狼":"贪狼【陷】",
+                "天梁":"天梁【陷】",
+                "陀罗":"陀罗【陷】"
+            }
+        }
+
         # 定义窗口列表
-        windows = [self.w, self.w2, self.w3, self.w4, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w13]
-        texts = ["巳", "午", "未", "申", "辰", "卯", "寅", "丑", "子", "亥", "戌", "酉", self.group_w13]
+        windows_main = [self.w, self.w2, self.w3, self.w4, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10, self.w11, self.w12, self.w13]
+        texts_main = ["巳", "午", "未", "申", "辰", "卯", "寅", "丑", "子", "亥", "戌", "酉", self.group_w13]
 
         god_labels = [
             ("命宫", 10, 1),
@@ -310,8 +653,23 @@ class ZiWeiDouShuWindow:
             "亥":"天机"
         }
 
+        self_dict = {
+            "子":self.w9,
+            "丑":self.w8,
+            "寅":self.w7,
+            "卯":self.w6,
+            "辰":self.w5,
+            "巳":self.w,
+            "午":self.w2,
+            "未":self.w3,
+            "申":self.w4,
+            "酉":self.w12,
+            "戌":self.w11,
+            "亥":self.w10
+            }
+
         Shen_ = ttk.Label(shen_map[self.Shen], text="身宫", font=self.font_style,foreground="#cb0008")
-        class_grid.grid_label_text("身宫", Shen_, 9, 2,GridLabelText.get_window(Shen_))
+        class_grid.grid_label_text("身宫", Shen_, 9, 2,GridLabelText.get_window(Shen_),朝旺利陷=朝旺利陷)
         天才 = ttk.Label(天才_map[self.nianZhi],text="天才",font=self.font_style)
         天伤 = ttk.Label(positions[self.Ming][7],text="天伤",font=self.font_style)
         天使 = ttk.Label(positions[self.Ming][5],text="天使",font=self.font_style)
@@ -350,7 +708,7 @@ class ZiWeiDouShuWindow:
 
         for i, text in enumerate(texts):
             label = ttk.Label(windows[i], text=text, font=self.font_style)
-            class_grid.grid_label_text(text, label, 9, 0,GridLabelText.get_window(label))
+            class_grid.grid_label_text(text, label, 9, 0,GridLabelText.get_window(label),朝旺利陷=朝旺利陷)
 
         match self.ziWei:
             case "子":
@@ -3238,17 +3596,118 @@ class ZiWeiDouShuWindow:
                 "阳女":GridLabelText.accumulate_vector(initial_vector=[6,15], reverse_result=False)
             }
         }
+
+        小限年支 = {
+            "寅":"寅",
+            "午":"寅",
+            "戌":"寅",
+            "申":"申",
+            "子":"申",
+            "辰":"申",
+            "巳":"巳",
+            "酉":"巳",
+            "丑":"巳",
+            "亥":"亥",
+        }
         
         小限 = {
             "寅":{
-                "男":["辰","巳","午","未"]
+                "男":["辰","巳","午","未","申","酉","戌","亥","子","丑","寅","卯"],
+                "女":['辰','卯','寅','丑','子','亥','戌','酉','申','未','午','巳']
+            },
+            "申":{
+                "男":["戌","亥","子","丑","寅","卯","辰","巳","午","未","申","酉"],
+                "女":["戌","酉","申","未","午","巳","辰","卯","寅","丑","子","亥"]
+            },
+            "巳":{
+                "男":["未","申","酉","戌","亥","子","丑","寅","卯","辰","巳","午"],
+                "女":["未","午","巳","辰","卯","寅","丑","子","亥","戌","酉","申"]
+            },
+            "亥":{
+                "男":["丑","寅","卯","辰","巳","午","未","申","酉","戌","亥","子"],
+                "女":["丑","子","亥","戌","酉","申","未","午","巳","辰","卯","寅"]
             }
         }
+
+        流年将前 = {
+            "寅":[self.w12, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w],
+            "申":[self.w6, self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10],
+            "巳":[self.w9, self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4],
+            "亥":[self.w2, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7]
+        }
+
+        流年岁前_丁 = {
+            "子":[self.w9, self.w3, self.w12],
+            "丑":[self.w8, self.w4, self.w11],
+            "寅":[self.w7, self.w12, self.w10],
+            "卯":[self.w6, self.w11, self.w9],
+            "辰":[self.w5, self.w10, self.w8],
+            "巳":[self.w, self.w9, self.w7],
+            "午":[self.w2, self.w8, self.w6],
+            "未":[self.w3, self.w7, self.w5],
+            "申":[self.w4, self.w6, self.w],
+            "酉":[self.w12, self.w5, self.w2],
+            "戌":[self.w11, self.w, self.w3],
+            "亥":[self.w10, self.w2, self.w4]
+        }
+
+        流年岁前_戊 = {
+            "子":[self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w4, self.w11, self.w10],
+            "丑":[self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w12, self.w10, self.w9],
+            "寅":[self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w11, self.w9, self.w8],
+            "卯":[self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w10, self.w8, self.w7],
+            "辰":[self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w9, self.w7, self.w6],
+            "巳":[self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w8, self.w6, self.w5],
+            "午":[self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w7, self.w5, self.w],
+            "未":[self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w6, self.w, self.w2],
+            "申":[self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w5, self.w2, self.w3],
+            "酉":[self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w, self.w3, self.w4],
+            "戌":[self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w2, self.w4, self.w12],
+            "亥":[self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w3, self.w12, self.w11],
+        }
+
+        年斗君 = {
+            "子":[self.w9, self.w10, self.w11, self.w12, self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7, self.w8],
+            "丑":[self.w8, self.w9, self.w10, self.w11, self.w12, self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7],
+            "寅":[self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7],
+            "卯":[self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6],
+            "辰":[self.w, self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5],
+            "巳":[self.w2, self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w],
+            "午":[self.w3, self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2],
+            "未":[self.w4, self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3],
+            "申":[self.w12, self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4],
+            "酉":[self.w11, self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w12],
+            "戌":[self.w10, self.w9, self.w8, self.w7, self.w6, self.w5, self.w, self.w2, self.w3, self.w4, self.w12, self.w11],
+            "亥":[self.w11, self.w12, self.w4, self.w3, self.w2, self.w, self.w5, self.w6, self.w7, self.w8, self.w9, self.w10]
+        }
+
+        小限_num = [
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+            [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+            [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48],
+            [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
+            [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
+            [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84],
+            [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96],
+            [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108],
+            [109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120]
+        ]
+
+        小限_columns = []
+        for i in range(12):
+            小限_columns.append(GridLabelText.list_srt(GridLabelText.get_column(小限_num, i)))
+
+        小限_list_label = 小限[小限年支[self.nianZhi]][self.r____]
+
+        小限_window = [self_dict[element] for element in 小限_list_label if element in self_dict]
 
         if self.male_or_female == "阳男":
             male_or_female = "阴女"
         elif self.male_or_female == "阴男":
             male_or_female = "阳女"
+        else:
+            male_or_female = self.male_or_female
 
         支系_window = 支系[self.nianZhi]
 
@@ -3262,6 +3721,19 @@ class ZiWeiDouShuWindow:
 
         旬空_window = 旬空[self.nianGan][self.nianZhi]
         旬空_list_label = ["正旬空","副旬空"]
+
+        流年将前_window = 流年将前[小限年支[self.nianZhi]]
+        流年将前_list_label = list(reversed(["亡神","月煞","咸池","指背","天煞","炎煞","劫煞","息神"]))
+
+        流年岁前_丁_window = 流年岁前_丁[self.nianZhi]
+        流年岁前_丁_list_label = list(reversed(["天德","龙德","岁建"]))
+
+        流年岁前_戊_window = 流年岁前_戊[self.nianZhi]
+        流年岁前_戊_list_label = list(reversed(["病符","弔客","白虎","大耗","小耗","官符","贯索","丧门","晦气"]))
+
+        年斗君_window = 年斗君[self.shiChen][self.Lunar_month]
+        年斗君_label = ttk.Label(年斗君_window, text="斗君", font=self.font_style)
+
 
         大限_window = [
             positions[self.Ming][0],positions[self.Ming][11],positions[self.Ming][10],positions[self.Ming][9],
@@ -3284,73 +3756,81 @@ class ZiWeiDouShuWindow:
             "天姚":tianyao,"天巫": tianwu,
             "天月": tianyue, "阴煞": tiansha, "三台":santai,
             "八座":bazuo, "恩光":enguang,"天贵":tiangui,
-            "天寿":天寿,"天官":天官,"天福":天福,"天厨":天厨,"天才":天才,"天使":天使,"天伤":天伤
+            "天寿":天寿,"天官":天官,"天福":天福,"天厨":天厨,"天才":天才,"天使":天使,"天伤":天伤,
+            "斗君":年斗君_label
         }
 
         # 生成包含控件父窗口的字典
         window_frame = {name: GridLabelText.get_window(widget) for name, widget in controls.items()}
 
-        for i, (win, text) in enumerate(zip(windows, texts)):
+        for i, (win, text) in enumerate(zip(windows_main, texts_main)):
             label = ttk.Label(win, text=text, font=self.font_style)
             label.grid(row=10, column=0)
 
-        class_grid.grid_label_text("紫微", ziWei_, 8, 1, window_frame["紫微"])
-        class_grid.grid_label_text("天机", tianJi, 8, 1, window_frame["天机"])
-        class_grid.grid_label_text("太阳", taiYang, 8, 1, window_frame["太阳"])
-        class_grid.grid_label_text("武曲", wuQu, 8, 1, window_frame["武曲"])
-        class_grid.grid_label_text("天同", tianTong, 8, 1, window_frame["天同"])
-        class_grid.grid_label_text("廉贞", lianZhen, 8, 1, window_frame["廉贞"])
-        class_grid.grid_label_text("天府", tianFu, 8, 1, window_frame["天府"])
-        class_grid.grid_label_text("太阴", taiYin, 8, 1, window_frame["太阴"])
-        class_grid.grid_label_text("贪狼", tanLang, 8, 1, window_frame["贪狼"])
-        class_grid.grid_label_text("巨门", juMen, 8, 1, window_frame["巨门"])
-        class_grid.grid_label_text("天相", 天相, 8, 1, window_frame["天相"])
-        class_grid.grid_label_text("天梁", tianLiang, 8, 1, window_frame["天梁"])
-        class_grid.grid_label_text("七杀", qiSha, 8, 1, window_frame["七杀"])
-        class_grid.grid_label_text("破军", poJun, 8, 1, window_frame["破军"])
+        class_grid.grid_label_text("紫微", ziWei_, 8, 1, window_frame["紫微"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天机", tianJi, 8, 1, window_frame["天机"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("太阳", taiYang, 8, 1, window_frame["太阳"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("武曲", wuQu, 8, 1, window_frame["武曲"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天同", tianTong, 8, 1, window_frame["天同"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("廉贞", lianZhen, 8, 1, window_frame["廉贞"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天府", tianFu, 8, 1, window_frame["天府"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("太阴", taiYin, 8, 1, window_frame["太阴"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("贪狼", tanLang, 8, 1, window_frame["贪狼"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("巨门", juMen, 8, 1, window_frame["巨门"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天相", 天相, 8, 1, window_frame["天相"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天梁", tianLiang, 8, 1, window_frame["天梁"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("七杀", qiSha, 8, 1, window_frame["七杀"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("破军", poJun, 8, 1, window_frame["破军"],朝旺利陷=朝旺利陷)
 
-        class_grid.grid_label_text("文昌", wenChang, 8, 1, window_frame["文昌"])
-        class_grid.grid_label_text("文曲", wenQu, 8, 1, window_frame["文曲"])
-        class_grid.grid_label_text("火星", huoXing, 8, 1, window_frame["火星"])
-        class_grid.grid_label_text("铃星", lingXing, 8, 1, window_frame["铃星"])
-        class_grid.grid_label_text("左辅", zuofu, 8, 1, window_frame["左辅"])
-        class_grid.grid_label_text("右弼", youbi, 8, 1, window_frame["右弼"])
+        class_grid.grid_label_text("文昌", wenChang, 8, 1, window_frame["文昌"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("文曲", wenQu, 8, 1, window_frame["文曲"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("火星", huoXing, 8, 1, window_frame["火星"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("铃星", lingXing, 8, 1, window_frame["铃星"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("左辅", zuofu, 8, 1, window_frame["左辅"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("右弼", youbi, 8, 1, window_frame["右弼"],朝旺利陷=朝旺利陷)
         
-        class_grid.grid_label_text("禄存", 禄存, 8, 1, window_frame["禄存"])
-        class_grid.grid_label_text("擎羊", 擎羊, 8, 1, window_frame["擎羊"])
-        class_grid.grid_label_text("陀罗", 陀罗, 8, 1, window_frame["陀罗"])
-        class_grid.grid_label_text("天魁", 天魁, 8, 1, window_frame["天魁"])
-        class_grid.grid_label_text("天钺", 天钺, 8, 1, window_frame["天钺"])
+        class_grid.grid_label_text("禄存", 禄存, 8, 1, window_frame["禄存"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("擎羊", 擎羊, 8, 1, window_frame["擎羊"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("陀罗", 陀罗, 8, 1, window_frame["陀罗"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天魁", 天魁, 8, 1, window_frame["天魁"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天钺", 天钺, 8, 1, window_frame["天钺"],朝旺利陷=朝旺利陷)
 
-        class_grid.grid_label_text("天官", 天官, 7, 1, window_frame["天官"])
-        class_grid.grid_label_text("天福", 天福, 7, 1, window_frame["天福"])
-        class_grid.grid_label_text("天厨", 天厨, 7, 1, window_frame["天厨"])
+        class_grid.grid_label_text("天官", 天官, 7, 1, window_frame["天官"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天福", 天福, 7, 1, window_frame["天福"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天厨", 天厨, 7, 1, window_frame["天厨"],朝旺利陷=朝旺利陷)
 
-        class_grid.grid_label_text("地劫", diJie, 7, 1, window_frame["地劫"])
-        class_grid.grid_label_text("地空", dikong, 7, 1, window_frame["地空"])
-        class_grid.grid_label_text("台辅", taiFu, 7, 1, window_frame["台辅"])
-        class_grid.grid_label_text("封诰", fengGao, 7, 1, window_frame["封诰"])
-        class_grid.grid_label_text("天刑", tianxing, 7, 1, window_frame["天刑"])
-        class_grid.grid_label_text("天姚", tianyao, 7, 1, window_frame["天姚"])
-        class_grid.grid_label_text("天巫", tianwu, 7, 1, window_frame["天巫"])
-        class_grid.grid_label_text("天月", tianyue, 7, 1, window_frame["天月"])
-        class_grid.grid_label_text("阴煞", tiansha, 7, 1, window_frame["阴煞"])
-        class_grid.grid_label_text("三台", santai, 7, 1, window_frame["三台"])
-        class_grid.grid_label_text("八座", bazuo, 7, 1, window_frame["八座"])
-        class_grid.grid_label_text("恩光", enguang, 7, 1, window_frame["恩光"])
-        class_grid.grid_label_text("天贵", tiangui, 7, 1, window_frame["天贵"])
+        class_grid.grid_label_text("地劫", diJie, 7, 1, window_frame["地劫"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("地空", dikong, 7, 1, window_frame["地空"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("台辅", taiFu, 7, 1, window_frame["台辅"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("封诰", fengGao, 7, 1, window_frame["封诰"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天刑", tianxing, 7, 1, window_frame["天刑"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天姚", tianyao, 7, 1, window_frame["天姚"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天巫", tianwu, 7, 1, window_frame["天巫"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天月", tianyue, 7, 1, window_frame["天月"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("阴煞", tiansha, 7, 1, window_frame["阴煞"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("三台", santai, 7, 1, window_frame["三台"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("八座", bazuo, 7, 1, window_frame["八座"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("恩光", enguang, 7, 1, window_frame["恩光"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天贵", tiangui, 7, 1, window_frame["天贵"],朝旺利陷=朝旺利陷)
 
-        GridLabelText.get_no_name(class_grid,支系_window, 支系_list_label,self.font_style,7,1)
-        GridLabelText.get_no_name(class_grid,长生十二_window, 长生十二_list_label,self.font_style,9,1)
-        GridLabelText.get_no_name(class_grid,截空_window, 截空_list_label,self.font_style,7,1)
-        GridLabelText.get_no_name(class_grid,旬空_window, 旬空_list_label,self.font_style,7,1)
+        GridLabelText.get_no_name(class_grid,支系_window, 支系_list_label,self.font_style,7,1,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,长生十二_window, 长生十二_list_label,self.font_style,9,1,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,截空_window, 截空_list_label,self.font_style,7,1,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,旬空_window, 旬空_list_label,self.font_style,7,1,朝旺利陷=朝旺利陷)
 
-        class_grid.grid_label_text("天才", 天才, 7, 1, window_frame["天才"])
-        class_grid.grid_label_text("天寿", 天寿, 7, 1, window_frame["天寿"])
-        class_grid.grid_label_text("天伤", 天伤, 7, 1, window_frame["天伤"])
-        class_grid.grid_label_text("天使", 天使, 7, 1, window_frame["天使"])
+        class_grid.grid_label_text("天才", 天才, 7, 1, window_frame["天才"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天寿", 天寿, 7, 1, window_frame["天寿"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天伤", 天伤, 7, 1, window_frame["天伤"],朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("天使", 天使, 7, 1, window_frame["天使"],朝旺利陷=朝旺利陷)
 
-        GridLabelText.get_no_name(class_grid,大限_window, 大限_list_label,self.font_style,12,0)
+        GridLabelText.get_no_name(class_grid,大限_window, 大限_list_label,self.font_style,12,0,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,小限_window,小限_columns,("Arial", 8),11,1,3,"小限：",朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,流年将前_window, 流年将前_list_label,self.font_style,6,1,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,流年岁前_丁_window, 流年岁前_丁_list_label,self.font_style,6,1,朝旺利陷=朝旺利陷)
+        GridLabelText.get_no_name(class_grid,流年岁前_戊_window, 流年岁前_戊_list_label,self.font_style,6,1,朝旺利陷=朝旺利陷)
+        class_grid.grid_label_text("斗君", 年斗君_label, 6, 1, window_frame["天使"],朝旺利陷=朝旺利陷)
+
+        #GridLabelText.display_labels_text(self.w9)
 
         self.window_z.grid_rowconfigure(1, weight=1)
         self.window_z.grid_columnconfigure(1, weight=1)
