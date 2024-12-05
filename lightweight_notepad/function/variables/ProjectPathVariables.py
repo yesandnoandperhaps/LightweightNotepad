@@ -45,3 +45,14 @@ XLR_DATA_WU_XING_JI_LU_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_wu_xing
 XLR_JSON = File.dict_load(XLR_DATA_PATH, XLR_DATA)
 XLR_WU_XING_JSON = File.dict_load(XLR_DATA_WU_XING_PATH, XLR_DATA_WU_XING)
 XLR_WU_XING_JI_LU_JSON = File.dict_load(XLR_DATA_WU_XING_JI_LU_PATH , XLR_DATA_WU_XING_JI_LU)
+
+TEXT_TEMP_PATH = os.path.join(DATA_FILE_PATH, "text-temp")
+
+RECONSTRUCTIONS_PAGE = os.path.join(DATA_FILE_PATH, "reconstructions_page")
+os.makedirs(RECONSTRUCTIONS_PAGE, exist_ok=True)
+RECONSTRUCTIONS = os.path.join(RECONSTRUCTIONS_PAGE, 'reconstructions')
+os.makedirs(RECONSTRUCTIONS, exist_ok=True)
+
+RECONSTRUCTIONS_LIST_PATH = os.path.join(RECONSTRUCTIONS, 'reconstructions_list')
+os.makedirs(RECONSTRUCTIONS_LIST_PATH, exist_ok=True)
+RECONSTRUCTIONS_LIST = os.path.join(RECONSTRUCTIONS_LIST_PATH, 'reconstructions_list.json')

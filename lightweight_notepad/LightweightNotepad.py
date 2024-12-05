@@ -16,7 +16,7 @@ from pystray import MenuItem, Menu
 from function.variables.ProjectCapabilityVariables import font_set
 from function.ProjectFunctions import load_theme
 from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff,t_size
-from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
+from function.variables.ProjectPathVariables import A_PATH,ICON_PATH,TEXT_TEMP_PATH
 from window_module.GadgetWindow import GadgetWindow
 from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
 from window_module.set_window.SetWindow import set_window
@@ -276,9 +276,8 @@ def read(filename, msg):
     def read_and_split():
         global index, index_, t_size,folder_t
         # 确定目标文件夹路径
-        folder = os.path.join(DATA_FILE_PATH, "text-temp")
 
-        os.makedirs(folder, exist_ok=True)
+        os.makedirs(TEXT_TEMP_PATH, exist_ok=True)
 
         # 打开文件进行逐块读取
         with open(msg, 'rb') as file:  # 'rb' 表示二进制模式读取
@@ -290,7 +289,7 @@ def read(filename, msg):
             encoding = result['encoding']
             print(f"Detected encoding: {encoding}")
 
-            folder_t=split_by_size(msg,t_divide_up,folder,encoding)
+            folder_t=split_by_size(msg,t_divide_up,TEXT_TEMP_PATH,encoding)
 
             size = os.path.getsize(msg)
             division = size // t_divide_up
@@ -320,12 +319,11 @@ def save_ff():
 
         # noinspection PyBroadException,PyShadowingNames
         def save_tt():
-            folder = os.path.join(DATA_FILE_PATH, "text-temp")
-            filename_ = os.path.join(folder, f'{filename}')
+            filename_ = os.path.join(TEXT_TEMP_PATH, f'{filename}')
             index = 0
             while True:
                 try:
-                    folder_t = (folder + "\\" + f'{filename}_{index}')
+                    folder_t = (TEXT_TEMP_PATH + "\\" + f'{filename}_{index}')
                     with open(folder_t, 'rb', encoding='utf-8', errors='ignore') as file:
                         a = file.read()
                         index += 1
@@ -384,8 +382,7 @@ def save_t():
                     icon.notify("文件已成功保存", "Lightweight text editor")
             else:
                 if index_ == 1:
-                    folder = os.path.join(DATA_FILE_PATH, "text-temp")
-                    folder_t = (folder + "\\" + f'{filename}_{index}')
+                    folder_t = (TEXT_TEMP_PATH + "\\" + f'{filename}_{index}')
                     with open(folder_t, 'w', encoding='utf-8') as file:
                         lines = text_widget.get("1.0", "end")
                         file.writelines(lines)
