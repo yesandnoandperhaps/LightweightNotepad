@@ -555,8 +555,9 @@ def numqgua_2():
     return t, r, d
 '''
 
-def numgua2_2():
-    t,r,d = numqgua()
+def numgua2_2(t=None,r=None,d=None):
+    if t and r and d is None:
+        t,r,d = numqgua()
     num_t = Num(t=t, r=r, d=d)
     a = str(num_t.judgment_f())
     a_ = decimal.Decimal(a)
@@ -566,8 +567,9 @@ def numgua2_2():
         return num_t_text
     return num_t_text
 
-def numgua2_1():
-    t,r,d = numqgua()
+def numgua2_1(t=None,r=None,d=None):
+    if t and r and d is None:
+        t,r,d = numqgua()
     num_t = Num(t=t, r=r, d=d)
     a = num_t.judgment_f()
     num_t_text = "{}\n".format(a)
@@ -576,8 +578,9 @@ def numgua2_1():
         return num_t_text
     return num_t_text
 
-def numgua2_0():
-    t,r,d = numqgua()
+def numgua2_0(t=None,r=None,d=None):
+    if t and r and d is None:
+        t,r,d = numqgua()
     num_t = Num(t=t, r=r, d=d)
     a = str(num_t.judgment_f())
     a_ = decimal.Decimal(a)

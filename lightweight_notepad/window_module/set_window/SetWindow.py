@@ -319,7 +319,7 @@ def set_window(root):
                     w_4_3_var2.set(1)
                 else:
                     w_4_3_var2.set(0)
-                w_4_3_var2_ = ttk.Checkbutton(w_4_3_1, text="CSS", variable=w_4_3_var2, command=lambda: t_s_(AA_PATH, var2_num_w_4_3), style="round-toggle")
+                w_4_3_var2_ = ttk.Checkbutton(w_4_3_1, text="css", variable=w_4_3_var2, command=lambda: t_s_(AA_PATH, var2_num_w_4_3), style="round-toggle")
                 w_4_3_var2_.grid(column=1,row=0,padx=5,pady=5)
 
                 w_4_3_var3 = ttk.IntVar()

@@ -7,6 +7,7 @@ from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+from window_module.xiao_liu_ren_window.JiZhiWindow import JiZhiWindow
 from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindowPatch import LabelManager
 from window_module.xiao_liu_ren_window.NewXiaoLiuRenWindow import NewX
 from function.ProjectFunctions import t_save, t_load
@@ -1387,8 +1388,16 @@ class OldXiaoLiuRenWindow:
                 f.grid()
                 xlr_num = NewX(self.window).choose()
                 LabelManager(f, font_style).update_labels(xlr_num)
+            elif combo.get() == "吉值":
+                f.grid_remove()
+                text_widget.grid()
+                scrollbar.grid()
+                xlr_num = JiZhiWindow(root_main,font_style).create_window()
+                if xlr_num is not None:
+                    text_widget.insert(tk.END, "吉值："+str(xlr_num))
 
-        combo = ttk.Combobox(self.window, values=["起卦", "算一卦"], state="readonly")
+
+        combo = ttk.Combobox(self.window, values=["起卦", "算一卦","吉值"], state="readonly")
         combo.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         combo.bind("<Button-3>", lambda event: generate_and_display())
         combo.set("起卦")

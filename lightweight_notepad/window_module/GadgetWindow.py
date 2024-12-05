@@ -26,8 +26,7 @@ class GadgetWindow:
 
         b1 = ttk.Button(self.window, text="小六壬", style=OUTLINE, command=lambda: OldXiaoLiuRenWindow(root, icon, font_style,0))
         b1.grid(column=0, row=0, padx=10, pady=10)
-        font_style_ = set_font_size(font_style, 10)
-        b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: ZiWeiDouShuWindow(root, font_style_))
+        b2 = ttk.Button(self.window, text="紫微斗数", style=OUTLINE, command=lambda: ZiWeiDouShuWindow(root, set_font_size(font_style, 10)))
         b2.grid(column=1, row=0, padx=10, pady=10)
         #b3 = ttk.Button(self.window, text="机器学习-回归问题", style=OUTLINE, command=lambda: regression(root))
         #b3.grid(column=2, row=0, padx=10, pady=10)

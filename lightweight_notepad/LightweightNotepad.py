@@ -1,6 +1,8 @@
 import ctypes
 import os
 import shutil
+
+import chardet
 import ttkbootstrap as ttk
 from tkinter import filedialog, messagebox
 import threading
@@ -13,12 +15,14 @@ from pystray import MenuItem, Menu
 
 from function.variables.ProjectCapabilityVariables import font_set
 from function.ProjectFunctions import load_theme
-from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff
+from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff,t_size
 from function.variables.ProjectPathVariables import A_PATH, DATA_FILE_PATH, ICON_PATH
 from window_module.GadgetWindow import GadgetWindow
 from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
 from window_module.set_window.SetWindow import set_window
 
+
+# noinspection PyTypeChecker
 class FadeInAnimation:
     def __init__(self, windows, image_path_png, steps=20, delay=100):
         self.photo = None
@@ -218,56 +222,91 @@ def save_2():
     thread = threading.Thread(target=save_2t)
     thread.start()
 
+
+def detect_encoding(file_content):
+    """
+    使用 chardet 检测文件内容的编码。
+    """
+    result = chardet.detect(file_content)
+    encoding = result['encoding']
+    confidence = result['confidence']
+    if confidence > 0.8:  # 确定性高的情况
+        return encoding
+    else:
+        raise ValueError("无法确定文件的编码，建议手动检查或使用更高置信度的方法。")
+
+def convert_to_utf8(buf, original_encoding):
+    """
+    将文件内容从原始编码转换为 UTF-8 编码。
+    """
+    try:
+        # 解码为字符串后再编码为 UTF-8
+        return buf.decode(original_encoding).encode('utf-8')
+    except Exception as e:
+        raise ValueError(f"转换为 UTF-8 时出错: {e}")
+
+def mk_sub_file(src_name, sub, buf, folder):
+    [des_filename, extname] = os.path.splitext(os.path.basename(src_name))
+    sub_file_path = os.path.join(folder, f"{des_filename}_{sub}{extname}")
+    print('正在生成子文件: %s' % sub_file_path)
+    with open(sub_file_path, 'wb') as fout:
+        fout.write(buf)  # 写入转换后的内容
+        # 假设有进度条控件 progressbarOne
+        progressbarOne['value'] += 1
+    return sub + 1, sub_file_path
+
+def split_by_size(filename, size, folder,encoding):
+    sub_files = []  # 用于保存生成的文件路径
+    with open(filename, 'rb') as fin:
+        buf = fin.read(size)
+        sub = 1
+        while len(buf) > 0:
+            # 转换为 UTF-8
+            utf8_buf = convert_to_utf8(buf, encoding)
+            # 生成子文件
+            sub, sub_file_path = mk_sub_file(filename, sub, utf8_buf, folder)
+            sub_files.append(sub_file_path)  # 收集文件路径
+            buf = fin.read(size)
+    print("ok")
+    return sub_files
+
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
 def read(filename, msg):
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException,PyAssignmentToLoopOrWithParameter
     def read_and_split():
-        global index, index_, t_size
-        with open(msg, 'r', encoding='utf-8', errors='ignore') as file:
-            index = 0
-            while True:
-                file.seek(index * t_divide_up)
-                data = file.read(t_divide_up)
-                if not data:
-                    folder = os.path.join(DATA_FILE_PATH, "text-temp")
-                    try:
-                        os.mkdir("text-temp")
-                    except:
-                        shutil.rmtree(folder)
-                        os.mkdir("text-temp")
-                    index -= 1
-                    progressbarOne['value'] -= 1
-                    while True:
-                        progressbarOne['value'] += 1
-                        try:
-                            shutil.move(f'{filename}_{index}', folder)
-                            index -= 1
-                        except:
-                            try:
-                                os.remove(f'{filename}_{index}')
-                            except:
-                                index = 0
-                                index_ = 1
-                                folder_t = (folder + "\\" + f'{filename}_{index}')
+        global index, index_, t_size,folder_t
+        # 确定目标文件夹路径
+        folder = os.path.join(DATA_FILE_PATH, "text-temp")
 
-                                size = os.path.getsize(msg)
-                                division = size // t_divide_up
-                                division08 = division * 0.1
-                                progressbarOne['value'] -= division08
+        os.makedirs(folder, exist_ok=True)
 
-                                with open(folder_t, 'r', encoding='utf-8', errors='ignore') as file:
-                                    a = file.read()
-                                    progressbarOne['value'] += division08
-                                    text_widget.insert(tk.END, a)
-                                    window3.destroy()
-                                    root.attributes("-disabled", 0)
-                            break
-                    break
+        # 打开文件进行逐块读取
+        with open(msg, 'rb') as file:  # 'rb' 表示二进制模式读取
+            # 读取文件的前 10KB 数据来检测编码
+            raw_data = file.read(10240)
 
-                with open(f'{filename}_{index}', 'w', encoding='utf-8', errors='ignore') as file:
-                    file.write(str(data))
-                index += 1
-                progressbarOne['value'] += 1
+            # 使用 chardet 检测编码
+            result = chardet.detect(raw_data)
+            encoding = result['encoding']
+            print(f"Detected encoding: {encoding}")
+
+            folder_t=split_by_size(msg,t_divide_up,folder,encoding)
+
+            size = os.path.getsize(msg)
+            division = size // t_divide_up
+
+            division08 = division * 0.1
+            progressbarOne['value'] -= division08
+
+            with open(folder_t[0], 'r', encoding='utf-8', errors='ignore') as file:
+                a = file.read()
+                progressbarOne['value'] += division08
+                text_widget.insert(tk.END, a)
+                window3.destroy()
+                root.attributes("-disabled", 0)
+                index_=1
+
+
 
     thread = threading.Thread(target=read_and_split)
     thread.start()
@@ -287,7 +326,7 @@ def save_ff():
             while True:
                 try:
                     folder_t = (folder + "\\" + f'{filename}_{index}')
-                    with open(folder_t, 'r', encoding='utf-8', errors='ignore') as file:
+                    with open(folder_t, 'rb', encoding='utf-8', errors='ignore') as file:
                         a = file.read()
                         index += 1
                     with open(filename_, 'a', encoding='utf-8', errors='ignore') as file:
@@ -366,16 +405,22 @@ def i(files):
     size = os.path.getsize(msg)
 
     if size < t_size:
-        with open(msg, 'r', encoding='utf-8') as file:
+        with open(msg, 'rb') as file:
             data = file.read()
-            text_widget.insert(tk.END, data)
+            # 检测编码
+            result = chardet.detect(data)
+            encoding = result['encoding']
+
+            # 使用检测到的编码解码文件内容
+            text = data.decode(encoding)
+            text_widget.insert(tk.END, text)
 
     elif onandoff == "关闭":
 
         # noinspection PyShadowingNames
         def save_ttt():
             icon.notify("正在导入文件，不建议操作当前窗口", "Lightweight text editor")
-            with open(msg, 'r', encoding='utf-8') as file:
+            with open(msg, 'rb') as file:
 
                 while True:
 
@@ -385,7 +430,18 @@ def i(files):
                         icon.notify("导入成功", "Lightweight text editor")
                         break
 
-                    text_widget.insert(tk.END, ''.join(data))
+                    # 将 data 列表中的所有字节数据合并成一个字节串
+                    combined_data = b''.join(data)
+
+                    # 检测编码
+                    result = chardet.detect(combined_data)
+                    encoding = result['encoding']
+
+                    # 解码
+                    text = combined_data.decode(encoding)
+
+                    # 插入到 text_widget 中
+                    text_widget.insert(tk.END, text)
 
         thread = threading.Thread(target=save_ttt)
         thread.start()
@@ -418,16 +474,12 @@ def i(files):
 # noinspection PyBroadException,PyGlobalUndefined
 def next_page():
     global index, index_
-
     if index_ != 1:
         messagebox.showerror("错误", message="仅限大文件操作", parent=root)
         return
-
-    folder = os.path.join(DATA_FILE_PATH, "text-temp")
     try:
         index += 1
-        folder_t = os.path.join(folder, f'{filename}_{index}')
-        _update_text_widget(folder_t)
+        _update_text_widget(folder_t[index])
     except FileNotFoundError:
         messagebox.showerror("错误", message="已经是尾页", parent=root)
         index -= 1  # 恢复index为上一页
@@ -441,12 +493,9 @@ def return_page():
     if index_ != 1:
         messagebox.showerror("错误", message="仅限大文件操作", parent=root)
         return
-
-    folder = os.path.join(DATA_FILE_PATH, "text-temp")
     try:
         index -= 1
-        folder_t = os.path.join(folder, f'{filename}_{index}')
-        _update_text_widget(folder_t)
+        _update_text_widget(folder_t[index])
     except FileNotFoundError:
         messagebox.showerror("错误", message="已经是首页", parent=root)
         index += 1  # 恢复index为下一页
@@ -529,6 +578,7 @@ root.bind("<Control-f> ", lambda event: toggle_window())
 scrollbar.config(command=text_widget.yview)
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
+index = 0
 index_ = 0
 
 action_map = {
@@ -539,7 +589,7 @@ action_map.get(num_wv1 % 2, lambda: None)()
 try:
     if v % 2 == 1:
         text_widget.delete('1.0', tk.END)
-        with open(A_PATH, 'r', encoding='utf-8') as f__:
+        with open(A_PATH, 'r') as f__:
             data = f__.read()
             text_widget.insert(tk.END, data)
 except Exception as error:
