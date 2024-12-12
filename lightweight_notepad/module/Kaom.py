@@ -21,6 +21,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
+from function.variables.ProjectDictionaryVariables import ROOCHSCMC
 from function.variables.ProjectPathVariables import RECONSTRUCTIONS, RECONSTRUCTIONS_LIST, RECONSTRUCTIONS_LIST_PATH
 
 
@@ -41,20 +42,20 @@ class GetThePage:
         }
 
         # 随机User-Agent
-        user_agent = self.ua.random
-        options['chrome'].add_argument(f"user-agent={user_agent}")
-        options['edge'].add_argument(f"user-agent={user_agent}")
-        options['firefox'].add_argument(f"user-agent={user_agent}")
+        #user_agent = self.ua.random
+        #options['chrome'].add_argument(f"user-agent={user_agent}")
+        #options['edge'].add_argument(f"user-agent={user_agent}")
+        #options['firefox'].add_argument(f"user-agent={user_agent}")
 
         # 启用无头模式
-        options['chrome'].add_argument("--headless")
-        options['edge'].add_argument("--headless")
-        options['firefox'].add_argument("--headless")
+        #options['chrome'].add_argument("--headless")
+        #options['edge'].add_argument("--headless")
+        #options['firefox'].add_argument("--headless")
 
         # 禁用GPU加速
-        options['chrome'].add_argument("--disable-gpu")
-        options['edge'].add_argument("--disable-gpu")
-        options['firefox'].add_argument("--disable-gpu")
+        #options['chrome'].add_argument("--disable-gpu")
+        #options['edge'].add_argument("--disable-gpu")
+        #options['firefox'].add_argument("--disable-gpu")
 
         # 禁用浏览器扩展
         options['chrome'].add_argument("--disable-extensions")
@@ -129,7 +130,8 @@ class GetThePage:
                 if self.handle_frequency_limit():
                     attempts += 1
                     logging.warning(f"频繁点击限制提示，重试第 {attempts} 次")
-                    time.sleep(random.uniform(3, 5))  # 等待一段时间再重试
+                    time.sleep(random.uniform(3, 5))
+                    # 等待一段时间再重试
                     continue
 
                 # 输入文字
@@ -137,7 +139,7 @@ class GetThePage:
                 if not input_box:
                     return []
                 input_box.clear()
-                time.sleep(random.uniform(1, 2))
+                time.sleep(3)
                 input_box.send_keys(word)
                 logging.info(f"输入文字: {word}")
 
@@ -145,13 +147,13 @@ class GetThePage:
                 dropdown = self.driver.find_element(By.NAME, "bianti")
                 dropdown.send_keys("no")
 
-                time.sleep(random.uniform(1, 2))
+                time.sleep(3)
 
                 # 提交表单
                 submit_button = self.driver.find_element(By.CSS_SELECTOR, "input[type='submit']")
                 submit_button.click()
 
-                time.sleep(random.uniform(1, 2))
+                time.sleep(3)
 
                 # 切换到新窗口
                 main_window = self.driver.current_window_handle
@@ -169,15 +171,15 @@ class GetThePage:
                     if self.handle_frequency_limit():
                         retry_count += 1
                         logging.warning(f"频繁点击限制提示，重试第 {retry_count} 次")
-                        time.sleep(random.uniform(3, 5))  # 等待一段时间再重试
+                        time.sleep(3.8)
                         continue
 
                     # 保存HTML
                     file_name = f"{word}_page.html"
-                    tables = re.findall(r'<table.*?>(.*?)</table>', self.driver.page_source, re.DOTALL)
+                    #tables = re.findall(r'<table.*?>(.*?)</table>', self.driver.page_source, re.DOTALL)
                     file_path = os.path.join(RECONSTRUCTIONS, file_name)
                     with open(file_path, "w", encoding="utf-8") as f:
-                        f.write(str(tables))
+                        f.write(str(self.driver.page_source))
                         logging.info(f"页面HTML已保存为: {file_path}")
                     return []  # 成功保存文件，返回空列表
 
@@ -199,7 +201,6 @@ class GetThePage:
 
         # 在所有词处理完成后关闭驱动
         self.driver.quit()
-
 
 class FileProcessor:
     def __init__(self, folder_on_path, output_path):
@@ -238,7 +239,7 @@ class HtmlSplitting:
     def extract_zi_heads(text_list):
         return [match.group(1) for item in text_list if (match := re.search(r"([a-zA-Z\u4e00-\u9fa5]+)-字頭", item))]
 
-    @staticmethod#提取 reconstruction 并判断是否以 '?' 结尾
+    @staticmethod#提取 reconstructions 并判断是否以 '?' 结尾
     def extract_reconstruction(text_list):
         return [(1 if match.group(1).endswith('?') else 0, match.group(1))
                 for item in text_list if (match := re.search(r"值为：([^：]+)-擬音", item))]
@@ -338,7 +339,7 @@ class HtmlSplitting:
 
         scholars = self.extract_scholars(corrected_textual_information_list)
         zi_head_list = self.extract_zi_heads(corrected_textual_information_list)
-        reconstruction_list = self.extract_reconstruction(corrected_textual_information_list)
+        reconstructions = self.extract_reconstruction(corrected_textual_information_list)
         rhyme_list = self.extract_rhyme(corrected_textual_information_list)
         type_list = self.extract_type(corrected_textual_information_list)
         era_list = self.extract_era(corrected_textual_information_list)
@@ -347,15 +348,74 @@ class HtmlSplitting:
         # logging.info("Scholars len:", len(scholars))
         logging.info(f"Zi Head List:{zi_head_list}")
         # logging.info("Zi Head List len", len(zi_head_list))
-        logging.info(f"reconstruction List:{reconstruction_list}")
-        # logging.info("reconstruction List len:", len(reconstruction_list))
+        logging.info(f"reconstructions List:{reconstructions}")
+        # logging.info("reconstructions List len:", len(reconstructions))
         logging.info(f"Rhyme:{rhyme_list}")
         logging.info(f"Type:{type_list}")
         logging.info(f"Era:{era_list}")
 
+        return scholars,[item for item in set(zi_head_list) if item != "None"],reconstructions,rhyme_list,type_list,era_list
+
+class StandardizeHtmlIntoDict:
+    def __init__(self,scholars,zi_head_list,reconstructions,rhyme_list,type_list,era_list):
+        """
+        :param scholars: 学者列表
+        :param zi_head_list: 字头列表
+        :param reconstructions: 拟音列表
+        :param rhyme_list: 韵部；
+        :param type_list: 类型列表
+        :param era_list: 时期列表
+        """
+        self.scholars = scholars
+        self.zi_head_list = zi_head_list
+        self.reconstructions = reconstructions
+        self.rhyme_list = rhyme_list
+        self.type_list = type_list
+        self.era_list = era_list
+        #self.era_dict = {int(num): name for num, name in era_list}
+        self.scholar_reconstructions_dict = {}
+        self.reconstructions_index = 0
+
+    def return_dict(self,new_dict,zhitou):
+        for era_num, era in self.era_list:
+            era_num = int(era_num)
+            for scholar_num, scholar in self.scholars:
+                scholar_num = int(scholar_num)
+
+                while self.reconstructions_index < era_num:
+
+                    save_dict = new_dict[zhitou][era]["構擬"][scholar]["擬音"] = []
+
+                    self.reconstructions_index += 1
+
+    @staticmethod
+    def replace_zhitou(new_zhitou):
+        """
+        替换字头为新的字
+        :param new_zhitou: 新的字头
+        :return: 更新后的字典
+        """
+        if "字頭" in ROOCHSCMC:
+            # 获取原始的子字典
+            original_data = ROOCHSCMC["字頭"]
+
+            # 用新的字头替换字头
+            ROOCHSCMC[new_zhitou] = original_data
+
+            # 删除旧的字头
+            del ROOCHSCMC["字頭"]
+
+        return ROOCHSCMC
+
+    # 示例：替换字头为"新字頭"
+    ROOCHSCMC_updated = replace_zhitou("")
+
+    # 查看更新后的字典
+    print(ROOCHSCMC_updated)
+
 
 def main():
-    input_string = "雨"
+    input_string = "四廂人寒噤，要眇如啼眼。"
 
     # 使用正则表达式去除非汉字字符
     filtered_string = re.sub(r'[^\u4e00-\u9fa5]', '', input_string)
@@ -367,8 +427,9 @@ def main():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-    #main()
-    processor = FileProcessor(RECONSTRUCTIONS,RECONSTRUCTIONS_LIST)
-    for i in processor.save_content():
-        HtmlSplitting(i).form_acquisition()
+    main()
+    #processor = FileProcessor(RECONSTRUCTIONS,RECONSTRUCTIONS_LIST)
+    #for i in processor.save_content():
+        #get_scholars,get_zi_head_list,get_reconstructions,get_rhyme,get_type,get_era = HtmlSplitting(i).form_acquisition()
+
 
