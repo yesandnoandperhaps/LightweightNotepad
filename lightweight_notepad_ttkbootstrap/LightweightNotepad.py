@@ -572,6 +572,7 @@ root.bind("<Control-z> ", a)
 root.bind("<Control-y>", lambda event: b())
 root.bind("<Shift_L>", lambda event: c())
 root.bind("<Control-f> ", lambda event: toggle_window())
+root.bind("<Control-x>",lambda event: print("永明体"))#永明体检测
 scrollbar.config(command=text_widget.yview)
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)

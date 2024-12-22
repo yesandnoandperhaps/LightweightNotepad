@@ -6,11 +6,12 @@ from ttkbootstrap.constants import *
 from window_module.set_window.set_function.Transfer import Transfer
 from function.JsonFile import File
 from function.CustomToolTip import CustomToolTip as ToolTip
-from function.variables.ProjectDictionaryVariables import UTC_TIME
+from function.variables.ProjectDictionaryVariables import UTC_TIME, YONG_MING_TI_LIST
 from function.ProjectFunctions import save, t_load, var_save, utc, window_init, window_closes, t_s, t_s_
 from function.variables.ProjectInitialVariables import onandoff, circular, divide_up, size__, v,v2,v3,v4
 from function.variables.ProjectPathVariables import R_PATH, S_PATH, T_PATH, W_PATH, X_PATH, Z_PATH, AA_PATH, AB_PATH, \
-    W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON, B_PATH
+    W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, XLR_JSON, B_PATH, YONG_MING_TI_DATA_JSON, YONG_MING_TI_PATH
+from function.QuicklyCreate import QuicklyCreate
 
 
 # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable
@@ -142,6 +143,15 @@ def set_window(root):
         w5 = ttk.Frame(w_3)
         w5.grid(row=0,column=1,sticky=W)
 
+        lb5 = ttk.Label(w_3, text="永明体:")
+        lb5.grid(column=2, row=0, padx=10, pady=10, ipadx=5, sticky=W)
+
+        w6 = ttk.Frame(w_3)
+        w6.grid(row=0,column=3,sticky=W)
+
+        #w6_lb1 = ttk.Label(w6,text="永明体:")
+        #w6_lb1.grid(column=0,row=0,padx=10,pady=10,ipadx=5,sticky=W)
+
         # noinspection PyGlobalUndefined
         def combobox():
             global combobox1,combobox2,combobox0,combobox3
@@ -202,6 +212,10 @@ def set_window(root):
                     combobox3.set(circular)
                 case _:
                     save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
+
+        QuicklyCreate(w6).quickly_create_drop_down_box(["使用時代:", "使用性質:", "使用作者:", "使用韻書:","使用聲調"],
+                                                       YONG_MING_TI_LIST,
+                                                       YONG_MING_TI_DATA_JSON, YONG_MING_TI_PATH, main_frame_row=0, main_frame_column=0)
 
         combobox()
 

@@ -14,20 +14,24 @@ class QuicklyCreate:
         self,
         name_list: list[str],
         overlay_lists: list[list[str]],
-        json,
-        json_path: str,
+        data_json,
+        data_json_path: str,
         uniform_width: int = None,
         main_frame_column: int = 0,
         main_frame_row: int = 0,
+        input_padx:int=10,
+        input_pady:int=10
         ) -> None:
         """
         快速创建多个下拉框并绑定事件。
 
         参数:
+        :param input_pady: 设置pady
+        :param input_padx: 设置padx
         :param name_list: 每个下拉框的标签名称。
         :param overlay_lists: 每个下拉框的可选值列表。
-        :param json: 使用 JsonFile 的对象。
-        :param json_path: JSON 文件路径。
+        :param data_json: 使用 JsonFile 的对象。
+        :param data_json_path: JSON 文件路径。
         :param uniform_width: 所有下拉框的统一宽度，默认为 None。
         :param main_frame_column: 主框架的列位置。
         :param main_frame_row: 主框架的行位置。
@@ -45,7 +49,7 @@ class QuicklyCreate:
 
         for i in range(drop_down_box_num):
             text = ttk.Label(self.main_frame, text=name_list[i])
-            text.grid(column=0, row=i)
+            text.grid(column=0, row=i,padx=10,pady=10)
 
             drop_down_box = ttk.Combobox(
                 self.main_frame,
@@ -56,19 +60,19 @@ class QuicklyCreate:
 
             down_dox_group_main.append(drop_down_box)
 
-            drop_down_box.bind("<<ComboboxSelected>>", lambda event: DownBoxModify(json,
-                                                                                   json_path,
+            drop_down_box.bind("<<ComboboxSelected>>", lambda event: DownBoxModify(data_json,
+                                                                                   data_json_path,
                                                                                    down_dox_values_group_main,
                                                                                    down_dox_group_main)
                                .for_modify()
                                )
 
-            drop_down_box.grid(column=1, row=i)
+            drop_down_box.grid(column=1, row=i,padx=input_padx,pady=input_pady)
 
-        messagebox.showerror("错误", message=f"{PRE_DATA}", parent=window) if isinstance(PRE_DATA,
+        messagebox.showerror("错误", message=f"{data_json}", parent=window) if isinstance(data_json,
                                                                                                  Exception) else DownBoxModify(
-            PRE_DATA,
-            PRE_DATA_PATH,
+            data_json,
+            data_json_path,
             down_dox_values_group_main,
             down_dox_group_main).for_set()
 

@@ -1,7 +1,7 @@
 import os
 
 from function.JsonFile import File
-from function.variables.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING,XLR_DATA_WU_XING_JI_LU,PRE_DATA
+from function.variables.ProjectDictionaryVariables import XLR_DATA,XLR_DATA_WU_XING,XLR_DATA_WU_XING_JI_LU,PRE_DATA,YONG_MING_TI_DATA
 
 p_ = os.path.dirname(__file__)
 PATH = os.path.abspath(os.path.join(p_, '..', '..'))
@@ -42,16 +42,19 @@ XLR_DATA_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
 XLR_DATA_WU_XING_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_wu_xing_data.json")
 XLR_DATA_WU_XING_JI_LU_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_wu_xing_ji_lu_data.json")
 PRE_DATA_PATH = os.path.join(DATA_FILE_PATH, "pre_data.json")
+YONG_MING_TI_PATH = os.path.join(DATA_FILE_PATH, "yong_mingti.json")
 
 XLR_JSON = File.dict_load(XLR_DATA_PATH, XLR_DATA)
 XLR_WU_XING_JSON = File.dict_load(XLR_DATA_WU_XING_PATH, XLR_DATA_WU_XING)
 XLR_WU_XING_JI_LU_JSON = File.dict_load(XLR_DATA_WU_XING_JI_LU_PATH , XLR_DATA_WU_XING_JI_LU)
-PRE_DATA = File.dict_load(PRE_DATA_PATH, PRE_DATA)
+PRE_DATA_JSON = File.dict_load(PRE_DATA_PATH, PRE_DATA)
+YONG_MING_TI_DATA_JSON = File.dict_load(YONG_MING_TI_PATH, YONG_MING_TI_DATA)
 
 TEXT_TEMP_PATH = os.path.join(DATA_FILE_PATH, "text-temp")
 
 RECONSTRUCTIONS_PAGE = os.path.join(DATA_FILE_PATH, "reconstructions_page")
 os.makedirs(RECONSTRUCTIONS_PAGE, exist_ok=True)
+
 RECONSTRUCTIONS = os.path.join(RECONSTRUCTIONS_PAGE, 'reconstructions')
 os.makedirs(RECONSTRUCTIONS, exist_ok=True)
 
@@ -62,4 +65,14 @@ RECONSTRUCTIONS_LIST = os.path.join(RECONSTRUCTIONS_LIST_PATH, 'reconstructions_
 RECONSTRUCTIONS_SQLITE_PATH = os.path.join(RECONSTRUCTIONS, 'reconstructions_sqlite')
 os.makedirs(RECONSTRUCTIONS_SQLITE_PATH, exist_ok=True)
 RECONSTRUCTIONS_SQLITE = os.path.join(RECONSTRUCTIONS_SQLITE_PATH, 'reconstructions_list.sqlite')
+
+RECONSTRUCTIONS_VOWEL = os.path.join(RECONSTRUCTIONS, 'reconstructions_vowel')
+os.makedirs(RECONSTRUCTIONS_VOWEL, exist_ok=True)
+
+RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST = os.path.join(RECONSTRUCTIONS_VOWEL, 'reconstructions_list')
+os.makedirs(RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST, exist_ok=True)
+
+RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH = os.path.join(RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST, 'reconstructions_list.json')
+
+#RECONSTRUCTIONS_VOWEL_PATH = os.path.join(RECONSTRUCTIONS_VOWEL, 'reconstructions_vowel_path')
 
