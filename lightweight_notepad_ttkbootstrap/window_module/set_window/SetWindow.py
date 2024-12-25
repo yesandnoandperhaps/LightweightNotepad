@@ -213,9 +213,9 @@ def set_window(root):
                 case _:
                     save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
 
-        QuicklyCreate(w6).quickly_create_drop_down_box(["使用時代:", "使用性質:", "使用作者:", "使用韻書:","使用聲調"],
+        QuicklyCreate(w6).quickly_create_drop_down_box(["使用時代:", "使用性質:", "使用作者:", "使用韻書:","使用聲調:","蜂腰問題:","鶴膝問題:","小韻問題:","旁紐問題:"],
                                                        YONG_MING_TI_LIST,
-                                                       YONG_MING_TI_DATA_JSON, YONG_MING_TI_PATH, main_frame_row=0, main_frame_column=0)
+                                                       YONG_MING_TI_DATA_JSON, YONG_MING_TI_PATH, main_frame_row=0, main_frame_column=0,row_num_max=4)
 
         combobox()
 
