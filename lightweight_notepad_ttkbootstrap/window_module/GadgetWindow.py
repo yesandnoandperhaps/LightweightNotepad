@@ -21,7 +21,6 @@ class GadgetWindow:
         GadgetWindow._instance = self.window  # 记录窗口实例
 
         self.window.title("轻量记事本-小工具")
-        self.window.iconbitmap(ICON_PATH)
         self.window.resizable(None, None)
 
         b1 = ttk.Button(self.window, text="小六壬", style=OUTLINE, command=lambda: OldXiaoLiuRenWindow(root, icon, font_style,0))

@@ -49,13 +49,12 @@ class StartTrainingFrontWindow:
     def lambda_lr_window(self):
         window___ = ttk.Toplevel()
         window___.title("线性回归-LambdaLR-编写函数")
-        window___.iconbitmap(ICON_PATH)
         scrollbar = ttk.Scrollbar(window___, style="round")
         scrollbar.grid(row=1, column=1, sticky="ns")
         text_widget = tk.Text(window___, wrap="word",
                               yscrollcommand=scrollbar.set, font=self.FONT_STYLE)
         text_widget.grid(row=1, column=0, sticky="nsew")
-        text_widget.bind('<Shift_R>', lambda event: self.lambda_lr_window_(text_widget, window___))
+        text_widget.bind('<Control_R>', lambda event: self.lambda_lr_window_(text_widget, window___))
         idc.color_config(text_widget)
         scrollbar.config(command=text_widget.yview)
         default_code = \
@@ -79,7 +78,6 @@ class StartTrainingFrontWindow:
     def pytorch_window():
         window___ = ttk.Toplevel()
         window___.title("线性回归-参数")
-        window___.iconbitmap(ICON_PATH)
         f0 = ttk.Frame(window___)
         f1 = ttk.Frame(window___)
         f2 = ttk.Frame(window___)

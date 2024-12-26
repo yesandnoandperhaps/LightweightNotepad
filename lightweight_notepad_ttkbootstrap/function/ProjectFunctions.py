@@ -7,7 +7,7 @@ import dateutil.tz
 from function import JsonFile
 from function.variables.ProjectDictionaryVariables import UTC_TIME
 from function.variables.ProjectPathVariables import B_PATH, C_PATH, H_PATH, I_PATH, J_PATH, \
-    K_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON, ICON_PATH
+    K_PATH, W_ROOT2_C_VAR_2_PATH, XLR_DATA_PATH, D_PATH, E_PATH, F_PATH, XLR_JSON
 
 def t_s(v):
     v+=1
@@ -96,9 +96,9 @@ def window_on(window, root_main):
 
 def window_init(window, root_main, text):
     window.title(text)
-    window.iconbitmap(ICON_PATH)
     window.protocol("WM_DELETE_WINDOW", lambda: window_closes(window, root_main))
     window_on(window, root_main)
+    window.focus()
 
 open_window = []
 

@@ -24,7 +24,6 @@ class JiZhiWindow:
     def create_window(self):
         self.window = ttk.Toplevel(self.root_main)
         self.window.title("小六壬")
-        self.window.iconbitmap(ICON_PATH)
 
         self.entry = tk.Entry(self.window, font=self.font_style)
         self.entry1 = tk.Entry(self.window, font=self.font_style)
@@ -44,12 +43,12 @@ class JiZhiWindow:
         self.entry.bind('<Return>', lambda event: self.entry1.focus_set())
         self.entry1.bind('<Return>', lambda event: self.entry2.focus_set())
         self.entry2.bind('<Return>', lambda event: self.entry.focus_set())
-        self.entry.bind('<Shift_R>', lambda event: self.judgement())
-        self.entry1.bind('<Shift_R>', lambda event: self.judgement())
-        self.entry2.bind('<Shift_R>', lambda event: self.judgement())
-        self.entry.bind('<Shift_L>', lambda event: self.window.destroy())
-        self.entry1.bind('<Shift_L>', lambda event: self.window.destroy())
-        self.entry2.bind('<Shift_L>', lambda event: self.window.destroy())
+        self.entry.bind('<Control_R>', lambda event: self.judgement())
+        self.entry1.bind('<Control_R>', lambda event: self.judgement())
+        self.entry2.bind('<Control_R>', lambda event: self.judgement())
+        self.entry.bind('<Control_L>', lambda event: self.window.destroy())
+        self.entry1.bind('<Control_L>', lambda event: self.window.destroy())
+        self.entry2.bind('<Control_L>', lambda event: self.window.destroy())
 
         self.window.wait_window()
         return self.result

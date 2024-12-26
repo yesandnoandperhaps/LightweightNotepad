@@ -31,6 +31,7 @@ class YongMingTi:
         reconstructions_list = []
         yun_list = []
         main_vowel_rhyme_tail_list = []
+        shengmu_yuanyin_yunwei_list = []
 
         phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
         extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
@@ -41,7 +42,7 @@ class YongMingTi:
             if self.matching(result):
                 need_to_look_list.append(word)#未找到，需启动
 
-        crawler = GetThePage(need_to_look_list)
+        crawler = GetThePage(''.join(need_to_look_list))
         crawler.crawl_words()
         html_list = FileProcessor(RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
 
@@ -71,7 +72,7 @@ class YongMingTi:
 
             '''擬音'''
             reconstructions_list.append(result)
-            
+
             '''清濁'''
             qing_zhuo_list.append(THIRTY_EIGHT_ALPHABET[extract_the_phenotype_sqlite.get_sheng_nu(word,qing_zhuo_table_dict.get(self.var_3, "guang_yun"),"聲紐")])#清濁问题
 
@@ -118,26 +119,29 @@ class YongMingTi:
             for word in get_all_list:
                 main_vowel_rhyme_tail_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻母") or "")
 
+        '''写入正紐-声母-主元音-韵尾'''
+        for word in get_all_list:
+            a = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "聲母") or ""
+            b = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "元音") or ""
+            c = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻尾") or ""
+            main_vowel_rhyme_tail_list.append(a + b + c)
+
         extract_the_phenotype_sqlite.close()
+        phonetic_processor.close()
 
-        # 查询特定字头、时代、性质和学者的拟音
-        #result = phonetic_processor.get_phonetic(headword="人", era=var_0, nature=var_1, scholar=var_2)
+        s = self.sickness_detect(sheng_diao_list,qing_zhuo_list,yun_list,main_vowel_rhyme_tail_list,shengmu_yuanyin_yunwei_list,get_all_list)
 
-        # 输出结果
-        #print(result)  # 输出对应的拟音或相关错误信息
+        print(s)
 
-        # 关闭连接
-        #processor.close()
-
-        #crawler = GetThePage(all_except_first_line)
-        #crawler.crawl_words()
+        return s
 
     @staticmethod
     def matching(string):
         return bool(re.search(r'.*未找到.*', string))
 
-    def sickness_detect(self,sheng_diao_list,qing_zhuo_list,yun_list,main_vowel_rhyme_tail_list,get_all_list):
+    def sickness_detect(self,sheng_diao_list,qing_zhuo_list,yun_list,main_vowel_rhyme_tail_list,shengmu_yuanyin_yunwei_list,get_all_list):
         """
+        :param shengmu_yuanyin_yunwei_list: 聲母與主元音與韻尾列表
         :param main_vowel_rhyme_tail_list: 主元音與韻尾列表或韻母列表
         :param yun_list: 韻部列表
         :param qing_zhuo_list: 清濁列表
@@ -282,10 +286,12 @@ class YongMingTi:
                                                   start_with_5_extract_5_skip_5, xiao_yun=True, sickness="旁紐")
 
         '''正紐'''
+        start_with_0_extract_5_skip_5 = self.extract_5_skip_5(shengmu_yuanyin_yunwei_list)
+        start_with_5_extract_5_skip_5 = self.extract_5_skip_5(shengmu_yuanyin_yunwei_list, 5)
+        get_all_list = self.rhyme_or_feng_yao(get_all_list, start_with_0_extract_5_skip_5,
+                                              start_with_5_extract_5_skip_5, xiao_yun=True, sickness="正紐")
 
-
-
-
+        return get_all_list
     @staticmethod
     def rhyme_or_shang_wei(elements,get_all_list,group_elements_num,segmentation_num,sickness="上尾"):
         for i in range(0, len(elements) - 1, 2):

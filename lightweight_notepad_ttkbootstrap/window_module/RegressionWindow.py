@@ -262,7 +262,6 @@ def regression(root_main):
 
     window_ = ttk.Toplevel(root_main)
     window_.title("线性回归")
-    window_.iconbitmap(ICON_PATH)
 
     menu_bar = tk.Menu(window_)
     window_.config(menu=menu_bar)

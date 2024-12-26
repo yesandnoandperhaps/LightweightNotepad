@@ -20,9 +20,10 @@ from function.QuicklyCreate import QuicklyCreate
 
 def set_window(root):
     window = ttk.Toplevel(str(root))
-    #window_init(window,root,"轻量记事本-设置")
-    #window.resizable(None,None)
+    window_init(window,root,"轻量记事本-设置")
+    window.resizable(None,None)
     FullscreenExample(window)
+    window.bind("<Control_L>", lambda event: window_closes(window,root))
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
     def w_root1():
@@ -59,8 +60,8 @@ def set_window(root):
         window_button_two = ttk.Button(w_, text="返回", style=OUTLINE, command=lambda: window_closes(window,root))
         window_button_two.grid(column=4,row=0,padx=10,pady=10)
 
-        window_button_two = ttk.Button(w_, text="下一页", style=OUTLINE, command=lambda: window_closes(window, root))
-        window_button_two.grid(column=5, row=0, padx=10, pady=10)
+        #window_button_two = ttk.Button(w_, text="下一页", style=OUTLINE, command=lambda: window_closes(window, root))
+        #window_button_two.grid(column=5, row=0, padx=10, pady=10)
 
         window_button = ttk.Button(w_, text="保存当前设置", style=OUTLINE, command=bao_chun)
         window_button.grid(column=3,row=0,padx=10,pady=10)

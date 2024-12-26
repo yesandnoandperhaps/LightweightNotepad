@@ -106,8 +106,8 @@ class NewX:
         entry0.focus_set()
 
         # 绑定 Shift 键事件
-        entry0.bind('<Shift_R>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
-        entry0.bind('<Shift_L>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
+        entry0.bind('<Control_R>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
+        entry0.bind('<Control_L>', lambda event: judge_function(entry0.get(), window,num,method,wu_time_list))
 
     def wu_xing_window(self):
         if self.wu_xing_input == 0:

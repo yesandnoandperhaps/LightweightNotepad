@@ -17,7 +17,6 @@ class SpriteSheetMaker(tk.Toplevel):
         super().__init__()
         self.icon = icon
         self.title("精灵图制作")
-        self.iconbitmap(ICON_PATH)
         self.images = []
         self.image_labels = []
         self.sprite_sheet = None

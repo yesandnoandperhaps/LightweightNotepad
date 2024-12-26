@@ -306,8 +306,7 @@ def picture(root_main,icon):
 
         window__ = ttk.Toplevel(str(window_))
         window__.title("颜色转换")
-        window__.iconbitmap(ICON_PATH)
-        window__.bind("<Shift_R>", lambda event: exit_win())
+        window__.bind("<Control_R>", lambda event: exit_win())
 
         f = ttk.Frame(window__)
         f.grid(column=0, row=0, padx=10, pady=10)
@@ -333,8 +332,8 @@ def picture(root_main,icon):
                 entry2.insert(tk.END, "255")
                 entry1.bind("<Return>", lambda event: entry2.focus_set())
                 entry2.bind("<Return>", lambda event: entry1.focus_set())
-                entry1.bind('<Shift_L>', lambda event: color_rgba())
-                entry2.bind('<Shift_L>', lambda event: color_rgba())
+                entry1.bind('<Control_L>', lambda event: color_rgba())
+                entry2.bind('<Control_L>', lambda event: color_rgba())
                 wb1_.bind("<Button-3>", lambda event: color_rgba())
                 wb2_.bind("<Button-3>", lambda event: color_rgba())
             elif t_ == "RGB":
@@ -360,13 +359,13 @@ def picture(root_main,icon):
                 entry2.bind("<Return>", lambda event: entry1_1.focus_set())
                 entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
                 entry2_1.bind("<Return>", lambda event: entry1.focus_set())
-                entry1.bind('<Shift_L>', lambda event: color_rgba_16())
-                entry2.bind('<Shift_L>', lambda event: color_rgba_16())
-                entry1_1.bind('<Shift_L>', lambda event: color_rgba_16())
-                entry2_1.bind('<Shift_L>', lambda event: color_rgba_16())
+                entry1.bind('<Control_L>', lambda event: color_rgba_16())
+                entry2.bind('<Control_L>', lambda event: color_rgba_16())
+                entry1_1.bind('<Control_L>', lambda event: color_rgba_16())
+                entry2_1.bind('<Control_L>', lambda event: color_rgba_16())
             elif t_ == "RGB":
-                entry1_1.bind('<Shift_L>', lambda event: color_rgb_16())
-                entry2_1.bind('<Shift_L>', lambda event: color_rgb_16())
+                entry1_1.bind('<Control_L>', lambda event: color_rgb_16())
+                entry2_1.bind('<Control_L>', lambda event: color_rgb_16())
                 entry1_1.bind("<Return>", lambda event: entry2_1.focus_set())
                 entry2_1.bind("<Return>", lambda event: entry1_1.focus_set())
         elif t == "RGB值":
@@ -391,15 +390,15 @@ def picture(root_main,icon):
                 entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
                 entry2_2.bind("<Return>", lambda event: entry1.focus_set())
 
-                entry1.bind('<Shift_L>', lambda event: color_rgba_rgb())
-                entry2.bind('<Shift_L>', lambda event: color_rgba_rgb())
-                entry1_2.bind('<Shift_L>', lambda event: color_rgba_rgb())
-                entry2_2.bind('<Shift_L>', lambda event: color_rgba_rgb())
+                entry1.bind('<Control_L>', lambda event: color_rgba_rgb())
+                entry2.bind('<Control_L>', lambda event: color_rgba_rgb())
+                entry1_2.bind('<Control_L>', lambda event: color_rgba_rgb())
+                entry2_2.bind('<Control_L>', lambda event: color_rgba_rgb())
             elif t_ == "RGB":
                 entry1_2.bind("<Return>", lambda event: entry2_2.focus_set())
                 entry2_2.bind("<Return>", lambda event: entry1_2.focus_set())
-                entry1_2.bind('<Shift_L>', lambda event: color_rgb_rgb())
-                entry2_2.bind('<Shift_L>', lambda event: color_rgb_rgb())
+                entry1_2.bind('<Control_L>', lambda event: color_rgb_rgb())
+                entry2_2.bind('<Control_L>', lambda event: color_rgb_rgb())
 
         text = ttk.Label(f, text="需要转换的颜色：")
         text.grid(column=0, row=0, padx=10, pady=10)
@@ -454,8 +453,7 @@ def picture(root_main,icon):
 
         window__ = ttk.Toplevel(str(window_))
         window__.title("格式转换")
-        window__.iconbitmap(ICON_PATH)
-        window__.bind("<Shift_R>", lambda event: exit_win())
+        window__.bind("<Control_R>", lambda event: exit_win())
 
         def f_image():
             output_format = down_box.get()

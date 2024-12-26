@@ -42,8 +42,8 @@ class RandomNumbersWindow:
        self.entry0.focus_set()
 
     def event0(self,num=None):
-        self.entry0.bind('<Shift_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
-        self.entry1.bind('<Shift_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
+        self.entry0.bind('<Control_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
+        self.entry1.bind('<Control_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
         self.entry0.bind('<Return>', lambda event: self.entry1.focus_set())
         self.entry1.bind('<Return>', lambda event: self.entry0.focus_set())
 

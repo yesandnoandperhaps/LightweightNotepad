@@ -125,10 +125,6 @@ class GridLabelText:
         else:
             return False
 
-
-
-
-
 class ZiWeiDouShuWindow:
     def __init__(self,root_main,font_style):
         t = str(t_load(R_PATH) or "横排样式")
@@ -138,7 +134,6 @@ class ZiWeiDouShuWindow:
             case "横排样式":
                 window = ttk.Toplevel(str(root_main))
                 window.title("紫微斗数")
-                window.iconbitmap(ICON_PATH)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
                 text2 = tk.Label(window,text="月:")
@@ -165,15 +160,14 @@ class ZiWeiDouShuWindow:
                 entry3.bind("<Return>", lambda event: entry4.focus_set())
                 entry4.bind("<Return>", lambda event: combobox.focus_set())
                 combobox.bind("<Return>", lambda event: entry1.focus_set())
-                entry1.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry2.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry3.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry4.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                combobox.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry1.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry2.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry3.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry4.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                combobox.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
             case "竖排样式":
                 window = ttk.Toplevel(str(root_main))
                 window.title("紫微斗数")
-                window.iconbitmap(ICON_PATH)
                 text1 = tk.Label(window,text="年:")
                 text1.grid(column=0,row=0,padx=5,pady=5)
                 text2 = tk.Label(window,text="月:")
@@ -200,11 +194,11 @@ class ZiWeiDouShuWindow:
                 entry3.bind("<Return>", lambda event: entry4.focus_set())
                 entry4.bind("<Return>", lambda event: combobox.focus_set())
                 combobox.bind("<Return>", lambda event: entry1.focus_set())
-                entry1.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry2.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry3.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                entry4.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
-                combobox.bind('<Shift_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry1.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry2.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry3.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                entry4.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
+                combobox.bind('<Control_R>', lambda event: self.z_judge(window,entry1,entry2,entry3,entry4,combobox))
     
     def z_judge(self,window,entry1,entry2,entry3,entry4,combobox):
         gain_entry1 = entry1.get()
@@ -262,7 +256,6 @@ class ZiWeiDouShuWindow:
     def zi_wei_dou_shu(self):
         self.window_z = ttk.Toplevel()
         self.window_z.title("轻量记事本-小工具-紫微斗数-三合派")
-        self.window_z.iconbitmap(ICON_PATH)
         self.w = ttk.Frame(self.window_z)
         self.w.grid(row=0,column=0,padx=10,pady=10)
         self.w2 = ttk.Frame(self.window_z)

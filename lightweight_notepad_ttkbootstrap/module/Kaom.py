@@ -27,6 +27,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from function.variables.ProjectPathVariables import RECONSTRUCTIONS, RECONSTRUCTIONS_VOWEL, \
     RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH, RECONSTRUCTIONS_SQLITE
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class GetThePage:
     def __init__(self,words,
@@ -47,7 +48,6 @@ class GetThePage:
         self.wait_time_before_submitting = wait_time_before_submitting
         self.wait_time_before_switching_windows = wait_time_before_switching_windows
         self.timeout = timeout
-
 
     def init_chrome_driver(self, browser_priority:list=None):
         """初始化浏览器驱动，按照优先顺序尝试启动"""
