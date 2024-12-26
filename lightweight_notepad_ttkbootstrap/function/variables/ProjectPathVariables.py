@@ -36,7 +36,7 @@ AA_PATH = os.path.join(DATA_FILE_PATH, "aa")
 AB_PATH = os.path.join(DATA_FILE_PATH, "ab")
 
 W_ROOT2_C_VAR_2_PATH = os.path.join(DATA_FILE_PATH, "w_root2_c_var_2_path")
-ICON_PATH = os.path.join(ICON_FILE_PATH, "main_icon.ico")
+ICON_PATH = os.path.join(ICON_FILE_PATH, "main_icon.png")
 
 XLR_DATA_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_data.json")
 XLR_DATA_WU_XING_PATH = os.path.join(DATA_FILE_PATH, "xiao_liu_ren_wu_xing_data.json")

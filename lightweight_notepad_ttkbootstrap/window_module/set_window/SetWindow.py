@@ -1,8 +1,10 @@
+import os
 from tkinter import messagebox
 from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+from function.FullscreenExample import FullscreenExample
 from window_module.set_window.set_function.Transfer import Transfer
 from function.JsonFile import File
 from function.CustomToolTip import CustomToolTip as ToolTip
@@ -18,8 +20,9 @@ from function.QuicklyCreate import QuicklyCreate
 
 def set_window(root):
     window = ttk.Toplevel(str(root))
-    window_init(window,root,"轻量记事本-设置")
-    window.resizable(None,None)
+    #window_init(window,root,"轻量记事本-设置")
+    #window.resizable(None,None)
+    FullscreenExample(window)
 
     # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
     def w_root1():
@@ -55,6 +58,9 @@ def set_window(root):
 
         window_button_two = ttk.Button(w_, text="返回", style=OUTLINE, command=lambda: window_closes(window,root))
         window_button_two.grid(column=4,row=0,padx=10,pady=10)
+
+        window_button_two = ttk.Button(w_, text="下一页", style=OUTLINE, command=lambda: window_closes(window, root))
+        window_button_two.grid(column=5, row=0, padx=10, pady=10)
 
         window_button = ttk.Button(w_, text="保存当前设置", style=OUTLINE, command=bao_chun)
         window_button.grid(column=3,row=0,padx=10,pady=10)
@@ -233,8 +239,8 @@ def set_window(root):
         w_4_1.grid(column=1,row=0,sticky=W)
 
         def w_root4_row6():
-            w_4_row_6 = ttk.Frame(window)
-            w_4_row_6.grid(row=6,column=1,sticky=W)
+            w_4_row_6 = ttk.Frame(w_4)
+            w_4_row_6.grid(row=0,column=2,sticky=W)
 
             w_4_2 = ttk.Frame(w_4_row_6)
             w_4_2.grid(column=1,row=0,sticky=W)
@@ -266,7 +272,7 @@ def set_window(root):
             w_4_3_lb2 = ttk.Label(w_4_3, text="色彩空间：")
             w_4_3_lb2.grid(column=0,row=1,padx=5,pady=5)
 
-            w_4_3_lb3 = ttk.Label(w_4_3, text="精灵图文件导出：")
+            w_4_3_lb3 = ttk.Label(w_4_3, text="精灵文件：")
             w_4_3_lb3.grid(column=0,row=2,padx=5,pady=5)
 
             # noinspection PyPep8Naming,PyShadowingNames,PyArgumentList,PyUnboundLocalVariable,PyBroadException
@@ -333,7 +339,7 @@ def set_window(root):
                     w_4_3_var2.set(1)
                 else:
                     w_4_3_var2.set(0)
-                w_4_3_var2_ = ttk.Checkbutton(w_4_3_1, text="css", variable=w_4_3_var2, command=lambda: t_s_(AA_PATH, var2_num_w_4_3), style="round-toggle")
+                w_4_3_var2_ = ttk.Checkbutton(w_4_3_1, text="CSS", variable=w_4_3_var2, command=lambda: t_s_(AA_PATH, var2_num_w_4_3), style="round-toggle")
                 w_4_3_var2_.grid(column=1,row=0,padx=5,pady=5)
 
                 w_4_3_var3 = ttk.IntVar()
