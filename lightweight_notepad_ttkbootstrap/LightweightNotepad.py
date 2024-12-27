@@ -71,7 +71,7 @@ class LightweightNotepad(ttk.Window):
         self.bind("<Control-y>", lambda event: self.b())
         #self.bind("<Shift_L>", lambda event: self.c())
         self.bind("<Control-f> ", lambda event: self.toggle_window())
-        self.bind("<Control-x>", lambda event: self.thread(YongMingTi(self.text_widget).fetch()))  # 永明体检测
+        self.bind("<Control-x>", lambda event: YongMingTi(self.text_widget).fetch())  # 永明体检测
         self.scrollbar.config(command=self.text_widget.yview)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)

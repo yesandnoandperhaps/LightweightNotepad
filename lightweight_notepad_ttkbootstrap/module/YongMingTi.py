@@ -1,4 +1,5 @@
 import re
+import sqlite3
 
 from function.variables.ProjectDictionaryVariables import YONG_MING_TI_LIST, THIRTY_EIGHT_ALPHABET
 from function.variables.ProjectPathVariables import YONG_MING_TI_DATA_JSON, RECONSTRUCTIONS_SQLITE, RECONSTRUCTIONS, \
@@ -24,6 +25,7 @@ class YongMingTi:
     def fetch(self):
 
         get_all_list = list(re.sub(r'[^\u4e00-\u9fa5]', '', self.get_all))
+        print(get_all_list)
 
         need_to_look_list = []
         qing_zhuo_list = []
@@ -34,16 +36,22 @@ class YongMingTi:
         shengmu_yuanyin_yunwei_list = []
 
         phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
-        extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
-        extract_the_phenotype_sqlite.connect()
 
-        for word in get_all_list:
-            result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1, scholar=self.var_2)
-            if self.matching(result):
-                need_to_look_list.append(word)#未找到，需启动
+        try:
+            for word in get_all_list:
+                result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1, scholar=self.var_2)
+                if self.matching(result):
+                    need_to_look_list.append(word)#未找到，需启动
+        except sqlite3.OperationalError:
+            pass
+
+
+        phonetic_processor.close()
+
 
         crawler = GetThePage(''.join(need_to_look_list))
         crawler.crawl_words()
+
         html_list = FileProcessor(RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
 
         processor = HtmlToSqlite(RECONSTRUCTIONS_SQLITE)
@@ -65,6 +73,10 @@ class YongMingTi:
             "玉篇-基於poem": "yu_pian",
             "平水韻": "ping_shui_yun"
         }
+
+        extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
+        extract_the_phenotype_sqlite.connect()
+        phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
 
         for word in get_all_list:
             result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1,
@@ -98,7 +110,8 @@ class YongMingTi:
                 else:
                     sheng_diao_list.append(sheng_diao)
 
-
+        extract_the_phenotype_sqlite.close()
+        phonetic_processor.close()
 
         crawler = SyllableSplitting()
         crawler.crawl_words_initiate(reconstructions_list)
@@ -106,25 +119,31 @@ class YongMingTi:
         html_list = FileProcessor(RECONSTRUCTIONS_VOWEL, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH).save_content()
 
         '''音节拆分，写入韵母'''
-        converter = SyllableHtmlToSqlite(html_list,["序號", "字表", "聲母", "介音", "元音", "韻尾", "聲調", "韻母", "聲韻"],
+        converter = SyllableHtmlToSqlite(html_list,["字表", "聲母", "介音", "元音", "韻尾", "聲調", "韻母", "聲韻"],
                                          RECONSTRUCTIONS_SQLITE, "cut_the_voicing")
         converter.convert()
 
+        ipa_list = converter.get_column_data("字表")
+
+        extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
+        extract_the_phenotype_sqlite.connect()
+        phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
+
         if self.var_8 == "主元音韻尾檢查-半聯" or "主元音韻尾檢查-全聯":
-            for word in get_all_list:
-                a = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "元音") or ""
-                b = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻尾") or ""
+            for word in ipa_list:
+                a = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "元音","字表") or ""
+                b = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻尾","字表") or ""
                 main_vowel_rhyme_tail_list.append(a + b)
         elif self.var_8 == "韻母檢查-半聯" or "韻母檢查-全聯":
-            for word in get_all_list:
-                main_vowel_rhyme_tail_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻母") or "")
+            for word in ipa_list:
+                main_vowel_rhyme_tail_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻母","字表") or "")
 
         '''写入正紐-声母-主元音-韵尾'''
-        for word in get_all_list:
-            a = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "聲母") or ""
-            b = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "元音") or ""
-            c = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻尾") or ""
-            main_vowel_rhyme_tail_list.append(a + b + c)
+        for word in ipa_list:
+            a = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "聲母","字表") or ""
+            b = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "元音","字表") or ""
+            c = extract_the_phenotype_sqlite.get_sheng_nu(word, "cut_the_voicing", "韻尾","字表") or ""
+            shengmu_yuanyin_yunwei_list.append(a + b + c)
 
         extract_the_phenotype_sqlite.close()
         phonetic_processor.close()
@@ -288,10 +307,14 @@ class YongMingTi:
         '''正紐'''
         start_with_0_extract_5_skip_5 = self.extract_5_skip_5(shengmu_yuanyin_yunwei_list)
         start_with_5_extract_5_skip_5 = self.extract_5_skip_5(shengmu_yuanyin_yunwei_list, 5)
-        get_all_list = self.rhyme_or_feng_yao(get_all_list, start_with_0_extract_5_skip_5,
-                                              start_with_5_extract_5_skip_5, xiao_yun=True, sickness="正紐")
+
+        print(start_with_0_extract_5_skip_5)
+        print(start_with_5_extract_5_skip_5)
+        get_all_list = self.rhyme_or_feng_yao(get_all_list, [item for sublist in start_with_0_extract_5_skip_5 for item in sublist],
+                                              [item for sublist in start_with_5_extract_5_skip_5 for item in sublist], xiao_yun=True, sickness="正紐")
 
         return get_all_list
+
     @staticmethod
     def rhyme_or_shang_wei(elements,get_all_list,group_elements_num,segmentation_num,sickness="上尾"):
         for i in range(0, len(elements) - 1, 2):
@@ -392,6 +415,9 @@ class YongMingTi:
         else:
             grouped_yun = YongMingTi._1to10_(yun_list)
 
+        print(grouped_yun)
+        print(len(get_all_list))
+
         for group in grouped_yun:
             # 用于记录每组中元素的索引
             element_indices = {}
@@ -399,6 +425,7 @@ class YongMingTi:
                 if element in element_indices:
                     # 如果该元素已出现过，检查并更新对应位置
                     previous_index = element_indices[element]
+                    print("yes",previous_index)
                     if f"-{element}{sickness}" not in get_all_list[previous_index]:
                         get_all_list[previous_index] += f"-{element}{sickness}"
                     if f"-{element}{sickness}" not in get_all_list[original_index]:
