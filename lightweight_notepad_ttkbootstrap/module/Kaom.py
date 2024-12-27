@@ -27,10 +27,8 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from function.variables.ProjectPathVariables import RECONSTRUCTIONS, RECONSTRUCTIONS_VOWEL, \
     RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH, RECONSTRUCTIONS_SQLITE
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 class GetThePage:
-    def __init__(self,words,
+    def __init__(self,words,text_widget,
                  timeout=8,
                  cycle_wait_time=5,max_retries=300,
                  wait_before_typing_time=3,wait_time_before_submitting=3,wait_time_before_switching_windows=3):
@@ -40,6 +38,7 @@ class GetThePage:
             :param wait_before_typing_time and wait_time_before_submitting and wait_time_before_switching_windows: 顾名思义-{用于operator_interface方法中}
         """
         self.words = list(re.sub(r'[^\u4e00-\u9fa5]', '', words))
+        self.text_widget = text_widget
         self.driver = None
         self.ua = UserAgent()
         self.cycle_wait_time = cycle_wait_time
@@ -67,14 +66,14 @@ class GetThePage:
         #options['firefox'].add_argument(f"user-agent={user_agent}")
 
         # 启用无头模式
-        #options['chrome'].add_argument("--headless")
-        #options['edge'].add_argument("--headless")
-        #options['firefox'].add_argument("--headless")
+        #['chrome'].add_argument("--headless")
+        options['edge'].add_argument("--headless")
+        options['firefox'].add_argument("--headless")
 
         # 禁用GPU加速
-        #options['chrome'].add_argument("--disable-gpu")
-        #options['edge'].add_argument("--disable-gpu")
-        #options['firefox'].add_argument("--disable-gpu")
+        options['chrome'].add_argument("--disable-gpu")
+        options['edge'].add_argument("--disable-gpu")
+        options['firefox'].add_argument("--disable-gpu")
 
         # 禁用浏览器扩展
         options['chrome'].add_argument("--disable-extensions")
@@ -94,23 +93,23 @@ class GetThePage:
                 if browser == 0:  # Chrome
                     self.driver = Chrome(service=ChromeService(ChromeDriverManager().install()),
                                          options=options['chrome'])
-                    logging.info("Chrome启动成功")
+                    self.text_widget.insert("end", "程序启动成功\n")
                     return self.driver
 
                 elif browser == 1:  # Edge
                     self.driver = Edge(service=EdgeService(EdgeChromiumDriverManager().install()),
                                        options=options['edge'])
-                    logging.info("Edge启动成功")
+                    self.text_widget.insert("end","程序启动成功\n")
                     return self.driver
 
                 elif browser == 2:  # Firefox
                     self.driver = Firefox(service=FirefoxService(GeckoDriverManager().install()),
                                           options=options['firefox'])
-                    logging.info("Firefox启动成功")
+                    self.text_widget.insert("end","程序启动成功\n")
                     return self.driver
 
             except Exception as e:
-                logging.info(f"浏览器启动失败: {e}")
+                self.text_widget.insert("end",f"启动失败-建议检查网络设置: {e}\n")
                 continue  # 如果当前浏览器启动失败，尝试下一个浏览器
 
         raise Exception("所有浏览器启动失败")
@@ -121,14 +120,14 @@ class GetThePage:
             element = WebDriverWait(self.driver, self.timeout).until(ec.presence_of_element_located(locator))
             return element
         except Exception as e:
-            logging.error(f"等待元素超时: {locator}, 错误: {e}")
+            self.text_widget.insert("end", f"等待元素超时: {locator}, 错误: {e}\n")
             return None
 
     def handle_frequency_limit(self,wait_time):
         """处理频繁点击的限制提示"""
         page_source = self.driver.page_source
         if "Please click with an interval greater than 3 seconds" in page_source or "請點擊間隔大於3秒" in page_source:
-            logging.warning(f"检测到频繁点击限制，等待{wait_time}秒后重试")
+            self.text_widget.insert("end", f"检测到频繁点击限制，等待{wait_time}秒后重试\n")
             time.sleep(wait_time)  # 等待3.8秒
             return True  # 返回True表示需要重试
         return False
@@ -152,7 +151,7 @@ class GetThePage:
         time.sleep(self.wait_before_typing_time)
 
         input_box.send_keys(word)
-        logging.info(f"输入文字: {word}")
+        self.text_widget.insert("end",f"输入文字: {word}\n")
 
         # 选择下拉框选项
         dropdown = self.driver.find_element(By.NAME, "bianti")
@@ -171,7 +170,7 @@ class GetThePage:
         WebDriverWait(self.driver, 10).until(ec.new_window_is_opened([main_window]))
         new_window = [window for window in self.driver.window_handles if window != main_window][0]
         self.driver.switch_to.window(new_window)
-        logging.info("切换到新窗口")
+        self.text_widget.insert("end","切换到新窗口\n")
         return main_window
 
     def crawl_word_data(self,word):
@@ -182,7 +181,7 @@ class GetThePage:
             # 访问第一个页面并处理频繁点击限制
             while attempts < self.max_retries:
                 self.driver.get("http://www.kaom.net/ny_word.php")
-                logging.info(f"访问页面成功: {self.driver.current_url}")
+                self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
                 main_window = self.driver.current_window_handle
 
                 self.wait_for_element((By.TAG_NAME, "div"))
@@ -190,7 +189,7 @@ class GetThePage:
                 # 检查是否出现频繁点击限制提示
                 if self.handle_frequency_limit(self.cycle_wait_time):
                     attempts += 1
-                    logging.warning(f"频繁点击限制提示，重试第 {attempts} 次")
+                    self.text_widget.insert("end", f"频繁点击限制提示，重试第 {attempts} 次\n")
                     if self.driver.current_url == "http://www.kaom.net/ny_word.php":
                         self.refresh_url(self.cycle_wait_time)
                     else:
@@ -208,7 +207,7 @@ class GetThePage:
 
                     if self.handle_frequency_limit(self.cycle_wait_time):
                         retry_count += 1
-                        logging.warning(f"频繁点击限制提示，重试第 {retry_count} 次")
+                        self.text_widget.insert("end", f"频繁点击限制提示，重试第 {attempts} 次\n")
                         time.sleep(self.cycle_wait_time)
                         self.frequent_clicks(main_window)
                         self.operator_interface(word)
@@ -221,17 +220,17 @@ class GetThePage:
                     file_path = os.path.join(RECONSTRUCTIONS, file_name)
                     with open(file_path, "w", encoding="utf-8") as f:
                         f.write(str(self.driver.page_source))
-                        logging.info(f"页面HTML已保存为: {file_path}")
+                        self.text_widget.insert("end", f"页面HTML已保存为: {file_path}\n")
 
                     self.frequent_clicks(main_window)
-                    logging.info("关闭新窗口并切回主窗口")
+                    self.text_widget.insert("end","关闭新窗口并切回主窗口\n")
                     return []  # 成功保存文件，返回空列表
 
-                logging.error("超过最大重试次数，无法保存文件")
+                self.text_widget.insert("end", "超过最大重试次数，无法保存文件\n")
                 return []  # 如果达到最大重试次数仍未成功，则返回空列表
 
         except Exception as e:
-            logging.error(f"发生异常: {e}")
+            self.text_widget.insert("end", f"发生异常: {e}\n")
             return []
 
     def crawl_words(self):
@@ -247,7 +246,7 @@ class GetThePage:
         self.driver.quit()
 
 class SyllableSplitting(GetThePage):
-    def __init__(self, timeout=8, cycle_wait_time=5, max_retries=300,
+    def __init__(self,text_widget,timeout=8, cycle_wait_time=5, max_retries=300,
                  wait_before_typing_time=3, wait_time_before_submitting=3,
                  wait_time_before_switching_windows=3,
                  syllabic_splits=5, words=None):
@@ -264,6 +263,7 @@ class SyllableSplitting(GetThePage):
                          wait_time_before_switching_windows)
 
         self.syllab_splits = syllabic_splits
+        self.text_widget = text_widget
 
     def operator_interface(self,word):
         """操作界面"""
@@ -279,7 +279,6 @@ class SyllableSplitting(GetThePage):
             # 判断是否是最后一个元素，最后一个元素不添加换行符
             if idx < len(word) - 1:
                 input_box.send_keys("\n")  # 添加换行符，使每个元素为一行
-            logging.info(f"输入文字: {item}")
 
         # 定位到第一个下拉框
         dropdown = self.driver.find_element(By.NAME, "mode")
@@ -303,7 +302,7 @@ class SyllableSplitting(GetThePage):
         WebDriverWait(self.driver, 10).until(ec.new_window_is_opened([main_window]))
         new_window = [window for window in self.driver.window_handles if window != main_window][0]
         self.driver.switch_to.window(new_window)
-        logging.info("切换到新窗口")
+        self.text_widget.insert("end","切换到新窗口\n")
         return main_window
 
     def split_syllables(self,word):
@@ -313,7 +312,7 @@ class SyllableSplitting(GetThePage):
             # 访问第一个页面并处理频繁点击限制
             while attempts < self.max_retries:
                 self.driver.get("http://www.kaom.net/font_ipa_qiefen.php")
-                logging.info(f"访问页面成功: {self.driver.current_url}")
+                self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
                 main_window = self.driver.current_window_handle
 
                 self.wait_for_element((By.TAG_NAME, "div"))
@@ -321,7 +320,7 @@ class SyllableSplitting(GetThePage):
                 # 检查是否出现频繁点击限制提示
                 if self.handle_frequency_limit(self.cycle_wait_time):
                     attempts += 1
-                    logging.warning(f"频繁点击限制提示，重试第 {attempts} 次")
+                    self.text_widget.insert("end", f"频繁点击限制提示，重试第 {attempts} 次\n")
                     if self.driver.current_url == "http://www.kaom.net/font_ipa_qiefen.php":
                         self.refresh_url(self.cycle_wait_time)
                     else:
@@ -339,7 +338,7 @@ class SyllableSplitting(GetThePage):
 
                     if self.handle_frequency_limit(self.cycle_wait_time):
                         retry_count += 1
-                        logging.warning(f"频繁点击限制提示，重试第 {retry_count} 次")
+                        self.text_widget.insert("end", f"频繁点击限制提示，重试第 {attempts} 次\n")
                         time.sleep(self.cycle_wait_time)
                         self.frequent_clicks(main_window)
                         self.operator_interface(word)
@@ -352,17 +351,17 @@ class SyllableSplitting(GetThePage):
                     file_path = os.path.join(RECONSTRUCTIONS_VOWEL, file_name)
                     with open(file_path, "w", encoding="utf-8") as f:
                         f.write(str(self.driver.page_source))
-                        logging.info(f"页面HTML已保存为: {file_path}")
+                        self.text_widget.insert("end", f"页面HTML已保存为: {file_path}\n")
 
                     self.frequent_clicks(main_window)
-                    logging.info("关闭新窗口并切回主窗口")
+                    self.text_widget.insert("end","关闭新窗口并切回主窗口\n")
                     return []  # 成功保存文件，返回空列表
 
-                logging.error("超过最大重试次数，无法保存文件")
+                self.text_widget.insert("end", "超过最大重试次数，无法保存文件\n")
                 return []  # 如果达到最大重试次数仍未成功，则返回空列表
 
         except Exception as e:
-            logging.error(f"发生异常: {e}")
+            self.text_widget.insert("end", f"发生异常: {e}\n")
             return []
 
     def crawl_words_initiate(self,word):
@@ -377,13 +376,14 @@ class SyllableSplitting(GetThePage):
         self.driver.quit()
 
 class FileProcessor:
-    def __init__(self, folder_on_path, output_path):
+    def __init__(self,text_widget,folder_on_path, output_path):
         self.folder_on_path = folder_on_path
         self.output_path = output_path
+        self.text_widget = text_widget
 
     def get_files_content(self):
         reconstructions_list = []
-        logging.info(f"开始提取中")
+        self.text_widget.insert("end",f"开始提取中\n")
         for file in os.listdir(self.folder_on_path):
             if file.endswith('.html'):
                 with open(os.path.join(self.folder_on_path, file), 'r', encoding='utf-8') as f:
@@ -391,20 +391,21 @@ class FileProcessor:
                     reconstructions_list.extend(
                         str(table) for table in BeautifulSoup(f.read(), 'html.parser').find_all('table')
                     )
-        logging.info(f"提取结束")
+        self.text_widget.insert("end",f"提取结束\n")
         return reconstructions_list
 
     def save_content(self):
-        logging.info(f"所有文件内容正在保存到 {self.output_path}")
+        self.text_widget.insert("end",f"所有文件内容正在保存到 {self.output_path}\n")
         reconstructions_list = self.get_files_content()
         with open(self.output_path, 'w', encoding='utf-8') as f:
             json.dump(reconstructions_list, f, ensure_ascii=False, indent=4)
 
-        logging.info(f"所有文件内容已保存到 {self.output_path}")
+        self.text_widget.insert("end",f"所有文件内容已保存到 {self.output_path}\n")
         return reconstructions_list
 
 class HtmlToSqlite:
-    def __init__(self, sq_file='reconstructions_list.sqlite'):
+    def __init__(self,text_widget,sq_file='reconstructions_list.sqlite'):
+        self.text_widget = text_widget
         self.sq_file = sq_file
         self.conn = sqlite3.connect(self.sq_file, check_same_thread=False)# 防止多线程时的锁定
         #self.conn.execute('PRAGMA busy_timeout=100000;')
@@ -464,7 +465,7 @@ class HtmlToSqlite:
         """处理每一行数据"""
         headword = row['字頭'] if pd.notna(row['字頭']) else None
         if headword is None:
-            logging.info("字頭為 None，跳過此行")
+            #self.text_widget.insert("end","字頭為 None，跳過此行\n")
             return
 
         era = row['時代'] if pd.notna(row['時代']) else None
@@ -477,8 +478,6 @@ class HtmlToSqlite:
         if phonetic == "無擬音":
             phonetic = rhyme
 
-        # 插入字頭，避免重复
-        logging.info(f"正在插入字頭: {headword}")
         self.cursor.execute("INSERT OR IGNORE INTO headwords (word) VALUES (?)", (headword,))
         self.cursor.execute("SELECT id FROM headwords WHERE word = ?", (headword,))
         headword_id = self.cursor.fetchone()[0]
@@ -499,28 +498,19 @@ class HtmlToSqlite:
         scholar_id = self.cursor.fetchone()[0]
 
         # 检查是否已存在相同组合的记录
-        logging.info(
-            f"检查是否已存在相同组合的记录：headword_id={headword_id}, era_id={era_id}, nature_id={nature_id}, scholar_id={scholar_id}")
         self.cursor.execute(''' 
         SELECT phonetic FROM phonetics
         WHERE headword_id = ? AND era_id = ? AND nature_id = ? AND scholar_id = ?''',
                             (headword_id, era_id, nature_id, scholar_id))
+
         existing_phonetic = self.cursor.fetchone()
 
         if existing_phonetic:
-            existing_phonetic = existing_phonetic[0]
-            if existing_phonetic != phonetic:
-                logging.warning(f"冲突：已有记录的擬音为 '{existing_phonetic}'，新擬音为 '{phonetic}'。跳过插入。")
-            else:
-                logging.info(f"记录已存在，擬音一致：'{phonetic}'。跳过插入。")
             return
 
-        # 插入 phonetic
-        logging.info(f"正在插入擬音: {phonetic}")
         self.cursor.execute(''' 
         INSERT INTO phonetics (headword_id, era_id, nature_id, scholar_id, phonetic)
         VALUES (?, ?, ?, ?, ?)''', (headword_id, era_id, nature_id, scholar_id, phonetic))
-        logging.info(f"擬音插入成功: {phonetic}")
 
     def process_html(self, html_code):
         """处理单个 HTML 文件"""
@@ -532,13 +522,13 @@ class HtmlToSqlite:
         for html_code in html_files:
             self.process_html(html_code)
         self.conn.commit()  # 提交所有操作
-        logging.info("所有数据已提交到数据库")
+        self.text_widget.insert("end","数据提交数据库成功\n")
 
     def close(self):
         """关闭数据库连接"""
         self.conn.commit()  # 确保所有数据已提交
         self.conn.close()
-        logging.info(f"数据已成功保存到 {self.sq_file} 数据库。")
+        self.text_widget.insert("end","关闭数据库\n")
 
 class SyllableHtmlToSqlite:
     def __init__(self, html_contents, column_names, db_name='table_data.sqlite', table_name='my_table'):
@@ -596,19 +586,6 @@ class SyllableHtmlToSqlite:
         conn.commit()
         conn.close()
 
-    def display_data(self):
-        """查询并显示表格数据"""
-        conn = sqlite3.connect(self.db_name)
-        cursor = conn.cursor()
-
-        # 查询数据
-        cursor.execute(f"SELECT * FROM {self.table_name}")
-        for row in cursor.fetchall():
-            print(row)
-
-        # 关闭连接
-        conn.close()
-
     def convert(self):
         """将多个 HTML 内容转换为 SQLite 数据库"""
         # 创建数据库表
@@ -619,9 +596,6 @@ class SyllableHtmlToSqlite:
             self.rows = []  # 每个 HTML 文件对应一组数据
             self.parse_html(html_content)
             self.insert_data()
-
-        # 显示所有插入的数据
-        self.display_data()
 
     def get_column_data(self, column_name):
         """根据列名提取该列的数据"""
@@ -704,20 +678,21 @@ class PhoneticDatabaseProcessor:
 
 class CsvImportDatabase:
     def __init__(self, csv_file,table_name, sq_file='reconstructions_list.sqlite'):
-        logging.info(f"数据从 {csv_file} 开始添加到 {sq_file} 数据库")
+        print(f"数据从 {csv_file} 开始添加到 {sq_file} 数据库")
         df = pd.read_csv(csv_file, encoding='utf-8', low_memory=False)
         conn = sqlite3.connect(sq_file)
         df.to_sql(table_name, conn, if_exists='replace', index=False)
         conn.close()
-        logging.info(f"数据从 {csv_file} 成功添加到 {sq_file} 数据库")
+        print(f"数据从 {csv_file} 成功添加到 {sq_file} 数据库")
 
 class TabularDatabaseExtraction:
-    def __init__(self, db_file):
+    def __init__(self,text_widget,db_file):
         """
         初始化数据库连接。
 
         :param db_file: SQLite数据库文件路径
         """
+        self.text_widget = text_widget
         self.db_file = db_file
         self.conn = None
         self.cursor = None
@@ -727,15 +702,15 @@ class TabularDatabaseExtraction:
         try:
             self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
             self.cursor = self.conn.cursor()
-            logging.info("数据库连接成功")
+            self.text_widget.insert("end","数据库连接成功\n")
         except sqlite3.Error as e:
-            logging.info(f"数据库连接失败: {e}")
+            self.text_widget.insert("end",f"数据库连接失败: {e}\n")
 
     def close(self):
         """关闭数据库连接。"""
         self.cursor.close()
         self.conn.close()
-        logging.info("数据库连接已关闭")
+        self.text_widget.insert("end","数据库连接已关闭\n")
 
     def get_sheng_nu(self, word_input,table,query,column="廣韻字頭_覈校後"):
         """
@@ -757,10 +732,7 @@ class TabularDatabaseExtraction:
             else:
                 return None  # 如果没有找到匹配的记录，返回 None
         except sqlite3.Error as e:
-            logging.info(f"查询失败: {e}-{word_input}")
-            #self.cursor.execute(f"PRAGMA table_info(guang_yun)")
-            #columns = self.cursor.fetchall()
-            #logging.info(f"表 guang_yun 的列: {columns}")
+            self.text_widget.insert("end",f"查询失败: {e}-{word_input}")
             return None
 
 def main():
@@ -775,7 +747,6 @@ def main():
     crawler.crawl_words()
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     #extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
     #extract_the_phenotype_sqlite.connect()
     phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
@@ -785,13 +756,13 @@ if __name__ == "__main__":
      '流', '光', '可', '憐', '夜', '色', '晚', '厭', '厭', '向', '太', '陽']:
         result = phonetic_processor.get_phonetic(headword=word, era="中古音", nature="構擬",
                                                  scholar="王力")
-        #print(extract_the_phenotype_sqlite.get_sheng_nu(word, "guang_yun", "韻部_調整後"))
+        #self.text_widget.insert(extract_the_phenotype_sqlite.get_sheng_nu(word, "guang_yun", "韻部_調整後"))
 
     #extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
     #extract_the_phenotype_sqlite.connect()
 
-    #print(type(extract_the_phenotype_sqlite.get_sheng_nu("pə̯u①", "cut_the_voicing", "介音")))
-    #print(extract_the_phenotype_sqlite.get_sheng_nu("pə̯u①", "cut_the_voicing", "介音"))
+    #self.text_widget.insert(type(extract_the_phenotype_sqlite.get_sheng_nu("pə̯u①", "cut_the_voicing", "介音")))
+    #self.text_widget.insert(extract_the_phenotype_sqlite.get_sheng_nu("pə̯u①", "cut_the_voicing", "介音"))
     '''
     crawler = SyllableSplitting()
     crawler.crawl_words_initiate([
@@ -816,11 +787,11 @@ if __name__ == "__main__":
     converter.convert()
     '''
 
-    #logging.info(HtmlSplitting("<table><caption>因電子內容常有差錯、不能忠實反映作者原成果、嚴謹研究請查閱原著</caption><tbody><tr><th class=\"red\" style=\"width: 80px\">時代</th><th style=\"width: 38px\">性質</th><th style=\"width: 160px\">學者</th><th style=\"width: 38px;\">字頭</th><th style=\"width: 100px\">擬音[經整理]</th><th style=\"width: 100px\">擬音[原材料]</th><th style=\"width: 68px\">韻部</th><th>原表其他信息</th><th style=\"width: 60px\">出處</th><th style=\"width: 20px\">序</th></tr><tr><td rowspan=\"16\"><b>上古音</b></td><td rowspan=\"16\">構擬</td><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=gaobenhan\">高本漢</a></u></td><td>人</td><td><b>ȵîĕn</b></td><td><i>ȵîĕn</i></td><td><u>07部 真</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>1</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=dongtonghe\">董同龢</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵîen</b></td><td style=\"background: #f8f8f8\"><i>ȵjen</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>2</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=wangli\">王力體系</a></u></td><td>人</td><td><b>ȵĭen</b></td><td><i>ȵĭen</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>3</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=lifanggui\">李方桂</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>njin</b></td><td style=\"background: #f8f8f8\"><i>njin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>4</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=zhoufagao\">周法高</a></u></td><td>人</td><td><b>njien</b></td><td><i>njien</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>5</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_a\">斯塔羅斯金①·上古前期</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真1</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i><a href=\"https://starlingdb.org/cgi-bin/query.cgi?basename=\\data\\china\\bigchina&amp;root=config&amp;morpho=0\">巴別塔</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>6</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_b\">斯塔羅斯金②·上古後期</a></u></td><td>人</td><td><b>nin</b></td><td><i>nin</i></td><td><u>真1</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i><a href=\"https://starlingdb.org/cgi-bin/query.cgi?basename=\\data\\china\\bigchina&amp;root=config&amp;morpho=0\">巴別塔</a></i></td><td rowspan=\"1\"><i>7</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_s\">斯塔羅斯金③·詩經音</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_sita_s&amp;p=319\">319頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>8</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=baiyiping\">白一平</a></u></td><td>人</td><td><b>njin</b></td><td><i>*ｎｊｉｎ</i></td><td><u>真n</u></td><td><i></i></td><td><i><a href=\"img.php?b=ny_baiyiping&amp;p=903\">903頁</a></i></td><td rowspan=\"1\"><i>9</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=zhengzhang\">鄭張尚芳</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>njin</b></td><td style=\"background: #f8f8f8\"><i>njin</i></td><td style=\"background: #f8f8f8\"><u>真n</u></td><td style=\"background: #f8f8f8\"><i>日真開三平·如鄰[人] </i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_zhengzhang&amp;p=466\">466頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>10</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=panwuyun\">潘悟雲</a></u></td><td>人</td><td><b>nʲiŋ</b></td><td><i>nʲiŋ</i></td><td><u>真ŋ</u></td><td><i>日真開三平·如鄰[人]</i></td><td><i></i></td><td rowspan=\"1\"><i>11</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=xusilai\">許思萊</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i>人</i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_xusilai&amp;p=321\">321頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>12</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=jinlixin\">金理新</a></u></td><td>人</td><td><b>ni̠n</b></td><td><i>同左</i></td><td><u>真①</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>13</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=baisha\">白一平-沙加爾</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>niŋ</b></td><td style=\"background: #f8f8f8\"><i>*ni[ŋ] </i></td><td style=\"background: #f8f8f8\"><u>真ŋ</u></td><td style=\"background: #f8f8f8\"><i>(other) person</i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_baisha&amp;p=90\">90頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>14</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=guoxiliang_biaogao\">郭錫良（表稿）</a></u></td><td>人</td><td><b>ȵĭen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u>真</u></td><td><i>19真部-2真部開三[ĭen]</i></td><td><i><a href=\"img.php?b=ny_guoxiliang_biaogao&amp;p=109\">109頁</a></i></td><td rowspan=\"1\"><i>15</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>郭錫良（手冊）</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b></b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_guoxiliang_shouce&amp;p=368\">368頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>16</i></td></tr><tr><td rowspan=\"12\"><b>兩漢六朝</b></td><td rowspan=\"5\">構擬</td><td rowspan=\"2\"><u>斯塔羅斯金·西漢</u></td><td>人</td><td><b>njǝn</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>17</i></td></tr><tr><td>[人耎]</td><td><b>nwānh</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·東漢</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ń́ǝn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>18</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwānh</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"1\"><u>許思萊·東漢</u></td><td>人</td><td><b>nin</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>19</i></td></tr><tr><td rowspan=\"7\">韻部</td><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>西漢</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>20</i></td></tr><tr><td rowspan=\"1\"><u>東漢</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>21</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>魏</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>22</i></td></tr><tr><td rowspan=\"1\"><u>晉</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>23</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>宋北魏後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真諄臻</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>24</i></td></tr><tr><td rowspan=\"1\"><u>北魏後期北齊</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真諄臻</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>25</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>齊梁陳北周隋</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真諄臻欣</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>26</i></td></tr><tr><td rowspan=\"32\"><b>中古音</b></td><td rowspan=\"17\">構擬</td><td rowspan=\"1\"><u>高本漢</u></td><td>人</td><td><b>ȵʑi̯ĕn</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>27</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>王力</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ɽǐěn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>28</i></td></tr><tr><td rowspan=\"1\"><u>董同龢</u></td><td>人</td><td><b>ȵjen</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>29</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>李方桂</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńźjĕn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>30</i></td></tr><tr><td rowspan=\"1\"><u>周法高</u></td><td>人</td><td><b>ȵiɪn</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>31</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>陳新雄</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nʑǐen</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>32</i></td></tr><tr><td rowspan=\"1\"><u>蒲立本·前期</u></td><td>人</td><td><b>ɲin</b></td><td><i>同左</i></td><td><u></u></td><td><i>man,person,human being</i></td><td><i></i></td><td rowspan=\"1\"><i>33</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>蒲立本·後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>rin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>man,person,human being</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>34</i></td></tr><tr><td rowspan=\"2\"><u>斯塔羅斯金·中古</u></td><td>人</td><td><b>ńin</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>35</i></td></tr><tr><td>[人耎]</td><td><b>nwần</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·前期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>36</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwā̀n</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"2\"><u>斯塔羅斯金·中期</u></td><td>人</td><td><b>ńin</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>37</i></td></tr><tr><td>[人耎]</td><td><b>nwā̀n</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>38</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwā̀n</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"1\"><u>楊力</u></td><td>人</td><td><b>ɲɨ̃n</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>39</i></td></tr><tr><td rowspan=\"3\">轉寫</td><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>金理新</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin①</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>40</i></td></tr><tr><td rowspan=\"1\"><u>許思萊</u></td><td>人</td><td><b>ńźjen</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>41</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>白一平-沙加爾</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nyin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>(other) person</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>42</i></td></tr><tr><td rowspan=\"12\">推導</td><td rowspan=\"1\"><u>高本漢</u></td><td>人</td><td><b>ȵʑi̯ĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>43</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>王力</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑĭĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>44</i></td></tr><tr><td rowspan=\"1\"><u>張世祿</u></td><td>人</td><td><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>45</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>嚴學宭</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑjɛn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>46</i></td></tr><tr><td rowspan=\"1\"><u>董同龢</u></td><td>人</td><td><b>ȵjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>47</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>李榮</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵiĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>48</i></td></tr><tr><td rowspan=\"1\"><u>蒲立本</u></td><td>人</td><td><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>49</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>邵榮芬</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>50</i></td></tr><tr><td rowspan=\"1\"><u>鄭張尚芳</u></td><td>人</td><td><b>ȵʑiɪn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>51</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>潘悟雲</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>52</i></td></tr><tr><td rowspan=\"1\"><u>楊劍橋</u></td><td>人</td><td><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>53</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>麥耘</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>54</i></td></tr><tr><td class=\"td_footer\" colspan=\"10\" style=\"padding: 10px 30px;text-align: left;font-size: 12px\"><b style=\"background: orangered;color: #fff;padding: 0px 2px;font-size: 14px\">?</b> 表示電子材料不太可靠，有以下三方面：\n            <br/>1：原電子材料無韻部名（現韻部名由古音小鏡依據一般原則添加，這不是作者本意，涉及內容：高本漢、斯塔羅斯金①/②）。\n            <br/>2：推導音（依據作者中古擬音框架配上字音，配音時有些位置可能考慮不周，比如合口是否判定為w介音，可能出錯，涉及內容：中古音12家）。\n            <br/>3：局部推導（郭錫良上古音電子表缺聲母（原書是有的），現聲母依據該書原則從《廣韻》批量推導，可能存在失誤，特別是多音字中）。\n            <br/></td></tr></tbody></table>").form_acquisition())
+    #self.text_widget.insert(HtmlSplitting("<table><caption>因電子內容常有差錯、不能忠實反映作者原成果、嚴謹研究請查閱原著</caption><tbody><tr><th class=\"red\" style=\"width: 80px\">時代</th><th style=\"width: 38px\">性質</th><th style=\"width: 160px\">學者</th><th style=\"width: 38px;\">字頭</th><th style=\"width: 100px\">擬音[經整理]</th><th style=\"width: 100px\">擬音[原材料]</th><th style=\"width: 68px\">韻部</th><th>原表其他信息</th><th style=\"width: 60px\">出處</th><th style=\"width: 20px\">序</th></tr><tr><td rowspan=\"16\"><b>上古音</b></td><td rowspan=\"16\">構擬</td><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=gaobenhan\">高本漢</a></u></td><td>人</td><td><b>ȵîĕn</b></td><td><i>ȵîĕn</i></td><td><u>07部 真</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>1</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=dongtonghe\">董同龢</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵîen</b></td><td style=\"background: #f8f8f8\"><i>ȵjen</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>2</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=wangli\">王力體系</a></u></td><td>人</td><td><b>ȵĭen</b></td><td><i>ȵĭen</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>3</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=lifanggui\">李方桂</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>njin</b></td><td style=\"background: #f8f8f8\"><i>njin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>4</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=zhoufagao\">周法高</a></u></td><td>人</td><td><b>njien</b></td><td><i>njien</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>5</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_a\">斯塔羅斯金①·上古前期</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真1</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i><a href=\"https://starlingdb.org/cgi-bin/query.cgi?basename=\\data\\china\\bigchina&amp;root=config&amp;morpho=0\">巴別塔</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>6</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_b\">斯塔羅斯金②·上古後期</a></u></td><td>人</td><td><b>nin</b></td><td><i>nin</i></td><td><u>真1</u> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i><a href=\"https://starlingdb.org/cgi-bin/query.cgi?basename=\\data\\china\\bigchina&amp;root=config&amp;morpho=0\">巴別塔</a></i></td><td rowspan=\"1\"><i>7</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=sita_s\">斯塔羅斯金③·詩經音</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_sita_s&amp;p=319\">319頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>8</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=baiyiping\">白一平</a></u></td><td>人</td><td><b>njin</b></td><td><i>*ｎｊｉｎ</i></td><td><u>真n</u></td><td><i></i></td><td><i><a href=\"img.php?b=ny_baiyiping&amp;p=903\">903頁</a></i></td><td rowspan=\"1\"><i>9</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=zhengzhang\">鄭張尚芳</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>njin</b></td><td style=\"background: #f8f8f8\"><i>njin</i></td><td style=\"background: #f8f8f8\"><u>真n</u></td><td style=\"background: #f8f8f8\"><i>日真開三平·如鄰[人] </i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_zhengzhang&amp;p=466\">466頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>10</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=panwuyun\">潘悟雲</a></u></td><td>人</td><td><b>nʲiŋ</b></td><td><i>nʲiŋ</i></td><td><u>真ŋ</u></td><td><i>日真開三平·如鄰[人]</i></td><td><i></i></td><td rowspan=\"1\"><i>11</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=xusilai\">許思萊</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nin</b></td><td style=\"background: #f8f8f8\"><i>nin</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i>人</i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_xusilai&amp;p=321\">321頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>12</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=jinlixin\">金理新</a></u></td><td>人</td><td><b>ni̠n</b></td><td><i>同左</i></td><td><u>真①</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>13</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u><a href=\"http://www.kaom.net/ny_x.php?name=baisha\">白一平-沙加爾</a></u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>niŋ</b></td><td style=\"background: #f8f8f8\"><i>*ni[ŋ] </i></td><td style=\"background: #f8f8f8\"><u>真ŋ</u></td><td style=\"background: #f8f8f8\"><i>(other) person</i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_baisha&amp;p=90\">90頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>14</i></td></tr><tr><td rowspan=\"1\"><u><a href=\"http://www.kaom.net/ny_x.php?name=guoxiliang_biaogao\">郭錫良（表稿）</a></u></td><td>人</td><td><b>ȵĭen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u>真</u></td><td><i>19真部-2真部開三[ĭen]</i></td><td><i><a href=\"img.php?b=ny_guoxiliang_biaogao&amp;p=109\">109頁</a></i></td><td rowspan=\"1\"><i>15</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>郭錫良（手冊）</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b></b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i><a href=\"img.php?b=ny_guoxiliang_shouce&amp;p=368\">368頁</a></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>16</i></td></tr><tr><td rowspan=\"12\"><b>兩漢六朝</b></td><td rowspan=\"5\">構擬</td><td rowspan=\"2\"><u>斯塔羅斯金·西漢</u></td><td>人</td><td><b>njǝn</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>17</i></td></tr><tr><td>[人耎]</td><td><b>nwānh</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·東漢</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ń́ǝn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>18</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwānh</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"1\"><u>許思萊·東漢</u></td><td>人</td><td><b>nin</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>19</i></td></tr><tr><td rowspan=\"7\">韻部</td><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>西漢</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>20</i></td></tr><tr><td rowspan=\"1\"><u>東漢</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>21</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>魏</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>22</i></td></tr><tr><td rowspan=\"1\"><u>晉</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>23</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>宋北魏後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真諄臻</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>24</i></td></tr><tr><td rowspan=\"1\"><u>北魏後期北齊</u></td><td>人</td><td><i>無擬音</i></td><td><i>同左</i></td><td><u>真諄臻</u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>25</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>齊梁陳北周隋</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><i>無擬音</i></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u>真諄臻欣</u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>26</i></td></tr><tr><td rowspan=\"32\"><b>中古音</b></td><td rowspan=\"17\">構擬</td><td rowspan=\"1\"><u>高本漢</u></td><td>人</td><td><b>ȵʑi̯ĕn</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>27</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>王力</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ɽǐěn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>28</i></td></tr><tr><td rowspan=\"1\"><u>董同龢</u></td><td>人</td><td><b>ȵjen</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>29</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>李方桂</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńźjĕn</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>30</i></td></tr><tr><td rowspan=\"1\"><u>周法高</u></td><td>人</td><td><b>ȵiɪn</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>31</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>陳新雄</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nʑǐen</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>32</i></td></tr><tr><td rowspan=\"1\"><u>蒲立本·前期</u></td><td>人</td><td><b>ɲin</b></td><td><i>同左</i></td><td><u></u></td><td><i>man,person,human being</i></td><td><i></i></td><td rowspan=\"1\"><i>33</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>蒲立本·後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>rin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>man,person,human being</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>34</i></td></tr><tr><td rowspan=\"2\"><u>斯塔羅斯金·中古</u></td><td>人</td><td><b>ńin</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>35</i></td></tr><tr><td>[人耎]</td><td><b>nwần</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·前期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>36</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwā̀n</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"2\"><u>斯塔羅斯金·中期</u></td><td>人</td><td><b>ńin</b></td><td><i>同左</i></td><td><u></u></td><td><i>human being, person, man; other persons, others; a person, someone</i></td><td><i></i></td><td rowspan=\"2\"><i>37</i></td></tr><tr><td>[人耎]</td><td><b>nwā̀n</b></td><td><i>同左</i></td><td><u></u></td><td><i>weak [LZ]</i></td><td><i></i></td></tr><tr><td rowspan=\"2\" style=\"background: #f8f8f8\"><u>斯塔羅斯金·後期</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ńin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>human being, person, man; other persons, others; a person, someone</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"2\" style=\"background: #f8f8f8\"><i>38</i></td></tr><tr><td style=\"background: #f8f8f8\">[人耎]</td><td style=\"background: #f8f8f8\"><b>nwā̀n</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>weak [LZ]</i></td><td style=\"background: #f8f8f8\"><i></i></td></tr><tr><td rowspan=\"1\"><u>楊力</u></td><td>人</td><td><b>ɲɨ̃n</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>39</i></td></tr><tr><td rowspan=\"3\">轉寫</td><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>金理新</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin①</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i></i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>40</i></td></tr><tr><td rowspan=\"1\"><u>許思萊</u></td><td>人</td><td><b>ńźjen</b></td><td><i>同左</i></td><td><u></u></td><td><i></i></td><td><i></i></td><td rowspan=\"1\"><i>41</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>白一平-沙加爾</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>nyin</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>(other) person</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>42</i></td></tr><tr><td rowspan=\"12\">推導</td><td rowspan=\"1\"><u>高本漢</u></td><td>人</td><td><b>ȵʑi̯ĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>43</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>王力</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑĭĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>44</i></td></tr><tr><td rowspan=\"1\"><u>張世祿</u></td><td>人</td><td><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>45</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>嚴學宭</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑjɛn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>46</i></td></tr><tr><td rowspan=\"1\"><u>董同龢</u></td><td>人</td><td><b>ȵjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>47</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>李榮</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵiĕn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>48</i></td></tr><tr><td rowspan=\"1\"><u>蒲立本</u></td><td>人</td><td><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>49</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>邵榮芬</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>50</i></td></tr><tr><td rowspan=\"1\"><u>鄭張尚芳</u></td><td>人</td><td><b>ȵʑiɪn</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>51</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>潘悟雲</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>52</i></td></tr><tr><td rowspan=\"1\"><u>楊劍橋</u></td><td>人</td><td><b>ȵʑjen</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td><i>同左</i></td><td><u></u></td><td><i>如鄰切[日真A開三]</i></td><td><i></i></td><td rowspan=\"1\"><i>53</i></td></tr><tr><td rowspan=\"1\" style=\"background: #f8f8f8\"><u>麥耘</u></td><td style=\"background: #f8f8f8\">人</td><td style=\"background: #f8f8f8\"><b>ȵin</b> <b style=\"background: orangered;color: #fff;padding: 0px 1px\">?</b></td><td style=\"background: #f8f8f8\"><i>同左</i></td><td style=\"background: #f8f8f8\"><u></u></td><td style=\"background: #f8f8f8\"><i>如鄰切[日真A開三]</i></td><td style=\"background: #f8f8f8\"><i></i></td><td rowspan=\"1\" style=\"background: #f8f8f8\"><i>54</i></td></tr><tr><td class=\"td_footer\" colspan=\"10\" style=\"padding: 10px 30px;text-align: left;font-size: 12px\"><b style=\"background: orangered;color: #fff;padding: 0px 2px;font-size: 14px\">?</b> 表示電子材料不太可靠，有以下三方面：\n            <br/>1：原電子材料無韻部名（現韻部名由古音小鏡依據一般原則添加，這不是作者本意，涉及內容：高本漢、斯塔羅斯金①/②）。\n            <br/>2：推導音（依據作者中古擬音框架配上字音，配音時有些位置可能考慮不周，比如合口是否判定為w介音，可能出錯，涉及內容：中古音12家）。\n            <br/>3：局部推導（郭錫良上古音電子表缺聲母（原書是有的），現聲母依據該書原則從《廣韻》批量推導，可能存在失誤，特別是多音字中）。\n            <br/></td></tr></tbody></table>").form_acquisition())
 
     #main()
 
-    #logging.info(RECONSTRUCTIONS_SQLITE)
+    #self.text_widget.insert(RECONSTRUCTIONS_SQLITE)
 
     #CsvImportDatabase(r"D:\LightweightNotepad\lightweight_notepad_ttkbootstrap\pre\平水韻.csv","ping_shui_yun",RECONSTRUCTIONS_SQLITE)
 
@@ -840,7 +811,7 @@ if __name__ == "__main__":
     result = processor.get_phonetic(headword="这", era="中古", nature="構擬", scholar="王力")
 
     # 输出结果
-    logging.info(result)  # 输出对应的拟音或相关错误信息
+    self.text_widget.insert(result)  # 输出对应的拟音或相关错误信息
 
     # 关闭连接
     processor.close()
@@ -863,10 +834,10 @@ if __name__ == "__main__":
     sheng_diao = guang_yun_db.get_sheng_nu(word_input, "聲調")
     # 输出结果
     if sheng_nu and sheng_diao:
-        logging.info(f"字头 '{word_input}' 对应的聲紐是: {sheng_nu}")
-        logging.info(f"字头 '{word_input}' 对应的聲調是: {sheng_diao}")
+        self.text_widget.insert(f"字头 '{word_input}' 对应的聲紐是: {sheng_nu}")
+        self.text_widget.insert(f"字头 '{word_input}' 对应的聲調是: {sheng_diao}")
     else:
-        logging.info(f"字头 '{word_input}' 没有对应的声纽")
+        self.text_widget.insert(f"字头 '{word_input}' 没有对应的声纽")
 
     # 关闭数据库连接
     guang_yun_db.close()
@@ -874,12 +845,12 @@ if __name__ == "__main__":
     '''
     for i in processor:
         get_scholars,get_zi_head_list,get_reconstructions,get_rhyme,get_type,get_era = HtmlSplitting(i).form_acquisition()
-        logging.info(get_scholars)
-        logging.info(get_zi_head_list)
-        logging.info(get_reconstructions)
-        logging.info(get_rhyme)
-        logging.info(get_type)
-        logging.info(get_era)
+        self.text_widget.insert(get_scholars)
+        self.text_widget.insert(get_zi_head_list)
+        self.text_widget.insert(get_reconstructions)
+        self.text_widget.insert(get_rhyme)
+        self.text_widget.insert(get_type)
+        self.text_widget.insert(get_era)
     '''
 
 

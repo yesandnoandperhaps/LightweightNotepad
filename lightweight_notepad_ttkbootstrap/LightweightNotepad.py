@@ -17,8 +17,8 @@ from function.variables.ProjectCapabilityVariables import font_set
 from function.ProjectFunctions import load_theme
 from function.variables.ProjectInitialVariables import t_divide_up, circular_num, num_wv1, v, onandoff,t_size
 from function.variables.ProjectPathVariables import A_PATH,ICON_PATH,TEXT_TEMP_PATH
-from module.YongMingTi import YongMingTi
 from window_module.GadgetWindow import GadgetWindow
+from window_module.YongMingTiPrintWindow import PrintWindow
 from window_module.xiao_liu_ren_window.OldXiaoLiuRenWindow import OldXiaoLiuRenWindow
 from window_module.set_window.SetWindow import set_window
 
@@ -71,7 +71,7 @@ class LightweightNotepad(ttk.Window):
         self.bind("<Control-y>", lambda event: self.b())
         #self.bind("<Shift_L>", lambda event: self.c())
         self.bind("<Control-f> ", lambda event: self.toggle_window())
-        self.bind("<Control-x>", lambda event: YongMingTi(self.text_widget).fetch())  # 永明体检测
+        self.bind("<Control-x>", lambda event: PrintWindow(self,"请等待",self.FONT_STYLE))
         self.scrollbar.config(command=self.text_widget.yview)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -93,11 +93,6 @@ class LightweightNotepad(ttk.Window):
             messagebox.showerror("错误", f"发生错误: {error}")
 
         self.mainloop()
-
-    @staticmethod
-    def thread(x):
-        thread = threading.Thread(target=x)
-        thread.start()
 
     def quit_window(self):
         self.destroy()
