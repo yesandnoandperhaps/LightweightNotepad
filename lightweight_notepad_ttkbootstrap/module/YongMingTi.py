@@ -28,9 +28,9 @@ class WordProcessor:
 
             # 每五个括号外字添加逗号，每十个括号外字添加句号并换行
             if count % 5 == 0 and (count % 10 != 0):  # 每五个字加逗号，排除十个字的情况
-                temp.append(',')
+                temp.append('，')
             if count % 10 == 0:  # 每十个字加句号并换行
-                temp.append('.')
+                temp.append('。')
                 self.result.append(' '.join(temp))  # 句号后换行
                 temp = []  # 清空临时列表
                 count = 0  # 重置计数器
@@ -43,7 +43,8 @@ class WordProcessor:
         return '\n'.join(self.result)
 
 class YongMingTi:
-    def __init__(self,text_widget):
+    def __init__(self,text_widget,text_box):
+        self.text_box = text_box
         self.text_widget = text_widget
         self.get_all = '\n'.join(line.strip() for line in text_widget.get("1.0", "end").splitlines())
         self.var_0 = YONG_MING_TI_LIST[0][YONG_MING_TI_DATA_JSON[0]]
@@ -57,7 +58,7 @@ class YongMingTi:
         self.var_8 = YONG_MING_TI_LIST[8][YONG_MING_TI_DATA_JSON[8]]
 
     def fetch(self):
-        self.text_widget.insert("end", "开始检查-请用繁体-多音字请自行检测-强制退出<Control-L>\n")
+        self.text_box.insert("end", "开始检查-请用繁体-多音字请自行检测-强制退出<Control-L>\n")
         get_all_list = list(re.sub(r'[^\u4e00-\u9fa5]', '', self.get_all))
 
         need_to_look_list = []
@@ -70,7 +71,7 @@ class YongMingTi:
 
         phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
 
-        self.text_widget.insert("end", "检查字词是否已有缓存\n")
+        self.text_box.insert("end", "检查字词是否已有缓存\n")
 
         try:
             for word in get_all_list:
@@ -83,15 +84,16 @@ class YongMingTi:
         phonetic_processor.close()
 
         if not need_to_look_list:
-            self.text_widget.insert("end", "所有字词已有缓存\n")
+            self.text_box.insert("end", "所有字词已有缓存\n")
         else:
-            self.text_widget.insert("end", "部分字词未有缓存-启动对应程序\n")
-            crawler = GetThePage(''.join(need_to_look_list),self.text_widget)
-            crawler.crawl_words()
+            self.text_box.insert("end", "部分字词未有缓存-启动对应程序\n")
 
-        html_list = FileProcessor(self.text_widget,RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
+        crawler = GetThePage(''.join(need_to_look_list),self.text_box)
+        crawler.crawl_words()
 
-        processor = HtmlToSqlite(self.text_widget,RECONSTRUCTIONS_SQLITE)
+        html_list = FileProcessor(self.text_box,RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
+
+        processor = HtmlToSqlite(self.text_box,RECONSTRUCTIONS_SQLITE)
         processor.process_html_files(html_list)
         processor.close()
 
@@ -111,7 +113,13 @@ class YongMingTi:
             "平水韻": "ping_shui_yun"
         }
 
-        extract_the_phenotype_sqlite = TabularDatabaseExtraction(self.text_widget,RECONSTRUCTIONS_SQLITE)
+        table_dict_ = {
+            "廣韻-基於poem": "廣韻字頭_覈校後",
+            "玉篇-基於poem": "字",
+            "平水韻": "字頭"
+        }
+
+        extract_the_phenotype_sqlite = TabularDatabaseExtraction(self.text_box,RECONSTRUCTIONS_SQLITE)
         extract_the_phenotype_sqlite.connect()
         phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
 
@@ -131,17 +139,17 @@ class YongMingTi:
                     headword=word, era="兩漢六朝", nature="韻部", scholar=self.var_3
                 ))
             elif self.var_3 == "廣韻-基於poem":
-                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"guang_yun","韻部_調整後"))
+                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"guang_yun","韻部_調整後",table_dict_.get(self.var_3, "guang_yun")))
             elif self.var_3 == "玉篇-基於poem":
-                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"yu_pian","韻部"))
+                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"yu_pian","韻部",table_dict_.get(self.var_3, "guang_yun")))
             elif self.var_3 == "平水韻":
-                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"ping_shui_yun","韻部"))
+                yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"ping_shui_yun","韻部",table_dict_.get(self.var_3, "guang_yun")))
 
             '''聲調'''
             if self.var_4 == "平上去入":
-                sheng_diao_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,table_dict.get(self.var_3, "guang_yun"),"聲調"))
+                sheng_diao_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,table_dict.get(self.var_3, "guang_yun"),"聲調",table_dict_.get(self.var_3, "guang_yun")))
             else:
-                sheng_diao = extract_the_phenotype_sqlite.get_sheng_nu(word,table_dict.get(self.var_3, "guang_yun"),"聲調")
+                sheng_diao = extract_the_phenotype_sqlite.get_sheng_nu(word,table_dict.get(self.var_3, "guang_yun"),"聲調",table_dict_.get(self.var_3, "guang_yun"))
                 if sheng_diao in ["上", "去", "入"]:
                     sheng_diao_list.append("仄")
                 else:
@@ -150,10 +158,10 @@ class YongMingTi:
         extract_the_phenotype_sqlite.close()
         phonetic_processor.close()
 
-        crawler = SyllableSplitting(self.text_widget)
+        crawler = SyllableSplitting(self.text_box)
         crawler.crawl_words_initiate(reconstructions_list)
 
-        html_list = FileProcessor(self.text_widget,RECONSTRUCTIONS_VOWEL, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH).save_content()
+        html_list = FileProcessor(self.text_box,RECONSTRUCTIONS_VOWEL, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH).save_content()
 
         '''音节拆分，写入韵母'''
         converter = SyllableHtmlToSqlite(html_list,["字表", "聲母", "介音", "元音", "韻尾", "聲調", "韻母", "聲韻"],
@@ -162,7 +170,7 @@ class YongMingTi:
 
         ipa_list = converter.get_column_data("字表")
 
-        extract_the_phenotype_sqlite = TabularDatabaseExtraction(self.text_widget,RECONSTRUCTIONS_SQLITE)
+        extract_the_phenotype_sqlite = TabularDatabaseExtraction(self.text_box,RECONSTRUCTIONS_SQLITE)
         extract_the_phenotype_sqlite.connect()
         phonetic_processor = PhoneticDatabaseProcessor(db_path=RECONSTRUCTIONS_SQLITE)
 
@@ -185,17 +193,15 @@ class YongMingTi:
         extract_the_phenotype_sqlite.close()
         phonetic_processor.close()
 
-        self.text_widget.insert("end", "检测四声八病开始\n")
-
-        print(sheng_diao_list)
+        self.text_box.insert("end", "检测开始\n")
 
         w = WordProcessor(self.sickness_detect(sheng_diao_list,qing_zhuo_list,yun_list,main_vowel_rhyme_tail_list,shengmu_yuanyin_yunwei_list,get_all_list))
 
         w.process()
 
-        self.text_widget.insert("end", "检测四声八病完成\n")
+        self.text_box.insert("end", "检测完成\n")
 
-        self.text_widget.insert("end", f"{w.get_result()}\n")
+        self.text_box.insert("end", f"\n{w.get_result()}\n")
 
     @staticmethod
     def matching(string):
