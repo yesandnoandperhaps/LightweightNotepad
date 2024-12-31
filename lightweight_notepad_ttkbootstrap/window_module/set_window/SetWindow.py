@@ -1,9 +1,11 @@
 import os
 from tkinter import messagebox
+import tkinter as tk
 from tkinter.ttk import Separator
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+from function import JsonFile
 from function.FullscreenExample import FullscreenExample
 from window_module.set_window.set_function.Transfer import Transfer
 from function.JsonFile import File
@@ -220,10 +222,60 @@ def set_window(root):
                 case _:
                     save(theme_cbo.get(),v,v2,v3,v4,combobox1,combobox2,combobox0,combobox3)
 
-        QuicklyCreate(w6).quickly_create_drop_down_box(["使用時代:", "使用性質:", "使用作者:", "使用韻書:","使用聲調:","蜂腰問題:","鶴膝問題:","小韻問題:","旁紐問題:"],
+        def validate_input(entry0_,entry1_,entry2_):
+            _0 = entry0_.get()
+            _1 = entry1_.get()
+            _2 = entry2_.get()
+            if _0 and _1 and _2:
+                try:
+                    __0 = float(_0)
+                    __1 = float(_1)
+                    __2 = float(_2)
+                    YONG_MING_TI_DATA_JSON[9] = __0
+                    YONG_MING_TI_DATA_JSON[10] = __1
+                    YONG_MING_TI_DATA_JSON[11] = __2
+                    JsonFile.File.dict_save(YONG_MING_TI_PATH, YONG_MING_TI_DATA_JSON.file_dict)
+                except ValueError:
+                    messagebox.showerror("错误",
+                                         message="只能输入浮点数或整数",
+                                         parent=window)
+
+        frame = QuicklyCreate(w6).quickly_create_drop_down_box(["使用時代:", "使用性質:", "使用作者:", "使用韻書:","使用聲調:","蜂腰問題:","鶴膝問題:","小韻問題:","旁紐問題:"],
                                                        YONG_MING_TI_LIST,
                                                        YONG_MING_TI_DATA_JSON, YONG_MING_TI_PATH, main_frame_row=0, main_frame_column=0,row_num_max=4)
 
+        text0 = ttk.Label(frame, text="前等待时:")
+        text1 = ttk.Label(frame, text="中等待时:")
+        text2 = ttk.Label(frame, text="后等待时:")
+
+        entry0 = ttk.Entry(frame)
+        entry1 = ttk.Entry(frame)
+        entry2 = ttk.Entry(frame)
+
+        entry0.insert(tk.END, str([YONG_MING_TI_DATA_JSON[9]][0]))
+        entry1.insert(tk.END, str([YONG_MING_TI_DATA_JSON[10]][0]))
+        entry2.insert(tk.END, str([YONG_MING_TI_DATA_JSON[11]][0]))
+
+        text0.grid(column=4, row=1, padx=5, pady=5)
+        text1.grid(column=4, row=2, padx=5, pady=5)
+        text2.grid(column=4, row=3, padx=5, pady=5)
+        entry0.grid(column=5, row=1, padx=5, pady=5, ipadx=10)
+        entry1.grid(column=5, row=2, padx=5, pady=5, ipadx=10)
+        entry2.grid(column=5, row=3, padx=5, pady=5, ipadx=10)
+        entry0.focus_set()
+
+        entry0.bind('<KeyRelease>',
+                         lambda event: validate_input(entry0,entry1,entry2))
+        entry1.bind('<KeyRelease>',
+                         lambda event: validate_input(entry0,entry1,entry2))
+        entry2.bind('<KeyRelease>',
+                    lambda event: validate_input(entry0, entry1, entry2))
+        entry0.bind('<Return>', lambda event: entry1.focus_set())
+        entry1.bind('<Return>', lambda event: entry2.focus_set())
+        entry2.bind('<Return>', lambda event: entry0.focus_set())
+
+
+        
         combobox()
 
     w_root3()

@@ -56,6 +56,9 @@ class YongMingTi:
         self.var_6 = YONG_MING_TI_LIST[6][YONG_MING_TI_DATA_JSON[6]]
         self.var_7 = YONG_MING_TI_LIST[7][YONG_MING_TI_DATA_JSON[7]]
         self.var_8 = YONG_MING_TI_LIST[8][YONG_MING_TI_DATA_JSON[8]]
+        self.var_9 = YONG_MING_TI_DATA_JSON[9]
+        self.var_10 = YONG_MING_TI_DATA_JSON[10]
+        self.var_11 = YONG_MING_TI_DATA_JSON[11]
 
     def fetch(self):
         self.text_box.insert("end", "开始检查-请用繁体-多音字请自行检测-强制退出<Control-L>\n")
@@ -88,7 +91,7 @@ class YongMingTi:
         else:
             self.text_box.insert("end", "部分字词未有缓存-启动对应程序\n")
 
-        crawler = GetThePage(''.join(need_to_look_list),self.text_box)
+        crawler = GetThePage(''.join(need_to_look_list),self.text_box,wait_before_typing_time=self.var_9,wait_time_before_submitting=self.var_10,wait_time_before_switching_windows=self.var_11)
         crawler.crawl_words()
 
         html_list = FileProcessor(self.text_box,RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
@@ -158,7 +161,7 @@ class YongMingTi:
         extract_the_phenotype_sqlite.close()
         phonetic_processor.close()
 
-        crawler = SyllableSplitting(self.text_box)
+        crawler = SyllableSplitting(self.text_box,wait_before_typing_time=self.var_9,wait_time_before_submitting=self.var_10,wait_time_before_switching_windows=self.var_11)
         crawler.crawl_words_initiate(reconstructions_list)
 
         html_list = FileProcessor(self.text_box,RECONSTRUCTIONS_VOWEL, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH).save_content()

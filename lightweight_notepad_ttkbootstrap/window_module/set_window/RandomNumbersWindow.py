@@ -27,8 +27,8 @@ class RandomNumbersWindow:
        window_init(self.window, main_window, "随机数范围")
        self.window.resizable(False, False)
 
-       self.text0 = ttk.Label(self.window, text="始范围")
-       self.text1 = ttk.Label(self.window, text="末范围")
+       self.text0 = ttk.Label(self.window, text="始范围:")
+       self.text1 = ttk.Label(self.window, text="末范围:")
        self.entry0 = ttk.Entry(self.window)
        self.entry1 = ttk.Entry(self.window)
 
@@ -44,6 +44,10 @@ class RandomNumbersWindow:
     def event0(self,num=None):
         self.entry0.bind('<Control_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
         self.entry1.bind('<Control_R>', lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window,num,self.p_time))
+        self.entry0.bind('<KeyRelease>',
+                         lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window, num, self.p_time))
+        self.entry1.bind('<KeyRelease>',
+                         lambda event: self.judge(self.entry0.get(), self.entry1.get(), self.window, num, self.p_time))
         self.entry0.bind('<Return>', lambda event: self.entry1.focus_set())
         self.entry1.bind('<Return>', lambda event: self.entry0.focus_set())
 

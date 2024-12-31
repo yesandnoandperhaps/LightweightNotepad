@@ -22,7 +22,7 @@ class QuicklyCreate:
             input_padx: int = 10,
             input_pady: int = 10,
             row_num_max: int = 4,
-    ) -> None:
+    ):
         """
         快速创建多个下拉框并绑定事件。
 
@@ -81,6 +81,7 @@ class QuicklyCreate:
             down_dox_values_group_main,
             down_dox_group_main).for_set()
 
+        return self.main_frame
 
 if __name__ == '__main__':
     window = Tk()

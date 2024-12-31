@@ -61,7 +61,6 @@ class File:
         """
         with open(path, 'w', encoding='utf-8') as file:
             json.dump(file_dict, file, indent=4)
-
     @staticmethod
     def dict_load(path, file_dict):
         """
