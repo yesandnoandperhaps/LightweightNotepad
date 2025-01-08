@@ -3726,7 +3726,8 @@ class ZiWeiDouShuWindow:
         流年岁前_戊_window = 流年岁前_戊[self.nianZhi]
         流年岁前_戊_list_label = list(reversed(["病符","弔客","白虎","大耗","小耗","官符","贯索","丧门","晦气"]))
 
-        年斗君_window = 年斗君[self.shiChen][self.Lunar_month]
+        print([self.shiChen,self.Lunar_month])
+        年斗君_window = 年斗君[self.shiChen][self.Lunar_month-1]
         年斗君_label = ttk.Label(年斗君_window, text="斗君", font=self.font_style)
 
 

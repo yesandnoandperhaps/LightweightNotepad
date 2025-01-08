@@ -181,7 +181,8 @@ class GetThePage:
             # 访问第一个页面并处理频繁点击限制
             while attempts < self.max_retries:
                 self.driver.get("http://www.kaom.net/ny_word.php")
-                self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
+                #self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
+                self.text_widget.insert("end", f"访问连接搜寻中\n")
                 main_window = self.driver.current_window_handle
 
                 self.wait_for_element((By.TAG_NAME, "div"))
@@ -312,7 +313,8 @@ class SyllableSplitting(GetThePage):
             # 访问第一个页面并处理频繁点击限制
             while attempts < self.max_retries:
                 self.driver.get("http://www.kaom.net/font_ipa_qiefen.php")
-                self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
+                # self.text_widget.insert("end",f"访问成功: {self.driver.current_url}\n")
+                self.text_widget.insert("end", f"访问连接搜寻中\n")
                 main_window = self.driver.current_window_handle
 
                 self.wait_for_element((By.TAG_NAME, "div"))
@@ -756,6 +758,7 @@ if __name__ == "__main__":
      '流', '光', '可', '憐', '夜', '色', '晚', '厭', '厭', '向', '太', '陽']:
         result = phonetic_processor.get_phonetic(headword=word, era="中古音", nature="構擬",
                                                  scholar="王力")
+        print(result)
         #self.text_widget.insert(extract_the_phenotype_sqlite.get_sheng_nu(word, "guang_yun", "韻部_調整後"))
 
     #extract_the_phenotype_sqlite = TabularDatabaseExtraction(RECONSTRUCTIONS_SQLITE)
