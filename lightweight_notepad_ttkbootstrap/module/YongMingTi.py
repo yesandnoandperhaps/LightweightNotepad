@@ -1,6 +1,8 @@
 import re
 import sqlite3
+from tkinter import messagebox
 
+from function.ProjectFunctions import window_closes
 from function.variables.ProjectDictionaryVariables import YONG_MING_TI_LIST, THIRTY_EIGHT_ALPHABET
 from function.variables.ProjectPathVariables import YONG_MING_TI_DATA_JSON, RECONSTRUCTIONS_SQLITE, RECONSTRUCTIONS, \
     RECONSTRUCTIONS_LIST, RECONSTRUCTIONS_VOWEL, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH
@@ -43,7 +45,10 @@ class WordProcessor:
         return '\n'.join(self.result)
 
 class YongMingTi:
-    def __init__(self,text_widget,text_box):
+    def __init__(self,text_widget,text_box,main_window,font_style,root):
+        self.root = root
+        self.main_window = main_window
+        self.font_style = font_style
         self.text_box = text_box
         self.text_widget = text_widget
         self.get_all = '\n'.join(line.strip() for line in text_widget.get("1.0", "end").splitlines())
@@ -64,6 +69,13 @@ class YongMingTi:
         self.text_box.insert("end", "开始检查-请用繁体-多音字请自行检测-强制退出<Control-L>\n")
         get_all_list = list(re.sub(r'[^\u4e00-\u9fa5]', '', self.get_all))
 
+        if len(get_all_list)<10:
+            messagebox.showerror("错误",
+                                 message="至少输入一句（十个字）",
+                                 parent=self.main_window)
+            window_closes(self.main_window,self.root)
+            return None
+
         need_to_look_list = []
         qing_zhuo_list = []
         sheng_diao_list = []
@@ -78,8 +90,9 @@ class YongMingTi:
 
         try:
             for word in get_all_list:
-                result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1, scholar=self.var_2)
-                if self.matching(result):
+                result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1,scholar=self.var_2,
+                                                         main_window=self.main_window,font_style=self.font_style,whether_polyphone=False)
+                if not result:
                     need_to_look_list.append(word)
         except sqlite3.OperationalError:
             pass
@@ -91,7 +104,10 @@ class YongMingTi:
         else:
             self.text_box.insert("end", "部分字词未有缓存-启动对应程序\n")
 
-        crawler = GetThePage(''.join(need_to_look_list),self.text_box,wait_before_typing_time=self.var_9,wait_time_before_submitting=self.var_10,wait_time_before_switching_windows=self.var_11)
+        crawler = GetThePage(''.join(need_to_look_list),self.text_box,
+                             wait_before_typing_time=self.var_9,
+                             wait_time_before_submitting=self.var_10,
+                             wait_time_before_switching_windows=self.var_11)
         crawler.crawl_words()
 
         html_list = FileProcessor(self.text_box,RECONSTRUCTIONS, RECONSTRUCTIONS_LIST).save_content()
@@ -128,7 +144,7 @@ class YongMingTi:
 
         for word in get_all_list:
             result = phonetic_processor.get_phonetic(headword=word, era=self.var_0, nature=self.var_1,
-                                                     scholar=self.var_2)
+                                                     scholar=self.var_2,main_window=self.main_window,font_style=self.font_style)
 
             '''擬音'''
             reconstructions_list.append(result)
@@ -140,7 +156,7 @@ class YongMingTi:
             if self.var_3 in valid_scholars:
                 yun_list.append(phonetic_processor.get_phonetic(
                     headword=word, era="兩漢六朝", nature="韻部", scholar=self.var_3
-                ))
+                ,main_window=self.main_window,font_style=self.font_style,whether_polyphone=False))
             elif self.var_3 == "廣韻-基於poem":
                 yun_list.append(extract_the_phenotype_sqlite.get_sheng_nu(word,"guang_yun","韻部_調整後",table_dict_.get(self.var_3, "guang_yun")))
             elif self.var_3 == "玉篇-基於poem":

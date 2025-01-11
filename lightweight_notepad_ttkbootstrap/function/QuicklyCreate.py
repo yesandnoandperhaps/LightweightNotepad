@@ -2,8 +2,6 @@ from tkinter import Tk
 from tkinter import messagebox
 import ttkbootstrap as ttk
 from function.DownBoxModify import DownBoxModify
-from function.variables.ProjectPathVariables import PRE_DATA, PRE_DATA_PATH
-
 
 class QuicklyCreate:
     def __init__(self, main_window):
@@ -84,6 +82,7 @@ class QuicklyCreate:
         return self.main_frame
 
 if __name__ == '__main__':
+    from function.variables.ProjectPathVariables import PRE_DATA, PRE_DATA_PATH
     window = Tk()
     QuicklyCreate(window).quickly_create_drop_down_box(["1","2","3","4","5"],
                                                        [["2","3"],["2","3"],["2","3"],["2","3"],["2","3"]],

@@ -26,6 +26,8 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 from function.variables.ProjectPathVariables import RECONSTRUCTIONS, RECONSTRUCTIONS_VOWEL, \
     RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST, RECONSTRUCTIONS_VOWEL_RECONSTRUCTIONS_LIST_PATH, RECONSTRUCTIONS_SQLITE
+from window_module.PolyphoneWindow import PolyphoneWindow
+
 
 class GetThePage:
     def __init__(self,words,text_widget,
@@ -417,43 +419,15 @@ class HtmlToSqlite:
     def _initialize_database(self):
         """初始化数据库表"""
         self.cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS headwords (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            word TEXT UNIQUE
-        )''')
+        CREATE TABLE IF NOT EXISTS phonetic_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        headword TEXT,
+        era TEXT,
+        nature TEXT,
+        scholar TEXT,
+        phonetic TEXT
+            )''')
 
-        self.cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS eras (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            era TEXT UNIQUE
-        )''')
-
-        self.cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS natures (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nature TEXT UNIQUE
-        )''')
-
-        self.cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS scholars (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            scholar TEXT UNIQUE
-        )''')
-
-        self.cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS phonetics (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            headword_id INTEGER,
-            era_id INTEGER,
-            nature_id INTEGER,
-            scholar_id INTEGER,
-            phonetic TEXT,
-            UNIQUE(headword_id, era_id, nature_id, scholar_id),
-            FOREIGN KEY (headword_id) REFERENCES headwords(id),
-            FOREIGN KEY (era_id) REFERENCES eras(id),
-            FOREIGN KEY (nature_id) REFERENCES natures(id),
-            FOREIGN KEY (scholar_id) REFERENCES scholars(id)
-        )''')
 
     @staticmethod
     def _parse_html(html_code):
@@ -467,8 +441,7 @@ class HtmlToSqlite:
         """处理每一行数据"""
         headword = row['字頭'] if pd.notna(row['字頭']) else None
         if headword is None:
-            #self.text_widget.insert("end","字頭為 None，跳過此行\n")
-            return
+            return  # 如果没有字头，则跳过
 
         era = row['時代'] if pd.notna(row['時代']) else None
         nature = row['性質'] if pd.notna(row['性質']) else None
@@ -480,39 +453,10 @@ class HtmlToSqlite:
         if phonetic == "無擬音":
             phonetic = rhyme
 
-        self.cursor.execute("INSERT OR IGNORE INTO headwords (word) VALUES (?)", (headword,))
-        self.cursor.execute("SELECT id FROM headwords WHERE word = ?", (headword,))
-        headword_id = self.cursor.fetchone()[0]
-
-        # 插入和查询 era
-        self.cursor.execute("INSERT OR IGNORE INTO eras (era) VALUES (?)", (era,))
-        self.cursor.execute("SELECT id FROM eras WHERE era = ?", (era,))
-        era_id = self.cursor.fetchone()[0]
-
-        # 插入和查询 nature
-        self.cursor.execute("INSERT OR IGNORE INTO natures (nature) VALUES (?)", (nature,))
-        self.cursor.execute("SELECT id FROM natures WHERE nature = ?", (nature,))
-        nature_id = self.cursor.fetchone()[0]
-
-        # 插入和查询 scholar
-        self.cursor.execute("INSERT OR IGNORE INTO scholars (scholar) VALUES (?)", (scholar,))
-        self.cursor.execute("SELECT id FROM scholars WHERE scholar = ?", (scholar,))
-        scholar_id = self.cursor.fetchone()[0]
-
-        # 检查是否已存在相同组合的记录
+        # 插入数据（不检查重复）
         self.cursor.execute(''' 
-        SELECT phonetic FROM phonetics
-        WHERE headword_id = ? AND era_id = ? AND nature_id = ? AND scholar_id = ?''',
-                            (headword_id, era_id, nature_id, scholar_id))
-
-        existing_phonetic = self.cursor.fetchone()
-
-        if existing_phonetic:
-            return
-
-        self.cursor.execute(''' 
-        INSERT INTO phonetics (headword_id, era_id, nature_id, scholar_id, phonetic)
-        VALUES (?, ?, ?, ?, ?)''', (headword_id, era_id, nature_id, scholar_id, phonetic))
+        INSERT INTO phonetic_data (headword, era, nature, scholar, phonetic)
+        VALUES (?, ?, ?, ?, ?)''', (headword, era, nature, scholar, phonetic))
 
     def process_html(self, html_code):
         """处理单个 HTML 文件"""
@@ -614,64 +558,39 @@ class PhoneticDatabaseProcessor:
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
 
-    def get_phonetic(self, headword, era, nature, scholar):
-        """根据输入的字頭、時代、性質和學者返回擬音[經整理]"""
-        # 查询字頭的id
-        self.cursor.execute("SELECT id FROM headwords WHERE word = ?", (headword,))
-        headword_id = self.cursor.fetchone()
-        if headword_id is None:
-            return f"字頭 '{headword}' 未找到"
-        headword_id = headword_id[0]
+    def get_phonetic(self, headword, era, nature, scholar, main_window, font_style, whether_polyphone=True):
+        """
+        根据输入的条件精确查找拟音。
+        :param whether_polyphone: 是否检查多音字
+        :param font_style: 多音字窗口字体传递
+        :param main_window: 多音字窗口
+        :param headword: 字头
+        :param era: 时代
+        :param nature: 性质
+        :param scholar: 学者
+        :return: 查询结果列表（可能有多个拟音）
+        """
+        self.cursor.execute(''' 
+        SELECT phonetic
+        FROM phonetic_data
+        WHERE headword = ?
+          AND era = ?
+          AND nature = ?
+          AND scholar = ?;
+        ''', (headword, era, nature, scholar))
 
-        # 查询時代的id
-        self.cursor.execute("SELECT id FROM eras WHERE era = ?", (era,))
-        era_id = self.cursor.fetchone()
-        if era_id is None:
-            return f"時代 '{era}' 未找到"
-        era_id = era_id[0]
+        # 获取所有查询结果
+        results = self.cursor.fetchall()
 
-        # 查询性質的id
-        self.cursor.execute("SELECT id FROM natures WHERE nature = ?", (nature,))
-        nature_id = self.cursor.fetchone()
-        if nature_id is None:
-            return f"性質 '{nature}' 未找到"
-        nature_id = nature_id[0]
+        unique_results = list(set([item[0] for item in results]))
 
-        # 查询學者的id
-        self.cursor.execute("SELECT id FROM scholars WHERE scholar = ?", (scholar,))
-        scholar_id = self.cursor.fetchone()
-        if scholar_id is None:
-            return f"學者 '{scholar}' 未找到"
-        scholar_id = scholar_id[0]
-
-        # 使用已找到的id查询擬音[經整理]
-        self.cursor.execute("""
-        SELECT phonetic 
-        FROM phonetics 
-        WHERE headword_id = ? AND era_id = ? AND nature_id = ? AND scholar_id = ?""",
-                            (headword_id, era_id, nature_id, scholar_id))
-        phonetic = self.cursor.fetchall()
-
-        # 用来存储唯一的元素
-        unique_phonetic = []
-        seen = set()
-
-        # 遍历phonetic，保留不重复的元素
-        for item in phonetic:
-            # 提取元组中的第一个元素
-            item_value = item[0] if isinstance(item, tuple) else item
-
-            if item_value not in seen:
-                unique_phonetic.append(item_value)
-                seen.add(item_value)
-
-        # 判断去重后的结果
-        if not unique_phonetic:
-            return "未找到匹配的擬音[經整理]"  # 如果为空，返回相应提示
-        elif len(unique_phonetic) == 1:
-            return unique_phonetic[0]  # 返回单个元素
-        else:
-            return unique_phonetic  # 返回列表
+        if whether_polyphone:#检测多音字
+            if len(unique_results) > 1:
+                return PolyphoneWindow(main_window,"多音字选择", font_style,unique_results,headword).polyphone_window()
+            else:
+                return results[0][0]
+        else:#拒绝多音字
+            return results[0][0]
 
     def close(self):
         """关闭数据库连接"""
