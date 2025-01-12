@@ -7,3 +7,5 @@
 <右-Shift键>确定
 
 <左-shift键>退出某些时候
+
+[使用文档](https://yesandnoandperhaps.cn/posts/e8a53eab.html)
